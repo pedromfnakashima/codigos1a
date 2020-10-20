@@ -1,3 +1,8 @@
 https://www.youtube.com/watch?v=C-gEQdGVXbk&t=782
 
-
+Para a dica 8, ir no Anaconda Prompt.
+ir na pasta: D:\Códigos, Dados, Documentação e Cheat Sheets\codigos_versionados\Python\Cursos e Vídeos\Corey Schafer (Youtube)\10 Python Tips and Tricks
+Rodar:
+python "10 Python Tips - Dica 8 - Jeito errado.py"
+e
+python "10 Python Tips - Dica 8 - Jeito certo.py"
