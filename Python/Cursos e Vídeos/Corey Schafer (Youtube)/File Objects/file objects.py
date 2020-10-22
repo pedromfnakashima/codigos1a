@@ -68,6 +68,12 @@ with open('test.txt', 'r') as f:
 with open('test.txt', 'r') as f:
     f_contents = f.readline()
     print(f_contents)
+    print()
+
+mensagem = "Hello World"
+print(mensagem.find('World'))
+
+
 
 
 ##############################
