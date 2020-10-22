@@ -273,6 +273,22 @@ with open('test.txt', 'r') as rf:
 ##############################
 ###### EXEMPLO 20 ############
 ##############################
-""" 
+""" abrir as primeiras N linhas e
+colocar cada linha em um elemento de
+uma lista
+(não está no vídeo)
+(retirado do stackoverflow:
+ https://stackoverflow.com/questions/1767513/read-first-n-lines-of-a-file-in-python)
 """
+
+with open("test.txt", 'r') as myfile:
+    N = 3
+    head = [next(myfile) for x in range(N)]
+
+print(head)
+print(head[0])
+print(head[1])
+
+
+
 
