@@ -5,6 +5,9 @@ Created on Wed Oct 21 20:41:29 2020
 @author: pedro
 Interpretador Python 3.8
 """
+#############################
+##### CONFIGURAÇÃO GERAL ####
+#############################
 globals().clear()
 """ Mudar diretório """
 import os
@@ -22,6 +25,10 @@ caminho_wd = caminho_base / 'Dados' / 'Siconfi' / 'RGF - Estados' / 'Anexo 01 - 
 print('\nDiretório anterior:\n', os.getcwd())
 os.chdir(caminho_wd)
 print('\nDiretório atual:\n', os.getcwd())
+
+#############################
+#############################
+#############################
 
 """ Lista de arquivos zip do wd """
 import glob
