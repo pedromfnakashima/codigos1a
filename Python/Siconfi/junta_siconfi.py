@@ -180,7 +180,7 @@ def processa_arquivos():
     
     i = 1
     for key in dicionario.keys():
-
+        
         if i == 1:
             novo_df = dicionario[key]
         else:
@@ -195,19 +195,28 @@ df = processa_arquivos()
 print(list(df['Instituição'].unique()))
 
 
+df.to_csv("siconfi_completo.csv")
+
+# Para preparar para merge
+print(df.shape)
+print(df['Instituição'].nunique())
+
+# Filtrando:
+
+ms = df.loc[df.UF =="MS", ['Instituição', 'Coluna', 'Conta', 'Valor', 'exercicio', 'quadrimestre']]
 
 
 
+teste = pd.read_html('http://www.transparencia.al.ms.gov.br/pages/index.php/consultaservidores')[0]
 
 
+filtro = teste['Nome'].str.contains('JOÃO')
+filtrados = teste.loc[filtro, :]
+print(filtrados)
 
-
-
-
-
-
-
-
+filtro = teste['Cargo'].str.contains('ASSESSOR I')
+filtrados = teste.loc[filtro, :]
+print(filtrados)
 
 
 
