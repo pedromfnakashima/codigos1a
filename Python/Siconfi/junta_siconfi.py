@@ -180,16 +180,20 @@ dic = processa_arquivos()
 lista = sorted(list(dic['df_2020q1']['Instituição'].unique()))
 
 
+# Funcionando
 import pandas as pd
 df = pd.DataFrame(lista)
 df.rename(columns={0: 'instituições'}, inplace=True)
+""" Usando regex """
+df['nova_col'] = df['instituições'].str.replace('\sdo[\s\w]+', '')
+""" Usando filtro """
+filtro = df['instituições'].str.contains('Militar')
+df.loc[filtro, 'nova_col'] = 'Tribunal de Justiça Militar'
 
-df['posicao'] = df['instituições'].str.find('do')
-
-df['inst2'] = df['instituições'].str.slice(0,5)
 
 
-df['inst2'] = df['instituições'].str.slice(0,df['instituições'].str.find('do'))
+
+
 
 # https://stackoverflow.com/questions/37973757/slicing-a-pandas-column-based-on-the-position-of-a-matching-substring
 # https://pandas.pydata.org/pandas-docs/stable/user_guide/text.html
