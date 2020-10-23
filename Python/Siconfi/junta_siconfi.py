@@ -148,6 +148,14 @@ def gera_df(nome_zip):
     
     df[periodo_unidade] = int(periodo_num)
     
+    
+    """ Manipula coluna Instituição """
+    """ Usando regex """
+    df['Instituição'] = df['Instituição'].str.replace('\sdo[\s\w]+', '')
+    """ Usando filtro """
+    filtro = df['Instituição'].str.contains('Justiça Militar')
+    df.loc[filtro, 'Instituição'] = 'Tribunal de Justiça Militar'
+    
     return df
 
 #df_siconfi = gera_df('2015q1.zip')
@@ -169,35 +177,45 @@ def processa_arquivos():
         print(f'  {df_nome}')
         
         dicionario[df_nome] = gera_df(arq_nome)
+    
+    i = 1
+    for key in dicionario.keys():
 
+        if i == 1:
+            novo_df = dicionario[key]
+        else:
+            novo_df = novo_df.append(dicionario[key])
+        i += 1
         
-    return dicionario
+    return novo_df
 
-dic = processa_arquivos()
+#dic = processa_arquivos()
+df = processa_arquivos()
 
-# print(dic['df_2020q1']['Instituição'].unique())
-
-lista = sorted(list(dic['df_2020q1']['Instituição'].unique()))
-
-
-# Funcionando
-import pandas as pd
-df = pd.DataFrame(lista)
-df.rename(columns={0: 'instituições'}, inplace=True)
-""" Usando regex """
-df['nova_col'] = df['instituições'].str.replace('\sdo[\s\w]+', '')
-""" Usando filtro """
-filtro = df['instituições'].str.contains('Militar')
-df.loc[filtro, 'nova_col'] = 'Tribunal de Justiça Militar'
+print(list(df['Instituição'].unique()))
 
 
 
 
 
 
-# https://stackoverflow.com/questions/37973757/slicing-a-pandas-column-based-on-the-position-of-a-matching-substring
-# https://pandas.pydata.org/pandas-docs/stable/user_guide/text.html
-# https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.str.extract.html
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
