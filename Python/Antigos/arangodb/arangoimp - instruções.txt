@@ -1,0 +1,341 @@
+﻿INSTRUÇÕES PARA EXECUTAR ARANGOIMP A PARTIR DO PROMPT:
+1) Exibir configurações avançadas do sistema
+2) Variáveis de ambiente
+3) Variáveis do ambiente -> novo -> Nome da variável: PATH; Valor da variável: pasta onde está o arquivo arangoimp.exe
+
+root
+senha: 1234
+
+BASE DE DADOS - TUTORIAL:
+https://www.arangodb.com/docs/stable/data-modeling-databases-working-with.html
+
+Lista das bases de dados:
+db._databases()
+
+Retorna base de dados atual:
+require("@arangodb").db._name()
+
+Mudar a base de dados:
+db._useDatabase('Politica')
+db._useDatabase('_system')
+
+Criar Base de Dados:
+db._createDatabase("newDB", {}, [{ username: "newUser", passwd: "123456", active: true}])
+db._createDatabase("Politica", {}, [{ username: "root", passwd: "1234", active: true}])
+
+Deletar Base de Dados:
+db._dropDatabase("newDB")
+
+arangoimp --file "C:\Users\pedro\bd\TEMÁTICO\Legislativo MS\Deputados.csv" --server.database Politica --collection Pessoas --create-collection true --type csv
+arangoimp --file "C:\Users\pedro\bd\TEMÁTICO\Legislativo MS\Comissoes.csv" --server.database Politica --collection Comissoes --create-collection true --type csv
+arangoimp --file "C:\Users\pedro\bd\TEMÁTICO\Legislativo MS\Partidos.csv" --server.database Politica --collection Partidos --create-collection true --type csv
+
+arangoimp --file "C:\Users\pedro\bd\TEMÁTICO\Legislativo MS\Rel_Comissoes.csv" --server.database Politica --create-collection-type edge --collection eh_da_comissao --create-collection true --type csv
+
+
+
+
+arangoimp --file "C:\Users\pedro\bd\Airports_Flights\airports.csv" --collection airports --create-collection true --type csv
+
+
+
+
+
+
+arangoimp --file "C:\Users\pedro\bd\TEMÁTICO\Legislativo MS\Rel_Partidos.csv" --collection Rel_Partidos --create-collection true --type csv --create-collection-type edge
+arangoimp --file "C:\Users\pedro\bd\TEMÁTICO\Legislativo MS\Rel_Comissoes.csv" --collection Rel_Comissoes --create-collection true --type csv --create-collection-type edge
+
+TESTES:
+
+arangoimp --file "C:\Users\pedro\bd\TEMÁTICO\Legislativo MS\airports_teste.csv" --collection Comissoes --create-collection true --type csv
+
+arangoimp --file "C:\Users\pedro\bd\TEMÁTICO\Legislativo MS\teste1.csv" --collection teste1 --create-collection true --type csv
+
+arangoimp --file "C:\Users\pedro\bd\TEMÁTICO\Legislativo MS\teste2.csv" --collection teste2 --create-collection true --type csv
+
+###########
+OPERAÇÕES COM DATABASES:
+https://docs.arangodb.com/3.0/Manual/DataModeling/Databases/WorkingWith.html
+
+LISTAR DATABASES
+db._databases()
+
+USAR DATABASE
+db._useDatabase(nome)
+
+OPERAÇÕES COM COLEÇÕES
+https://docs.arangodb.com/2.8/FirstSteps/CollectionsAndDocuments.html
+############
+RENOMEAR COLEÇÕES
+https://docs.arangodb.com/2.8/FirstSteps/CollectionsAndDocuments.html
+
+Ex. (renomeando de teste1 para teste2):
+var1 = db.teste1;
+var1;
+var1.rename("teste2");
+var1;
+
+deputados = db._system
+
+LISTAR COLEÇÕES
+ > db._collections();                   list all collections       
+ > db._create(<name>)                   create a new collection    
+ > db._drop(<name>)                     drop a collection    
+
+############
+REMOVER COLEÇÕES
+
+Ex.:
+db._drop("airports")
+db._drop("Comissoes")
+db._drop("flights")
+db._drop("teste10")
+
+
+db._drop("alms_relacoes");
+db._drop("Comissoes");
+db._drop("Consumidores");
+db._drop("Cozinha");
+db._drop("Deputados");
+db._drop("female");
+db._drop("Local");
+db._drop("male");
+db._drop("Relacao");
+db._drop("relation");
+db._drop("Comissoes");
+db._drop("Restaurantes");
+
+##########################################################################
+########################### NORTHWIND ####################################
+##########################################################################
+
+arangoimp --file "C:\Users\salj\Desktop\Pedro Nakashima\Códigos\arangodb\Northwind\customers.csv" --server.database db_northwind_1 --collection customers --create-collection true --type csv
+
+
+
+
+
+##########################################################################
+########################### GRAPH COURSE #################################
+##########################################################################
+
+arangoimp --file "C:\Users\pedro\OneDrive\Documentação, Tutorial, Cheat Sheet\ArangoDB\GraphCourse\airports.csv" --server.database db_voos_1 --collection airports --create-collection true --type csv
+arangoimp --file "C:\Users\pedro\OneDrive\Documentação, Tutorial, Cheat Sheet\ArangoDB\GraphCourse\flights.csv" --server.database db_voos_1 --create-collection-type edge --collection flights --create-collection true --type csv
+
+# QUERIES
+
+RETURN DOCUMENT("airports/JFK")
+
+FOR airport IN airports
+	FILTER airport._key == "JFK"
+	RETURN airport
+
+FOR airport IN airports
+	FILTER airport.city == "New York"
+	AND airport.state == "NY"
+	RETURN airport
+
+FOR a IN airports
+	FILTER a.vip
+	SORT a.state, a.name DESC
+	LIMIT 5
+	RETURN a
+
+FOR a IN airports
+	FILTER a.vip
+	SORT a.state DESC, a.name DESC
+	LIMIT 5
+	RETURN a
+
+FOR a IN airports
+	FILTER a._key IN ["JFK", "LAX"]
+	RETURN { fullName: a.name }
+
+FOR a IN airports
+	FILTER a._key IN ["JFK", "LAX"]
+	RETURN { apelido: a.name }
+
+FOR a IN airports
+	FILTER a._key IN ["JFK", "LAX"]
+	RETURN {apelido: a.name, cidade:a.city}
+
+RETURN COUNT(airports)
+
+RETURN {numero: COUNT(airports)}
+
+FOR airport IN airports
+	FILTER airport.vip
+	COLLECT WITH COUNT INTO count
+	RETURN count
+
+################################################################
+########### EXERCISES A ########################################
+################################################################
+
+FOR airport IN 1..1 OUTBOUND 'airports/LAX' flights
+	RETURN DISTINCT airport.name
+
+FOR airport, flight IN OUTBOUND 'airports/LAX' flights
+	LIMIT 10
+	RETURN {airport, flight}
+
+FOR airport, flight IN OUTBOUND 'airports/LAX' flights
+	LIMIT 10
+	RETURN {aeroporto: airport.name, voo: flight.FlightNum}
+
+FOR airport, flight IN INBOUND 'airports/BIS' flights
+	LIMIT 10
+	RETURN flight.FlightNum
+
+FOR airport, flight IN INBOUND 'airports/BIS' flights
+	LIMIT 10
+	RETURN {vooNum: flight.FlightNum, vindo_de: airport.name}
+
+FOR airport, flight IN ANY 'airports/BIS' flights
+	FILTER flight.Month == 1
+	AND flight.Day >= 5
+	AND flight.Day <= 7
+	RETURN { cidade: airport.city, horario: flight.ArrTimeUTC }
+
+FOR flight IN flights
+	FILTER flight.TailNum == "N238JB"
+	RETURN flight
+
+FOR orig IN airports
+	FILTER orig._key IN ["JFK", "PBI"]
+	FOR dest IN OUTBOUND orig flights
+
+
+####################################
+
+
+FOR airport IN OUTBOUND 'airports/LAX' flights
+	OPTIONS { bfs: true, uniqueVertices: 'global' }
+	RETURN airport
+
+FOR airport IN OUTBOUND 'airports/LAX' flights
+	RETURN DISTINCT airport
+
+FOR v IN OUTBOUND
+	SHORTEST_PATH 'airports/BIS'
+	TO 'airports/JFK' flights
+	RETURN v.name
+
+LET airports = (
+	FOR v IN OUTBOUND
+	SHORTEST_PATH 'airports/BIS'
+	TO 'airports/JFK' flights
+	RETURN v
+)
+RETURN LENGTH(airports) - 1
+
+######################################################################
+###### Exercises A – Solutions #######################################
+######################################################################
+
+1. Retrieve the airport document of Los Angeles International (LAX). 
+
+RETURN DOCUMENT("airports/LAX")
+
+RETURN DOCUMENT("airports/LAX").name
+RETURN DOCUMENT("airports/LAX").city
+
+RETURN {nome: DOCUMENT("airports/LAX").name,
+cidade: DOCUMENT("airports/LAX").name,
+estado: DOCUMENT("airports/LAX").state
+}
+
+2. Retrieve all airport documents of the city Los Angeles.
+
+FOR a IN airports
+	FILTER a.city == "Los Angeles"
+	RETURN a
+
+FOR a IN airports
+	FILTER a.city == "Los Angeles"
+	RETURN {aeroporto: a.name}
+
+3. Find all airports of the state North Dakota (ND) and return the name attribute only.
+
+FOR airport IN airports
+	FILTER airport.state == "ND"
+	RETURN airport.name
+
+4. Retrieve multiple airports via their primary key 
+(_key), for example BIS, DEN and JFK. Return an 
+object for each match: RETURN {airport: a.name}
+
+FOR a IN airports
+	FILTER a._key IN ["BIS","DEN","JFK"]
+	RETURN { airport: a.name }
+
+5. Count the airports in the state New York (NY) 
+which are not vip.
+
+FOR airport IN airports
+	FILTER airport.state == "NY"
+	AND NOT airport.vip
+	COLLECT WITH COUNT INTO count
+	RETURN count
+
+######################################################################
+###### Exercises B – Solutions #######################################
+######################################################################
+
+1. Find all ﬂights with FlightNum 860 (number) on 
+January 5th and return the _from and _to 
+attributes only (you may use KEEP() for this).
+
+FOR f IN flights
+	FILTER f.FlightNum == 860
+	AND f.Month == 1
+	AND f.Day == 5
+	RETURN KEEP(f, "_from", "_to")
+
+FOR f IN flights
+	FILTER f.FlightNum == 860
+	AND f.Month == 1
+	AND f.Day == 5
+	RETURN {de: f._from, para: f._to}
+
+2. Find all ﬂights departing or arriving at JFK with 
+FlightNum 859 or 860 and return objects with 
+ﬂight numbers and airport names where the 
+ﬂights go to or come from respectively. 
+
+FOR a,f IN ANY "airports/JFK" flights
+	FILTER f.FlightNum IN [859,860]
+	RETURN { airport: a.name,
+	flight: f.FlightNum }
+
+3. Combine a FOR loop and a traversal like: 
+FOR orig IN airports
+ FILTER orig._key IN ["JFK", "PBI"]
+ FOR dest IN OUTBOUND orig flights
+ …
+to do multiple traversals with diﬀerent starting 
+points. Filter by ﬂight numbers 859 and 860. 
+Return orig.name, dest.name, FlightNum and 
+Day. Name the attributes appropriately. 
+
+FOR orig IN airports
+	FILTER orig._key IN ["JFK", "PBI"]
+	FOR dest, flight IN OUTBOUND orig flights
+		FILTER dest.FlightNum IN [859,860]
+		RETURN { from: orig.name,
+		to: dest.name,
+		number: f.FlightNum,
+		day: f.Day }
+
+FOR orig IN airports
+	FILTER orig._key IN ["JFK", "PBI"]
+	FOR dest, flight IN OUTBOUND orig flights
+		RETURN { de: orig.name,
+		para: dest.name,
+		voo_num: flight.FlightNum,
+		dia: flight.Day }
+
+
+
+
+
