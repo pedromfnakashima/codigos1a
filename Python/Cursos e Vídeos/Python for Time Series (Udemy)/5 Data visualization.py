@@ -92,119 +92,355 @@ movies.plot.scatter(x='CriticRating', y='AudienceRating', s=movies['Genre']*50, 
 # https://stackoverflow.com/questions/28033046/matplotlib-scatter-color-by-categorical-factors
 # https://medium.com/@contactsunny/label-encoder-vs-one-hot-encoder-in-machine-learning-3fc273365621
 
+#############################
+##### CONFIGURAÇÃO GERAL ####
+#############################
+"""
+Funcionando
+
+ATENÇÃO!!!!
+TEM QUE RODAR TUDO DE UMA VEZ!!!!!!!!!!! Pelo menos:
+    fig1, (ax1) = plt.subplots(nrows=1, ncols=1)
+    e
+    ax1.scatter(x[index], y[index], marker='o', label=name)
+
+"""
+globals().clear()
+""" Mudar diretório """
+import os
+from pathlib import Path
+import getpass
+if getpass.getuser() == "pedro":
+    print('\nLogado de casa')
+    caminho_base = Path(r'D:\Códigos, Dados, Documentação e Cheat Sheets')
+elif getpass.getuser() == "pedro-salj":
+    print('\nLogado da salj-alems')
+    caminho_base = Path(r'C:\Users\pedro-salj\Desktop\Pedro Nakashima\Códigos, Dados, Documentação e Cheat Sheets')
+
+""" Mudar diretório para dados Siconfi"""
+caminho_wd = caminho_base / 'Dados' / 'Cursos e Livros' / 'R Programming A-Z (Udemy)'
+print('\nDiretório anterior:\n', os.getcwd())
+os.chdir(caminho_wd)
+print('\nDiretório atual:\n', os.getcwd())
+
+#############################
+#############################
+#############################
+
+import pandas as pd
 from matplotlib import pyplot as plt
+
+movies = pd.read_csv('P2-Movie-Ratings.csv')
+movies.columns = ['Film', 'Genre', 'CriticRating', 'AudienceRating', 'BudgetMillions', 'Year']
+
+x, y = movies['CriticRating'], movies['AudienceRating']
+classes_cor = set(movies['Genre'])
+
+fig1, (ax1) = plt.subplots(nrows=1, ncols=1)
+
+for name in classes_cor:
+    index = movies['Genre'] == name
+    ax1.scatter(x[index], y[index], marker='o', label=name)
+
+plt.legend()
+plt.show()
+
+####################################################
+
+def gera_scatter(df_input, col_x, col_y, col_cor):
+    
+    x, y = df_input[col_x], df_input[col_y]
+    
+    classes_cor = set(df_input[col_cor])
+    
+    fig1, (ax1) = plt.subplots(nrows=1, ncols=1)
+    
+    for name in classes_cor:
+        index = df_input[col_cor] == name
+        ax1.scatter(x[index], y[index], marker='o', label=name)
+    
+    plt.legend()
+    plt.show()
+    
+    return fig1
+
+gera_scatter(df_input=movies,
+             col_x='CriticRating',
+             col_y='AudienceRating',
+             col_cor='Genre')
+
+####################################################
+
+import pandas as pd
+from matplotlib import pyplot as plt
+
+movies = pd.read_csv('P2-Movie-Ratings.csv')
+movies.columns = ['Film', 'Genre', 'CriticRating', 'AudienceRating', 'BudgetMillions', 'Year']
 
 from sklearn.preprocessing import OneHotEncoder, LabelEncoder, LabelBinarizer
 lab_encoder = LabelEncoder()
+movies['GeneroCod'] = lab_encoder.fit_transform(movies['Genre'])
 
-movies['genero'] = lab_encoder.fit_transform(movies['Genre'])
+x, y = movies['CriticRating'], movies['AudienceRating']
+classes_cor_set = set(movies['Genre'])
 
-unicos = movies['Genre'].unique()
+cor_corresp = movies.groupby('Genre').first().loc[:, 'GeneroCod'].reset_index()
 
-print(movies['Genre'].unique())
+fig1, (ax1) = plt.subplots(nrows=1, ncols=1)
 
+ax1.scatter(x, y, marker='o')
 
-# https://altair-viz.github.io/user_guide/encoding.html
-#pip install altair
-#pip install vega_datasets
-from altair import *
+plt.legend()
+plt.show()
+
+####################################################
+# Funcionando
+
 import pandas as pd
+from matplotlib import pyplot as plt
 
-df = datasets.load_dataset('iris')
-Chart(df).mark_point().encode(x='petalLength',y='sepalLength', color='species')
+movies = pd.read_csv('P2-Movie-Ratings.csv')
+movies.columns = ['Film', 'Genre', 'CriticRating', 'AudienceRating', 'BudgetMillions', 'Year']
 
+from sklearn.preprocessing import OneHotEncoder, LabelEncoder, LabelBinarizer
+lab_encoder = LabelEncoder()
+movies['GeneroCod'] = lab_encoder.fit_transform(movies['Genre'])
 
+x, y = movies['CriticRating'], movies['AudienceRating']
+cor = movies['GeneroCod']
+classes_cor_set = set(movies['Genre'])
 
-import altair as alt
-from vega_datasets import data
-cars = data.cars()
+cor_corresp = movies.groupby('Genre').first().loc[:, 'GeneroCod']
 
-alt.Chart(cars).mark_point().encode(
-    x='Horsepower',
-    y='Miles_per_Gallon',
-    color='Origin',
-    shape='Origin'
-)
+fig1, (ax1) = plt.subplots(nrows=1, ncols=1)
 
+#ax1.scatter(x, y, marker='o', c='b')
+turquesa = '#afeeee'
+azul = '#3352FF'
+vermelho = '#FF3333'
+ax1.scatter(x, y, marker='o', color=vermelho)
 
+plt.legend()
+plt.show()
 
-import matplotlib
+""" FUNCIONANDO!!! """
+####################################################
+# 
+# https://stackoverflow.com/questions/29973952/how-to-draw-legend-for-scatter-plot-indicating-size
 
-print(matplotlib.__version__)
-
-pip install matplotlib
-
-plt.scatter(x=movies['CriticRating'], y=movies['AudienceRating'])
-
-plt.scatter(x=movies['CriticRating'], y=movies['AudienceRating'], c=movies['genero'])
-
-plt.colorbar()
-
-x = movies['CriticRating']
-y = movies['AudienceRating']
-colors = movies['Genre']
-sizes = movies['Genre']
-
-plt.scatter(x, y, c=colors, s=sizes, alpha=0.3,
-            cmap='viridis')
-
-import numpy as np
-rng = np.random.RandomState(0)
-x = rng.randn(100)
-y = rng.randn(100)
-colors = rng.rand(100)
-sizes = 1000 * rng.rand(100)
-
-plt.scatter(x, y, c=colors, s=sizes, alpha=0.3,
-            cmap='viridis')
-plt.colorbar();  # show color scale
+import pandas as pd
+from matplotlib import pyplot as plt
 
 
+movies = pd.read_csv('P2-Movie-Ratings.csv')
+movies.columns = ['Film', 'Genre', 'CriticRating', 'AudienceRating', 'BudgetMillions', 'Year']
 
+from sklearn.preprocessing import OneHotEncoder, LabelEncoder, LabelBinarizer
+lab_encoder = LabelEncoder()
+movies['GeneroCod'] = lab_encoder.fit_transform(movies['Genre'])
 
+movies.set_index('Genre', inplace=True)
 
+# 7 cores
+azul = '#0000ff'
+vermelho = '#cc0000'
+verde = '#003300'
+rosa = '#ff00ff'
+laranja = '#ff6600'
+marrom = '#663300'
+roxo = '#6600cc'
+dic_cores = {'azul' :'#0000ff',
+         'vermelho' : '#cc0000',
+         'verde' : '#003300',
+         'rosa' : '#ff00ff',
+         'laranja' : '#ff6600',
+         'marrom' : '#663300',
+         'roxo' : '#6600cc'}
+serie_cores = pd.Series(dic_cores)
 
+x, y = movies['CriticRating'], movies['AudienceRating']
 
+fig1, (ax1) = plt.subplots(nrows=1, ncols=1)
 
+Action = ax1.scatter(x['Action'], y['Action'], marker='o', color=serie_cores['azul'], s=50, alpha=0.5)
+Adventure = ax1.scatter(x['Adventure'], y['Adventure'], marker='o', color=serie_cores['vermelho'], s=50, alpha=0.5)
+Comedy = ax1.scatter(x['Comedy'], y['Comedy'], marker='o', color=serie_cores['verde'], s=50, alpha=0.5)
+Drama = ax1.scatter(x['Drama'], y['Drama'], marker='o', color=serie_cores['rosa'], s=50, alpha=0.5)
+Horror = ax1.scatter(x['Horror'], y['Horror'], marker='o', color=serie_cores['laranja'], s=50, alpha=0.5)
+Romance = ax1.scatter(x['Romance'], y['Romance'], marker='o', color=serie_cores['marrom'], s=50, alpha=0.5)
+Thriller = ax1.scatter(x['Thriller'], y['Thriller'], marker='o', color=serie_cores['roxo'], s=50, alpha=0.5)
 
-
-
-
-
-
-
-
-
-
-
-
-import numpy as np
-import matplotlib.pyplot as plt
-import matplotlib.cbook as cbook
-
-# Load a numpy record array from yahoo csv data with fields date, open, close,
-# volume, adj_close from the mpl-data/example directory. The record array
-# stores the date as an np.datetime64 with a day unit ('D') in the date column.
-price_data = (cbook.get_sample_data('goog.npz', np_load=True)['price_data'].view(np.recarray))
-price_data = price_data[-250:]  # get the most recent 250 trading days
-
-delta1 = np.diff(price_data.adj_close) / price_data.adj_close[:-1]
-
-# Marker size in units of points^2
-volume = (15 * price_data.volume[:-2] / price_data.volume[0])**2
-close = 0.003 * price_data.close[:-2] / 0.003 * price_data.open[:-2]
-
-fig, ax = plt.subplots()
-ax.scatter(delta1[:-1], delta1[1:], c=close, s=volume, alpha=0.5)
-
-ax.set_xlabel(r'$\Delta_i$', fontsize=15)
-ax.set_ylabel(r'$\Delta_{i+1}$', fontsize=15)
-ax.set_title('Volume and percent change')
-
-ax.grid(True)
-fig.tight_layout()
+ax1.legend( (Action, Adventure, Comedy, Drama, Horror, Romance, Thriller),
+           ('Action', 'Adventure', 'Comedy', 'Drama', 'Horror', 'Romance', 'Thriller'),
+           loc = 'lower left',
+           ncol=1,
+           fontsize=8
+    )
 
 plt.show()
+####################################################
+
+azul = '#0000ff'
+vermelho = '#cc0000'
+verde = '#003300'
+rosa = '#ff00ff'
+laranja = '#ff6600'
+marrom = '#663300'
+roxo = '#6600cc'
+dic_cores = {'azul' :'#0000ff',
+         'vermelho' : '#cc0000',
+         'verde' : '#003300',
+         'rosa' : '#ff00ff',
+         'laranja' : '#ff6600',
+         'marrom' : '#663300',
+         'roxo' : '#6600cc'}
+serie_cores = pd.Series(dic_cores)
+
+x, y = movies['CriticRating'], movies['AudienceRating']
+
+class Dados:
+    dic_cores = {'azul' :'#0000ff',
+         'vermelho' : '#cc0000',
+         'verde' : '#003300',
+         'rosa' : '#ff00ff',
+         'laranja' : '#ff6600',
+         'marrom' : '#663300',
+         'roxo' : '#6600cc'}
+    
+    Action = ax1.scatter(x['Action'], y['Action'], marker='o', color=serie_cores['azul'], s=50, alpha=0.5)
+    Adventure = ax1.scatter(x['Adventure'], y['Adventure'], marker='o', color=serie_cores['vermelho'], s=50, alpha=0.5)
+    Comedy = ax1.scatter(x['Comedy'], y['Comedy'], marker='o', color=serie_cores['verde'], s=50, alpha=0.5)
+    Drama = ax1.scatter(x['Drama'], y['Drama'], marker='o', color=serie_cores['rosa'], s=50, alpha=0.5)
+    Horror = ax1.scatter(x['Horror'], y['Horror'], marker='o', color=serie_cores['laranja'], s=50, alpha=0.5)
+    Romance = ax1.scatter(x['Romance'], y['Romance'], marker='o', color=serie_cores['marrom'], s=50, alpha=0.5)
+    Thriller = ax1.scatter(x['Thriller'], y['Thriller'], marker='o', color=serie_cores['roxo'], s=50, alpha=0.5)
+    
+    ax1.legend( (Action, Adventure, Comedy, Drama, Horror, Romance, Thriller),
+           ('Action', 'Adventure', 'Comedy', 'Drama', 'Horror', 'Romance', 'Thriller'),
+           loc = 'lower left',
+           ncol=1,
+           fontsize=8
+    )
+
+dados = Dados()
+
+dados.Action
+
+plt.show()
+
+
+print(Dados.dic_cores)
+
+
+
+fig1, (ax1) = plt.subplots(nrows=1, ncols=1)
+
+dic = {}
+
+dic.update('Action': ax1.scatter(x['Action'], y['Action'], marker='o', color=serie_cores['azul'], s=50, alpha=0.5))
+
+Action = ax1.scatter(x['Action'], y['Action'], marker='o', color=serie_cores['azul'], s=50, alpha=0.5)
+Adventure = ax1.scatter(x['Adventure'], y['Adventure'], marker='o', color=serie_cores['vermelho'], s=50, alpha=0.5)
+Comedy = ax1.scatter(x['Comedy'], y['Comedy'], marker='o', color=serie_cores['verde'], s=50, alpha=0.5)
+Drama = ax1.scatter(x['Drama'], y['Drama'], marker='o', color=serie_cores['rosa'], s=50, alpha=0.5)
+Horror = ax1.scatter(x['Horror'], y['Horror'], marker='o', color=serie_cores['laranja'], s=50, alpha=0.5)
+Romance = ax1.scatter(x['Romance'], y['Romance'], marker='o', color=serie_cores['marrom'], s=50, alpha=0.5)
+Thriller = ax1.scatter(x['Thriller'], y['Thriller'], marker='o', color=serie_cores['roxo'], s=50, alpha=0.5)
+
+ax1.legend( (Action, Adventure, Comedy, Drama, Horror, Romance, Thriller),
+           ('Action', 'Adventure', 'Comedy', 'Drama', 'Horror', 'Romance', 'Thriller'),
+           loc = 'lower left',
+           ncol=1,
+           fontsize=8
+    )
+
+plt.show()
+
+
+
+####################################################
+# 
+# https://stackoverflow.com/questions/29973952/how-to-draw-legend-for-scatter-plot-indicating-size
+
+import pandas as pd
+from matplotlib import pyplot as plt
+
+
+movies = pd.read_csv('P2-Movie-Ratings.csv')
+movies.columns = ['Film', 'Genre', 'CriticRating', 'AudienceRating', 'BudgetMillions', 'Year']
+
+from sklearn.preprocessing import OneHotEncoder, LabelEncoder, LabelBinarizer
+lab_encoder = LabelEncoder()
+movies['GeneroCod'] = lab_encoder.fit_transform(movies['Genre'])
+
+movies.set_index('Genre', inplace=True)
+
+# 7 cores
+dic_cores = {'azul' :'#0000ff',
+         'vermelho' : '#cc0000',
+         'verde' : '#003300',
+         'rosa' : '#ff00ff',
+         'laranja' : '#ff6600',
+         'marrom' : '#663300',
+         'roxo' : '#6600cc'}
+serie_cores = pd.Series(dic_cores)
+
+dic_cat = {'Action': {'marker':'x', 'cor':serie_cores['azul'], 's':50, 'alpha':0.5},
+           'Adventure': {'marker':'x', 'cor':serie_cores['vermelho'], 's':50, 'alpha':0.5},
+           'Comedy': {'marker':'x', 'cor':serie_cores['verde'], 's':50, 'alpha':0.5},
+           'Drama': {'marker':'x', 'cor':serie_cores['rosa'], 's':50, 'alpha':0.5},
+           'Horror': {'marker':'x', 'cor':serie_cores['laranja'], 's':50, 'alpha':0.5},
+           'Romance': {'marker':'x', 'cor':serie_cores['marrom'], 's':50, 'alpha':0.5},
+           'Thriller': {'marker':'x', 'cor':serie_cores['roxo'], 's':50, 'alpha':0.5}
+    }
+
+
+x, y = movies['CriticRating'], movies['AudienceRating']
+dic_cat = {}
+for key in dic_cat.keys():
+    print(dic_cat[key]['s'])
+    dic_cat.update({key: ax1.scatter(x[key], y[key], marker=dic_cat[key]['marker'], color=dic_cat[key]['cor'], s=dic_cat[key]['s'], alpha=dic_cat[key]['alpha'])})
+
+
+x, y = movies['CriticRating'], movies['AudienceRating']
+
+fig1, (ax1) = plt.subplots(nrows=1, ncols=1)
+
+Action = ax1.scatter(x['Action'], y['Action'], marker='o', color=serie_cores['azul'], s=50, alpha=0.5)
+Adventure = ax1.scatter(x['Adventure'], y['Adventure'], marker='o', color=serie_cores['vermelho'], s=50, alpha=0.5)
+Comedy = ax1.scatter(x['Comedy'], y['Comedy'], marker='o', color=serie_cores['verde'], s=50, alpha=0.5)
+Drama = ax1.scatter(x['Drama'], y['Drama'], marker='o', color=serie_cores['rosa'], s=50, alpha=0.5)
+Horror = ax1.scatter(x['Horror'], y['Horror'], marker='o', color=serie_cores['laranja'], s=50, alpha=0.5)
+Romance = ax1.scatter(x['Romance'], y['Romance'], marker='o', color=serie_cores['marrom'], s=50, alpha=0.5)
+Thriller = ax1.scatter(x['Thriller'], y['Thriller'], marker='o', color=serie_cores['roxo'], s=50, alpha=0.5)
+
+ax1.legend( (Action, Adventure, Comedy, Drama, Horror, Romance, Thriller),
+           ('Action', 'Adventure', 'Comedy', 'Drama', 'Horror', 'Romance', 'Thriller'),
+           loc = 'lower left',
+           ncol=1,
+           fontsize=8
+    )
+
+plt.show()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
