@@ -21,7 +21,7 @@ elif getpass.getuser() == "pedro-salj":
     caminho_base = Path(r'C:\Users\pedro-salj\Desktop\Pedro Nakashima\Códigos, Dados, Documentação e Cheat Sheets')
 
 """ Mudar diretório para dados Siconfi"""
-caminho_wd = caminho_base / 'Dados' / 'Cursos e Livros' / 'Python Time Series (Udemy)' / 'Data'
+caminho_wd = caminho_base / 'Dados' / 'Cursos e Livros' / 'Python for time series (Udemy)' / 'Data'
 print('\nDiretório anterior:\n', os.getcwd())
 os.chdir(caminho_wd)
 print('\nDiretório atual:\n', os.getcwd())
@@ -120,51 +120,91 @@ airline[['Thousands of Passengers', 'EWMA-12']].plot()
 
 airline[['Thousands of Passengers', 'EWMA-12']].plot(figsize=(10,8))
 
+# HOLT WINTERS
 
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
 
+df = pd.read_csv('airline_passengers.csv', index_col='Month', parse_dates=True)
+df = df.dropna()
 
+print(df.index)
+# freq = None
 
+""" O passo abaixo é fundamental
+para se rodar statsmodels """
+df.index.freq = 'MS' # MS = Monthly Start
 
+print(df.index)
+# freq = MS
 
+print(df.head())
 
+""" Simple Exponential Smoothing """
 
+from statsmodels.tsa.holtwinters import SimpleExpSmoothing
 
+span = 12
+alpha = 2/(span+1)
 
+df['EWMA12'] = df['Thousands of Passengers'].ewm(alpha=alpha, adjust=False).mean()
 
+"""
+Simple Exponential Smoothing
+com Statsmodels
+"""
+model = SimpleExpSmoothing(df['Thousands of Passengers'])
 
+fitted_model = model.fit(smoothing_level=alpha, optimized=False)
 
+print(fitted_model.fittedvalues.shift(-1))
 
+df['SES12'] = fitted_model.fittedvalues.shift(-1)
 
+print(df.head())
 
+df.plot()
 
+"""
+Double Exponential Smoothing
+=
+Modelo de Holt
+"""
+from statsmodels.tsa.holtwinters import ExponentialSmoothing
 
+df['DES_add_12'] = ExponentialSmoothing(df['Thousands of Passengers'], trend='add').fit().fittedvalues.shift(-1)
 
+print(df.head())
 
+print(df.columns)
 
+df[['Thousands of Passengers', 'SES12', 'DES_add_12']].plot()
 
+df[['Thousands of Passengers', 'SES12', 'DES_add_12']].iloc[:24].plot(figsize=(12,5)) # Primeiros 2 anos (24 meses)
 
+df[['Thousands of Passengers', 'SES12', 'DES_add_12']].iloc[-24:].plot(figsize=(12,5)) # Últimos 2 anos (24 meses)
 
+df['DES_mul_12'] = ExponentialSmoothing(df['Thousands of Passengers'], trend='mul').fit().fittedvalues.shift(-1)
 
+print(df.columns)
 
+df[['Thousands of Passengers', 'SES12', 'DES_add_12', 'DES_mul_12']].iloc[-24:].plot(figsize=(12,5)) # Últimos 2 anos (24 meses)
+df[['Thousands of Passengers', 'SES12', 'DES_add_12', 'DES_mul_12']].iloc[:24].plot(figsize=(12,5)) # Primeiros 2 anos (24 meses)
 
+"""
+Triple Exponential Smoothing
+=
+Modelo de Holt-Winters
+"""
 
+df['TES_mul_12'] = ExponentialSmoothing(df['Thousands of Passengers'], trend='mul', seasonal='mul', seasonal_periods=12).fit().fittedvalues
 
+df.plot()
 
+print(df.columns)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+df[['Thousands of Passengers', 'DES_mul_12', 'TES_mul_12']].plot(figsize=(12,6)) # Todos os dados
+df[['Thousands of Passengers', 'DES_mul_12', 'TES_mul_12']].iloc[:24].plot(figsize=(12,6)) # 2 primeiros anos (começo dos dados) => TES pior que DES
+df[['Thousands of Passengers', 'DES_mul_12', 'TES_mul_12']].iloc[-24:].plot(figsize=(12,6)) # 2 últimos anos (final dos dados) => TES melhor que DES
 
