@@ -10,6 +10,7 @@ ftp://ftp.mtps.gov.br/pdet/microdados/
 
 """
 
+
 #############################
 ##### CONFIGURAÇÃO GERAL ####
 #############################
@@ -26,12 +27,331 @@ elif getpass.getuser() == "pedro-salj":
     caminho_base = Path(r'C:\Users\pedro-salj\Desktop\Pedro Nakashima\Códigos, Dados, Documentação e Cheat Sheets')
 
 """ Mudar diretório para dados Siconfi"""
-caminho_wd = caminho_base / 'Dados' / 'trabalho' / 'caged2020' / 'temp'
+caminho_wd = caminho_base / 'Dados' / 'trabalho' / 'caged_vinculos' / 'temp'
 print('\nDiretório anterior:\n', os.getcwd())
 os.chdir(caminho_wd)
 print('\nDiretório atual:\n', os.getcwd())
 
+##########################################################################################################
+##########################################################################################################
+##########################################################################################################
+
+def gera_df():
+
+    import pandas as pd
+    df_estados_siglas = pd.read_excel(caminho_base / 'dados' / 'estados.xlsx', sheet_name='estados')
+    
+    import glob
+    import pandas as pd
+    df_estados_siglas = pd.read_excel(caminho_base / 'dados' / 'estados.xlsx', sheet_name='estados')
+    lista = []
+    
+    for arq_num, arq_nome in enumerate(glob.glob('*.txt')):
+        #print(arq_num, arq_nome)
+        
+        data = pd.to_datetime(arq_nome.replace('.txt','')[-6:], format='%Y%m', errors='ignore')
+        
+        print(data)
+        
+        if data.year >= 2020:
+            df = pd.read_csv(arq_nome, header=0, sep=';', decimal=',', quotechar='"', skiprows=0)
+        else:
+            df = pd.read_csv(arq_nome, header=0, sep=';', decimal=',', quotechar='"', skiprows=0, encoding = 'latin')
+        
+        df = df.rename(columns = {'uf': 'uf_cod_ibge', 'UF': 'uf_cod_ibge'})
+        df = pd.merge(df, df_estados_siglas, how='left', on='uf_cod_ibge')
+        ###################################################################################################
+        df_agregacao_uf = df.groupby(['seção', 'uf_sigla'])['saldomovimentação'].sum().to_frame()
+        
+        df_agregacao_uf = df_agregacao_uf.reset_index()
+        
+        df_agregacao_br = df_agregacao_uf.groupby(['seção'])['saldomovimentação'].sum().to_frame()
+        
+        df_agregacao_br = df_agregacao_br.reset_index()
+        
+        df_agregacao_br['nova_var'] = 'sm_' + df_agregacao_br['seção'] + '_BR'
+        
+        del df_agregacao_br['seção']
+        
+        df_agregacao_br = df_agregacao_br.set_index('nova_var')
+        
+        df_agregacao_br = df_agregacao_br.T
+        
+        df_agregacao_uf['nova_var'] = 'sm_' + df_agregacao_uf['seção'] + '_' + df_agregacao_uf['uf_sigla']
+        
+        del df_agregacao_uf['seção'], df_agregacao_uf['uf_sigla']
+        
+        df_agregacao_uf = df_agregacao_uf.set_index('nova_var')
+        
+        df_agregacao_uf = df_agregacao_uf.T
+        
+        df_agregacao = pd.merge(df_agregacao_br, df_agregacao_uf, left_index=True, right_index=True)
+        
+        data = pd.to_datetime(arq_nome.replace('.txt','')[-6:], format='%Y%m', errors='ignore')
+        
+        df_agregacao.index = [data]
+        
+        df_agregacao.index.freq = 'MS' # MS = Monthly Start
+        
+        if arq_num == 0:
+            df_final = df_agregacao.copy()
+        else:
+            df_final = df_final.append(df_agregacao)
+    
+    ##################
+    return df_final
+
+df = gera_df()
+
+
 import pandas as pd
+arq_nome = 'CAGEDMOV201001.txt'
+
+data = pd.to_datetime(arq_nome.replace('.txt','')[-6:], format='%Y%m', errors='ignore')
+
+if data.year < 2020:
+    print('é menor que 2020 !!!')
+
+print(data)
+df = pd.read_csv(arq_nome, header=0, sep=';', decimal=',', quotechar='"', skiprows=0, encoding = 'latin')
+print(df.dtypes)
+df = df.rename(columns = {'uf': 'uf_cod_ibge', 'UF': 'uf_cod_ibge'})
+
+
+print(df.dtypes)
+
+##########################################################################################################
+##########################################################################################################
+##########################################################################################################
+
+import pandas as pd
+df_estados_siglas = pd.read_excel(caminho_base / 'dados' / 'estados.xlsx', sheet_name='estados')
+
+##########################################################################################################
+##########################################################################################################
+##########################################################################################################
+
+def cgd_agrega(coluna):
+    import glob
+    import pandas as pd
+    df_estados_siglas = pd.read_excel(caminho_base / 'dados' / 'estados.xlsx', sheet_name='estados')
+    lista = []
+    arq_num = 0
+    for arq_nome in glob.glob('*.txt'):
+        arq_num += 1
+        print(arq_nome)
+        
+        data = pd.to_datetime(arq_nome.replace('.txt','')[-6:], format='%Y%m', errors='ignore')
+        
+        print(data)
+        
+        df = pd.read_csv(arq_nome, header=0, sep=';', decimal=',', quotechar='"', skiprows=0)
+        
+        df = df.rename(columns = {'uf': 'uf_cod_ibge'})
+        df = pd.merge(df, df_estados_siglas, how='left', on='uf_cod_ibge')
+        
+        df_agregacao = df.groupby('uf_sigla')[coluna].sum().to_frame()
+        df_agregacao = df_agregacao.T
+        df_agregacao['br'] = df_agregacao.sum(axis=1)
+        
+        data = pd.to_datetime(data)
+        
+        df_agregacao['data'] = data
+        df_agregacao = df_agregacao.set_index('data')
+        df_agregacao.index.freq = 'MS' # MS = Monthly Start
+        print(df_agregacao.index)
+        
+        if arq_num == 1:
+            df_final = df_agregacao.copy()
+        else:
+            df_final = df_final.append(df_agregacao)
+        
+    #
+    return df_final
+        
+
+
+df = cgd_agrega(coluna = 'saldomovimentação')
+
+##########################################################################################################
+##########################################################################################################
+##########################################################################################################
+
+import pandas as pd
+df_estados_siglas = pd.read_excel(caminho_base / 'dados' / 'estados.xlsx', sheet_name='estados')
+
+arq_nome = 'CAGEDMOV202001.txt'
+data = pd.to_datetime(arq_nome.replace('.txt','')[-6:], format='%Y%m', errors='ignore')
+
+print(data)
+
+df = pd.read_csv(arq_nome, header=0, sep=';', decimal=',', quotechar='"', skiprows=0)
+
+df = df.rename(columns = {'uf': 'uf_cod_ibge'})
+df = pd.merge(df, df_estados_siglas, how='left', on='uf_cod_ibge')
+
+df_agregacao_uf = df.groupby(['seção', 'uf_sigla'])['saldomovimentação'].sum().to_frame()
+
+df_agregacao_uf = df_agregacao_uf.reset_index()
+
+df_agregacao_br = df_agregacao_uf.groupby(['seção'])['saldomovimentação'].sum().to_frame()
+
+df_agregacao_br = df_agregacao_br.reset_index()
+
+df_agregacao_br['nova_var'] = 'sm_' + df_agregacao_br['seção'] + '_BR'
+
+del df_agregacao_br['seção']
+
+df_agregacao_br = df_agregacao_br.set_index('nova_var')
+
+df_agregacao_br = df_agregacao_br.T
+
+df_agregacao_uf['nova_var'] = 'sm_' + df_agregacao_uf['seção'] + '_' + df_agregacao_uf['uf_sigla']
+
+del df_agregacao_uf['seção'], df_agregacao_uf['uf_sigla']
+
+df_agregacao_uf = df_agregacao_uf.set_index('nova_var')
+
+df_agregacao_uf = df_agregacao_uf.T
+
+df_agregacao = pd.merge(df_agregacao_br, df_agregacao_uf, left_index=True, right_index=True)
+
+data = pd.to_datetime(arq_nome.replace('.txt','')[-6:], format='%Y%m', errors='ignore')
+
+df_agregacao.index = [data]
+
+df_agregacao.index.freq = 'MS' # MS = Monthly Start
+
+
+
+
+
+
+
+df_agregacao = df_agregacao_br.append(df_agregacao_uf)
+
+
+df_agregacao = pd.merge(df_agregacao_uf, df_agregacao_br, how='left', on='uf_cod_ibge')
+
+
+
+df_agregacao2 = df_agregacao.unstack().reset_index()
+
+df_agregacao2.columns = df.columns.reset_index()
+
+print(df_agregacao2.index)
+print(df_agregacao2.columns)
+
+df2 = df_agregacao.reset_index(col_level=1)
+del df2['index']
+df2['nova_var'] = df2['seção'] + '_' + df2['uf_sigla']
+del df2['seção'], df2['uf_sigla']
+df2 = df2.set_index('nova_var')
+df2 = df2.T
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+df2 = df[['CID','FE', 'FID']].groupby(by=['CID','FE']).count().unstack().reset_index()
+
+
+df_agregacao = df_agregacao.T
+df_agregacao['br'] = df_agregacao.sum(axis=1)
+
+data = pd.to_datetime(data)
+
+df_agregacao['data'] = data
+df_agregacao = df_agregacao.set_index('data')
+df_agregacao.index.freq = 'MS' # MS = Monthly Start
+print(df_agregacao.index)
+
+df1 = df_agregacao.copy()
+
+
+
+
+##########################################################################################################
+##########################################################################################################
+##########################################################################################################
+import pandas as pd
+arq_nome = 'CAGEDMOV202002.txt'
+data = pd.to_datetime(arq_nome.replace('.txt','')[-6:], format='%Y%m', errors='ignore')
+
+print(data)
+
+df = pd.read_csv(arq_nome, header=0, sep=';', decimal='.', quotechar='"', skiprows=0)
+
+print(df.dtypes)
+
+ax = df['salário'].plot.hist(bins=100, range=(0, 10000))
+
+ax.ticklabel_format(useOffset=False, style='plain')
+
+
+
+cond1 = df['salário'] > 1000
+df = df.loc[cond1,:]
+
+df['salário'].plot.hist(bins=20, edgecolor='k').autoscale(enable=True, axis='both')
+
+
+movies['CriticRating'].plot.hist()
+
+df = df.rename(columns = {'uf': 'uf_cod_ibge'})
+df = pd.merge(df, df_estados_siglas, how='left', on='uf_cod_ibge')
+del df_estados_siglas
+
+df_agregacao = df.groupby('uf_sigla')['saldomovimentação'].sum().to_frame()
+df_agregacao = df_agregacao.T
+df_agregacao['br'] = df_agregacao.sum(axis=1)
+
+data = pd.to_datetime(data)
+
+df_agregacao['data'] = data
+df_agregacao = df_agregacao.set_index('data')
+df_agregacao.index.freq = 'MS' # MS = Monthly Start
+print(df_agregacao.index)
+
+df2 = df_agregacao.copy()
+
+dft = df1.append(df2)
+
+
+
 #############################
 #############################
 #############################
@@ -59,26 +379,6 @@ def gera_serie():
 
 soma = gera_serie()
 
-##########################################################################################################
-##########################################################################################################
-
-caminho_mun = caminho_base / 'Dados'
-
-df_estados = pd.read_excel(caminho_mun / 'estados.xlsx', sheet_name='estados')
-
-print(df_estados.dtypes)
-print(df_estados['uf_cod_ibge'].nunique())
-
-
-##########################################################################################################
-##########################################################################################################
-
-caminho_mun = caminho_base / 'Dados'
-
-df_municipios = pd.read_excel(caminho_mun / 'municipios.xlsx', sheet_name='municipios')
-
-print(df_municipios.dtypes)
-print(df_municipios['mun_cod_ibge'].nunique())
 
 ##########################################################################################################
 ##########################################################################################################
@@ -303,7 +603,26 @@ with lzma.open("CAGEDMOV202001.7z") as f:
 
 
 
+colunas2020 = ['competência',
+           'município',
+           'seção',
+           'subclasse',
+           'saldomovimentação',
+           'cbo2002ocupação',
+           'graudeinstrução',
+           'idade',
+           'horascontratuais',
+           'raçacor',
+           'sexo',
+           'tipoempregador',
+           'tipomovimentação',
+           'indtrabintermitente',
+           'indtrabparcial',
+           'salário']
 
+col_excl_2020 = ['']
+
+print(colunas)
 
 
 
