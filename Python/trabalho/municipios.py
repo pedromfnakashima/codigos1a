@@ -73,3 +73,32 @@ print(df_municipios.columns)
 df_municipios = df_municipios[['mun_cod_ibge', 'mun_cod_tse', 'mun_nome', 'capital']]
 
 df_municipios.to_excel('municipios.xlsx', sheet_name='municipios', engine='xlsxwriter', index=False)  
+
+
+###############################################
+####### capitais ##############################
+###############################################
+
+pasta = caminho_wd = caminho_base / 'Dados'
+municipios = pd.read_excel(pasta / 'municipios.xlsx', sheet_name='municipios', skiprows=0, dtype={'capital': np.bool})
+
+capitais = municipios.loc[municipios['capital']==True,]
+capitais.sort_values(['mun_cod_ibge'], inplace=True)
+
+capitais.index = range(len(capitais.index))
+capitais.drop(['mun_cod_tse', 'capital'], axis=1, inplace=True)
+
+capitais.to_excel('capitais.xlsx', sheet_name='capitais', engine='xlsxwriter', index=False)  
+
+
+
+
+
+
+
+
+
+
+
+
+

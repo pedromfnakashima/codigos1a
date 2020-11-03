@@ -33,10 +33,10 @@ print('\nDiretório atual:\n', os.getcwd())
 
 linhas = []
 num_linhas = 1000
-with open('CAGEDMOV200701.txt', 'r') as rf:
+with open('CAGEDMOV201206.txt', 'r') as rf:
     for linha in range(num_linhas):
         linhas.append(rf.readline())
-with open('CAGEDMOV200701_amostra.txt', 'a') as wf:
+with open('CAGEDMOV201206_amostra.txt', 'a') as wf:
     for linha in linhas:
         
         wf.write(linha)

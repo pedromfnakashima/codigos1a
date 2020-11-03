@@ -38,37 +38,38 @@ def cgd_agrega():
     import pandas as pd
     
     for arq_num, arq_nome in enumerate(glob.glob('*.txt')):
-
+        
+        print(f'Processando {arq_nome}')
         
         dic_colunas_tipos_0 = {'competência':'string',
-                               'município':'string',
-                               'cbo2002ocupação':'string',
-                               'subclasse':'string',
-                               'classe':'string',
+                               'município':pd.Int64Dtype(),
+                               'cbo2002ocupação':pd.Int64Dtype(),
+                               'subclasse':pd.Int64Dtype(),
+                               'classe':pd.Int64Dtype(),
                                'horascontratuais':'float64',
-                               'graudeinstrução':'int64',
-                               'idade':'int64',
+                               'graudeinstrução':pd.Int64Dtype(),
+                               'idade':pd.Int64Dtype(),
                                'salário':'float64',
-                               'saldomovimentação':'string'}
+                               'saldomovimentação':pd.Int64Dtype()}
         
         dic_colunas_tipos_1 = {'Competência Declarada':'string',
-                               'Município':'int64',
-                               'CBO 2002 Ocupação':'string',
-                               'CNAE 2.0 Subclas':'string',
-                               'CNAE 2.0 Classe':'string',
+                               'Município':pd.Int64Dtype(),
+                               'CBO 2002 Ocupação':pd.Int64Dtype(),
+                               'CNAE 2.0 Subclas':pd.Int64Dtype(),
+                               'CNAE 2.0 Classe':pd.Int64Dtype(),
                                'Qtd Hora Contrat':'float64',
-                               'Grau Instrução':'int64',
-                               'Idade':'int64',
+                               'Grau Instrução':pd.Int64Dtype(),
+                               'Idade':pd.Int64Dtype(),
                                'Salário Mensal':'float64',
-                               'Saldo Mov':'int64'}
+                               'Saldo Mov':pd.Int64Dtype()}
         
         data = pd.to_datetime(arq_nome.replace('.txt','')[-6:], format='%Y%m', errors='ignore')
-        print(data)
+
         # IMPORTA DADOS
         if data.year >= 2020:
-            df = pd.read_csv(arq_nome, header=0, sep=';', decimal=',', quotechar='"', skiprows=0, dtype=dic_colunas_tipos_0)
+            df = pd.read_csv(arq_nome, header=0, sep=';', decimal=',', quotechar='"', skiprows=0, dtype=dic_colunas_tipos_0, na_values = ['{ñ', '{ñ c','00000-1', '0000-1', '000-1', '{с class}'])
         else:
-            df = pd.read_csv(arq_nome, header=0, sep=';', decimal=',', quotechar='"', skiprows=0, encoding = 'latin', dtype=dic_colunas_tipos_1)
+            df = pd.read_csv(arq_nome, header=0, sep=';', decimal=',', quotechar='"', skiprows=0, encoding = 'latin', dtype=dic_colunas_tipos_1, na_values = ['{ñ', '{ñ c','00000-1', '0000-1', '000-1', '{с class}'])
 
         dic_colunas = {'Competência Declarada':'competência',
                        'Município':'município',
@@ -81,17 +82,22 @@ def cgd_agrega():
                        'Salário Mensal':'salário',
                        'Saldo Mov':'saldomovimentação'}
         
-        li_colunas = list(dic_colunas.values())
-        
         df = df.rename(columns = dic_colunas)
         
-        df = df.loc[:,li_colunas]
+        li_colunas = list(dic_colunas.values())
+        
+        if data.year < 2020:
+            li_colunas.append('classe')
+        
+        df = df[li_colunas]
         
         # VAI EMPILHANDO OS
         if arq_num == 0:
             df_final = df.copy()
         else:
             df_final = df_final.append(df)
+        
+        print(f'  -> {arq_nome} processado.')
         
     return df_final
 
@@ -214,7 +220,8 @@ def cgd_agrega_antigo():
 
     for arq_num, arq_nome in enumerate(glob.glob('*.txt')):
         # GERA DATA NO FORMATO DATETIME
-        print(arq_num, arq_nome)
+        # print(arq_num, arq_nome)
+        print(f'Processando arquivo {arq_nome} ...')
         # IMPORTA DADOS
         df = pd.read_csv(arq_nome, header=0, sep=';', decimal=',', quotechar='"', skiprows=0, encoding = 'latin', dtype={'Competência Movimentação':'string'})
         df = df.rename(columns = {'uf':'uf_cod_ibge', 'UF':'uf_cod_ibge', 'Saldo Mov':'sm', 'saldomovimentação':'sm'})
@@ -238,6 +245,8 @@ def cgd_agrega_antigo():
             df_final = soma.copy()
         else:
             df_final = df_final.append(soma)
+        
+        print(f'   {arq_nome} processado.')
     
     return df_final
     
@@ -247,8 +256,97 @@ df2 = cgd_agrega_antigo()
 ##############################################################################
 ##############################################################################
 
+globals().clear()
+""" Mudar diretório """
+import os
+from pathlib import Path
+import getpass
+caminho_base = Path(r'D:\Códigos, Dados, Documentação e Cheat Sheets')
+
+caminho_wd = caminho_base / 'Dados' / 'trabalho' / 'caged_vinculos' / 'microdados' / 'csv'
+os.chdir(caminho_wd)
+
 import pandas as pd
-arq_nome = 'CAGEDMOV200701.txt'
+arq_nome = 'CAGEDMOV201206.txt'
+
+df = pd.read_csv(arq_nome, header=0, sep=';', decimal=',', quotechar='"', skiprows=0, encoding = 'latin', na_values = ['{ñ'])
+
+dic_colunas_tipos_0 = {'competência':'string',
+                       'município':pd.Int64Dtype(),
+                       'cbo2002ocupação':pd.Int64Dtype(),
+                       'subclasse':pd.Int64Dtype(),
+                       'classe':pd.Int64Dtype(),
+                       'horascontratuais':'float64',
+                       'graudeinstrução':pd.Int64Dtype(),
+                       'idade':pd.Int64Dtype(),
+                       'salário':'float64',
+                       'saldomovimentação':pd.Int64Dtype()}
+
+dic_colunas_tipos_1 = {'Competência Declarada':'string',
+                       'Município':pd.Int64Dtype(),
+                       'CBO 2002 Ocupação':pd.Int64Dtype(),
+                       'CNAE 2.0 Subclas':pd.Int64Dtype(),
+                       'CNAE 2.0 Classe':pd.Int64Dtype(),
+                       'Qtd Hora Contrat':'float64',
+                       'Grau Instrução':pd.Int64Dtype(),
+                       'Idade':pd.Int64Dtype(),
+                       'Salário Mensal':'float64',
+                       'Saldo Mov':pd.Int64Dtype()}
+
+data = pd.to_datetime(arq_nome.replace('.txt','')[-6:], format='%Y%m', errors='ignore')
+
+if data.year >= 2020:
+    df = pd.read_csv(arq_nome, header=0, sep=';', decimal=',', quotechar='"', skiprows=0, dtype=dic_colunas_tipos_0, na_values = ['{ñ','00000-1', '0000-1'])
+else:
+    df = pd.read_csv(arq_nome, header=0, sep=';', decimal=',', quotechar='"', skiprows=0, encoding = 'latin', dtype=dic_colunas_tipos_1, na_values = ['{ñ','00000-1', '0000-1'])
+
+print(df.dtypes)
+
+dic_colunas = {'Competência Declarada':'competência',
+               'Município':'município',
+               'CBO 2002 Ocupação':'cbo2002ocupação',
+               'CNAE 2.0 Subclas':'subclasse',
+               'CNAE 2.0 Classe':'classe',
+               'Qtd Hora Contrat':'horascontratuais',
+               'Grau Instrução':'graudeinstrução',
+               'Idade':'idade',
+               'Salário Mensal':'salário',
+               'Saldo Mov':'saldomovimentação'}
+
+li_colunas = list(dic_colunas.values())
+
+df = df.rename(columns = dic_colunas)
+
+if data.year < 2020:
+    li_colunas.append('classe')
+
+df = df[li_colunas]
+
+
+
+
+#print(df.dtypes)
+print(df['subclasse'].value_counts())
+print(df['subclasse'].nunique())
+
+
+
+
+
+
+
+
+##############################################################################
+##############################################################################
+##############################################################################
+
+import pandas as pd
+arq_nome = '2020_1_teste.txt'
+
+#df = pd.read_csv(arq_nome, header=0, sep=';', decimal=',', quotechar='"', skiprows=0, encoding = 'latin', na_values = ['{ñ'])
+
+#print(df.dtypes)
+#print(df['Grau Instrução'].value_counts())
 
 dic_colunas_tipos_0 = {'competência':'string',
                        'município':'string',
@@ -256,29 +354,29 @@ dic_colunas_tipos_0 = {'competência':'string',
                        'subclasse':'string',
                        'classe':'string',
                        'horascontratuais':'float64',
-                       'graudeinstrução':'int64',
-                       'idade':'int64',
-                       'salário':'float64',
-                       'saldomovimentação':'string'}
+                       'graudeinstrução':pd.Int64Dtype(),
+                       'idade':pd.Int64Dtype(),
+                       #'salário':'float64',
+                       'saldomovimentação':pd.Int64Dtype()}
 
 dic_colunas_tipos_1 = {'Competência Declarada':'string',
-                       'Município':'int64',
+                       'Município':'string',
                        'CBO 2002 Ocupação':'string',
                        'CNAE 2.0 Subclas':'string',
                        'CNAE 2.0 Classe':'string',
                        'Qtd Hora Contrat':'float64',
-                       'Grau Instrução':'int64',
-                       'Idade':'int64',
+                       'Grau Instrução':pd.Int64Dtype(),
+                       'Idade':pd.Int64Dtype(),
                        'Salário Mensal':'float64',
-                       'Saldo Mov':'int64'}
+                       'Saldo Mov':pd.Int64Dtype()}
 
 data = pd.to_datetime(arq_nome.replace('.txt','')[-6:], format='%Y%m', errors='ignore')
 print(data)
 # IMPORTA DADOS
 if data.year >= 2020:
-    df = pd.read_csv(arq_nome, header=0, sep=';', decimal=',', quotechar='"', skiprows=0, dtype=dic_colunas_tipos_0)
+    df = pd.read_csv(arq_nome, header=0, sep=';', decimal='.', quotechar='"', skiprows=0, dtype=dic_colunas_tipos_0, na_values = ['{ñ','00000-1'])
 else:
-    df = pd.read_csv(arq_nome, header=0, sep=';', decimal=',', quotechar='"', skiprows=0, encoding = 'latin', dtype=dic_colunas_tipos_1)
+    df = pd.read_csv(arq_nome, header=0, sep=';', decimal=',', quotechar='"', skiprows=0, encoding = 'latin', dtype=dic_colunas_tipos_1, na_values = ['{ñ','00000-1'])
 
 #df = pd.read_csv(arq_nome, header=0, sep=';', decimal=',', quotechar='"', skiprows=0, encoding = 'latin', dtype={'Competência Movimentação':'string'})
 #df = pd.read_csv(arq_nome, header=0, sep=';', decimal=',', quotechar='"', skiprows=0, dtype={'Competência Movimentação':'string'})
@@ -300,8 +398,17 @@ li_colunas = list(dic_colunas.values())
 
 df = df.rename(columns = dic_colunas)
 
-df = df.loc[:,li_colunas]
 
+
+if data.year < 2020:
+    li_colunas.append('classe')
+
+df = df[li_colunas]
+
+
+
+print(df.dtypes)
+print(df['graudeinstrução'].value_counts())
 
 
 
