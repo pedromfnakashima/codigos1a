@@ -117,8 +117,9 @@ def processa_arquivos_zip(arquivo = 'todos', caminho = os.getcwd()):
         
     return novo_df
 
-ca2018_rec_orc = processa_arquivos_zip(arquivo='2018_maior.zip',
-                                           caminho=r'D:\Códigos, Dados, Documentação e Cheat Sheets\Dados\Siconfi\Contas Anuais - Municípios\Receitas Orçamentárias')
+pasta = caminho_base / 'Dados' / 'Siconfi' / 'Contas Anuais - Municípios' / 'Receitas Orçamentárias'
+ca2018_rec_orc = processa_arquivos_zip(arquivo='2018.zip',
+                                           caminho=pasta)
 
 ca2018_rec_orc.rename(columns={'Cod.IBGE':'mun_cod_ibge'}, inplace=True)
 ca2018_rec_orc = ca2018_rec_orc.merge(municipios, how='left', left_on='mun_cod_ibge', right_on='mun_cod_ibge')
