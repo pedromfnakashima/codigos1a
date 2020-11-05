@@ -131,6 +131,9 @@ ca2018_rec_orc.drop(['capital'], axis=1, inplace=True)
 ######################################
 
 '''
+
+RECEITAS ORIUNDAS DA ATIVIDADE ECONÔMICA
+
 Despesa LIQUIDADA
 Valor na coluna :
 
@@ -155,6 +158,87 @@ Conta: 1.1.1.0.00.0.0 - Impostos
 Colunas: Receitas Brutas Realizadas
 Variável: imp
 '''
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Impostos
+cond1 = ca2018_rec_orc['Conta'].str.contains('1.1.1.0.00.0.0 - Impostos', case=False)
+cond2 = ca2018_rec_orc['Coluna'].str.contains('bruta', case=False)
+df_impostos = ca2018_rec_orc.loc[cond1, ['mun_nome', 'Valor', 'Coluna']]
+
+
+
+df_impostos = df_impostos.merge(capitais, how='outer', left_on='mun_nome', right_on='mun_nome')
+df_impostos.rename(columns={'Valor': 'impostos'}, inplace=True)
+
+# Receita Patrimonial
+
+
+
+cond1 = ca2018_rec_orc['Conta'].str.contains('1.3.0.0.00.0.0 - Receita Patrimonial', case=False)
+cond2 = ca2018_rec_orc['Coluna'].str.contains('bruta', case=False)
+df_filtro = ca2018_rec_orc.loc[cond1, ['mun_nome', 'Valor', 'Coluna']]
+
+df_filtro = df_filtro.merge(capitais, how='outer', left_on='mun_nome', right_on='mun_nome')
+
+
+
+
+cond1 = df_filtro['Coluna'].str.contains('receitas', case=False)
+cond = cond1
+df_filtro.loc[cond,'rb'] = df_filtro['Valor']
+
+cond1 = df_filtro['Coluna'].str.contains('fundeb', case=False)
+cond = cond1
+df_filtro.loc[cond,'ded_fundeb'] = df_filtro['Valor']
+
+df_rb = df_filtro[['mun_nome', 'mun_cod_ibge', 'rb']]
+df_rb.dropna(inplace=True)
+
+df_ded_fundeb = df_filtro[['mun_nome', 'mun_cod_ibge', 'ded_fundeb']]
+df_ded_fundeb.dropna(inplace=True)
+
+df_rb = df_rb.merge(df_ded_fundeb, how='left', left_on='mun_cod_ibge', right_on='mun_cod_ibge')
+
+df_rb['final'] = df_rb['rb'] - df_rb['ded_fundeb']
+
+
+
+
+
+
+
+
+
+
+del df_filtro
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 cond1 = ca2018_rec_orc['Conta'].str.contains('1.1.1.0.00.0.0 - Impostos', case=False)
 cond2 = ca2018_rec_orc['Coluna'].str.contains('bruta', case=False)
