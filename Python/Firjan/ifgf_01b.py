@@ -150,8 +150,11 @@ Valores na coluna Conta:
 1.7.2.8.01.3.0 Cota-Parte do IPI - Municípios
 '''
 
+dic_ifgf_autonomia = {}
 
-# 1.1.1.0.00.0.0 - Impostos e deduções
+########################################
+# 1.1.1.0.00.0.0 - Impostos e deduções #
+########################################
 '''
 Valores nas colunas:
 Conta: 1.1.1.0.00.0.0 - Impostos
@@ -159,61 +162,128 @@ Colunas: Receitas Brutas Realizadas
 Variável: imp
 '''
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# Impostos
 cond1 = ca2018_rec_orc['Conta'].str.contains('1.1.1.0.00.0.0 - Impostos', case=False)
-cond2 = ca2018_rec_orc['Coluna'].str.contains('bruta', case=False)
-df_impostos = ca2018_rec_orc.loc[cond1, ['mun_nome', 'Valor', 'Coluna']]
-
-
-
-df_impostos = df_impostos.merge(capitais, how='outer', left_on='mun_nome', right_on='mun_nome')
-df_impostos.rename(columns={'Valor': 'impostos'}, inplace=True)
-
-# Receita Patrimonial
-
-
-
-cond1 = ca2018_rec_orc['Conta'].str.contains('1.3.0.0.00.0.0 - Receita Patrimonial', case=False)
-cond2 = ca2018_rec_orc['Coluna'].str.contains('bruta', case=False)
 df_filtro = ca2018_rec_orc.loc[cond1, ['mun_nome', 'Valor', 'Coluna']]
 
-df_filtro = df_filtro.merge(capitais, how='outer', left_on='mun_nome', right_on='mun_nome')
+#----------------------
+# Receita Bruta
+#----------------------
 
-
-
-
-cond1 = df_filtro['Coluna'].str.contains('receitas', case=False)
-cond = cond1
-df_filtro.loc[cond,'rb'] = df_filtro['Valor']
-
-cond1 = df_filtro['Coluna'].str.contains('fundeb', case=False)
-cond = cond1
-df_filtro.loc[cond,'ded_fundeb'] = df_filtro['Valor']
-
-df_rb = df_filtro[['mun_nome', 'mun_cod_ibge', 'rb']]
+cond1 = df_filtro['Coluna'].str.contains('Receitas Brutas', case=False)
+df_filtro.loc[cond1,'rb'] = df_filtro['Valor']
+df_rb = df_filtro[['mun_nome', 'rb']]
 df_rb.dropna(inplace=True)
 
-df_ded_fundeb = df_filtro[['mun_nome', 'mun_cod_ibge', 'ded_fundeb']]
+#----------------------
+# Deduções do Fundeb
+#----------------------
+
+cond1 = df_filtro['Coluna'].str.contains('fundeb', case=False)
+df_filtro.loc[cond1,'ded_fundeb'] = df_filtro['Valor']
+df_ded_fundeb = df_filtro[['mun_nome', 'ded_fundeb']]
 df_ded_fundeb.dropna(inplace=True)
 
-df_rb = df_rb.merge(df_ded_fundeb, how='left', left_on='mun_cod_ibge', right_on='mun_cod_ibge')
-
+#---------------------------------------------
+# Merge Receita Bruta com Deduções do Fundeb
+#---------------------------------------------
+df_rb = df_rb.merge(df_ded_fundeb, how='left', left_on='mun_nome', right_on='mun_nome')
+df_rb.fillna(0, inplace=True)
 df_rb['final'] = df_rb['rb'] - df_rb['ded_fundeb']
 
+# Ordena pelo nome do município
+df_rb.sort_values(by=['mun_nome'], inplace=True)
+
+# ----------------------------------------
+# Adiciona ao dicionário do IFGF
+# ----------------------------------------
+dic_ifgf_autonomia.update({'Impostos':df_rb[['mun_nome', 'final']]})
+
+########################################
+# 1.3.0.0.00.0.0 - Receita Patrimonial #
+########################################
+
+'''
+Valores nas colunas:
+Conta: 1.3.0.0.00.0.0 - Receita Patrimonial
+Colunas: Receitas Brutas Realizadas
+Variável: imp
+'''
+
+cond1 = ca2018_rec_orc['Conta'].str.contains('1.3.0.0.00.0.0 - Receita Patrimonial', case=False)
+df_filtro = ca2018_rec_orc.loc[cond1, ['mun_nome', 'Valor', 'Coluna']]
+
+#----------------------
+# Receita Bruta
+#----------------------
+
+cond1 = df_filtro['Coluna'].str.contains('Receitas Brutas', case=False)
+df_filtro.loc[cond1,'rb'] = df_filtro['Valor']
+df_rb = df_filtro[['mun_nome', 'rb']]
+df_rb.dropna(inplace=True)
+
+#----------------------
+# Deduções do Fundeb
+#----------------------
+
+cond1 = df_filtro['Coluna'].str.contains('fundeb', case=False)
+df_filtro.loc[cond1,'ded_fundeb'] = df_filtro['Valor']
+df_ded_fundeb = df_filtro[['mun_nome', 'ded_fundeb']]
+df_ded_fundeb.dropna(inplace=True)
+
+#---------------------------------------------
+# Merge Receita Bruta com Deduções do Fundeb
+#---------------------------------------------
+df_rb = df_rb.merge(df_ded_fundeb, how='left', left_on='mun_nome', right_on='mun_nome')
+df_rb.fillna(0, inplace=True)
+df_rb['final'] = df_rb['rb'] - df_rb['ded_fundeb']
+
+# Ordena pelo nome do município
+df_rb.sort_values(by=['mun_nome'], inplace=True)
+
+# ----------------------------------------
+# Adiciona ao dicionário do IFGF
+# ----------------------------------------
+dic_ifgf_autonomia.update({'Receita Patrimonial':df_rb[['mun_nome', 'final']]})
+
+
+############################################################
+############################################################
+##################### FAZENDO O LOOPING ####################
+############################################################
+############################################################
+
+'''
+RECEITAS ORIUNDAS DA ATIVIDADE ECONÔMICA
+
+Despesa LIQUIDADA
+Valor na coluna :
+
+Valores na coluna Conta:
+1.1.1.0.00.0.0 - Impostos
+1.3.0.0.00.0.0 - Receita Patrimonial
+1.4.0.0.00.0.0 - Receita Agropecuária
+1.5.0.0.00.0.0 - Receita Industrial
+1.6.0.0.00.0.0 - Receita de Serviços
+1.7.1.8.01.5.0 Cota-Parte do Imposto Sobre a Propriedade Territorial Rural
+1.7.1.8.06.0.0 Transferência Financeira do ICMS ¿ Desoneração ¿ L.C. Nº 87/96
+1.7.2.8.01.1.0 Cota-Parte do ICMS
+1.7.2.8.01.2.0 Cota-Parte do IPVA
+1.7.2.8.01.3.0 Cota-Parte do IPI - Municípios
+'''
+
+import pandas as pd
+
+df_colunas = pd.DataFrame(columns=['Coluna','DicEntrada'])
+
+
+nova_linha = {'Coluna':'Geo', 'physics':87, 'chemistry':92, 'algebra':97}
+
+
+linha1 = pd.Series({'Coluna':'1.1.1.0.00.0.0 - Impostos', 'DicEntrada':'impostos'}).to_frame()
+linha2 = pd.Series({'Coluna':'1.3.0.0.00.0.0 - Receita Patrimonial', 'DicEntrada':'recPat'}).to_frame()
+
+
+df_colunas = pd.DataFrame(linha1, linha1)
 
 
 
@@ -221,9 +291,27 @@ df_rb['final'] = df_rb['rb'] - df_rb['ded_fundeb']
 
 
 
+import pandas as pd
+
+data = {'name': ['Somu', 'Kiku', 'Amol', 'Lini'],
+	'physics': [68, 74, 77, 78],
+	'chemistry': [84, 56, 73, 69],
+	'algebra': [78, 88, 82, 87]}
+
+	
+#create dataframe
+df_marks = pd.DataFrame(data)
+print('Original DataFrame\n------------------')
+print(df_marks)
+
+new_row = {'name':'Geo', 'physics':87, 'chemistry':92, 'algebra':97}
+#append row to the dataframe
 
 
-del df_filtro
+
+
+
+
 
 
 
@@ -241,22 +329,106 @@ del df_filtro
 
 
 cond1 = ca2018_rec_orc['Conta'].str.contains('1.1.1.0.00.0.0 - Impostos', case=False)
-cond2 = ca2018_rec_orc['Coluna'].str.contains('bruta', case=False)
-df_filtro = ca2018_rec_orc.loc[cond1 & cond2, ['mun_nome', 'Valor']]
-
-df_filtro = df_filtro.merge(capitais, how='outer', left_on='mun_nome', right_on='mun_nome')
+str1 = '1.1.1.0.00.0.0 - Impostos'
+str_entrada_dic = str1[str1.find('-') + 2:]
 
 
 
 
 
 
+
+
+
+
+
+# gd: Gera Dados
+def gd_ifgfAutonomia():
+    
+
+
+
+
+
+
+
+
+
+
+dic_ifgf_autonomia = {}
+
+########################################
+# 1.1.1.0.00.0.0 - Impostos e deduções #
+########################################
+'''
+Valores nas colunas:
+Conta: 1.1.1.0.00.0.0 - Impostos
+Colunas: Receitas Brutas Realizadas
+Variável: imp
+'''
 
 cond1 = ca2018_rec_orc['Conta'].str.contains('1.1.1.0.00.0.0 - Impostos', case=False)
-cond2a = ca2018_rec_orc['Coluna'].str.contains('bruta', case=False)
-cond2b = ca2018_rec_orc['Coluna'].str.contains('fundeb', case=False)
-cond = cond1 & (cond2a | cond2b)# & cond3
-df_filtro = ca2018_rec_orc.loc[cond, ['mun_nome', 'mun_cod_ibge', 'Conta', 'Coluna', 'Valor']]
+df_filtro = ca2018_rec_orc.loc[cond1, ['mun_nome', 'Valor', 'Coluna']]
+
+#----------------------
+# Receita Bruta
+#----------------------
+
+cond1 = df_filtro['Coluna'].str.contains('Receitas Brutas', case=False)
+df_filtro.loc[cond1,'rb'] = df_filtro['Valor']
+df_rb = df_filtro[['mun_nome', 'rb']]
+df_rb.dropna(inplace=True)
+
+#----------------------
+# Deduções do Fundeb
+#----------------------
+
+cond1 = df_filtro['Coluna'].str.contains('fundeb', case=False)
+df_filtro.loc[cond1,'ded_fundeb'] = df_filtro['Valor']
+df_ded_fundeb = df_filtro[['mun_nome', 'ded_fundeb']]
+df_ded_fundeb.dropna(inplace=True)
+
+#---------------------------------------------
+# Merge Receita Bruta com Deduções do Fundeb
+#---------------------------------------------
+df_rb = df_rb.merge(df_ded_fundeb, how='left', left_on='mun_nome', right_on='mun_nome')
+df_rb.fillna(0, inplace=True)
+df_rb['final'] = df_rb['rb'] - df_rb['ded_fundeb']
+
+# Ordena pelo nome do município
+df_rb.sort_values(by=['mun_nome'], inplace=True)
+
+# ----------------------------------------
+# Adiciona ao dicionário do IFGF
+# ----------------------------------------
+dic_ifgf_autonomia.update({'Impostos':df_rb[['mun_nome', 'final']]})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
