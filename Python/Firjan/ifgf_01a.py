@@ -396,8 +396,6 @@ df_rb = df_rb.merge(df_ded_fundeb, how='left', left_on='mun_cod_ibge', right_on=
 
 df_rb['final'] = df_rb['rb'] - df_rb['ded_fundeb']
 
-
-
 '''
 VERIFICAR POR QUE NÃO HÁ DADOS DE RECEITAS DE IMPOSTOS DE
 BOA VISTA, PALMAS, SÃO PAULO, BRASÍLIA
@@ -421,23 +419,77 @@ cond3 = ca2018_rec_orc['mun_nome'].str.contains('TO-Palmas', case=False)
 cond = cond3
 df_filtro = ca2018_rec_orc.loc[cond, ['mun_nome', 'Conta', 'Coluna', 'Valor']]
 
-
-
-
-
 rreo2018_desp_função = processa_arquivos_zip(arquivo='2018.zip',
                                            caminho=r'D:\Códigos, Dados, Documentação e Cheat Sheets\Dados\Siconfi\Contas Anuais - Municípios\Despesas por Função')
 
+##############################################################
+# CUSTOS COM A ESTRUTURA ADMINISTRATIVA ######################
+##############################################################
+import pandas as pd
+import numpy as np
+pasta = caminho_wd = caminho_base / 'Dados'
+municipios = pd.read_excel(pasta / 'municipios.xlsx', sheet_name='municipios', skiprows=0, dtype={'capital': np.bool})
+
+
+pasta = caminho_base / 'Dados' / 'Siconfi' / 'Contas Anuais - Municípios' / 'Despesas por Função'
+ca2018_desp_função = processa_arquivos_zip(arquivo='2018.zip',
+                                           caminho=pasta)
+
+
+ca2018_desp_função.rename(columns={'Cod.IBGE':'mun_cod_ibge'}, inplace=True)
+ca2018_desp_função = ca2018_desp_função.merge(municipios, how='left', left_on='mun_cod_ibge', right_on='mun_cod_ibge')
+ca2018_desp_função = ca2018_desp_função[ca2018_desp_função['capital'] == True]
+ca2018_desp_função.drop(['capital'], axis=1, inplace=True)
 
 
 
+cond1 = ca2018_desp_função['Conta'].str.contains('01 - Legislativa', case=False)
+cond2a = ca2018_desp_função['Coluna'].str.contains('Despesas Liquidadas', case=False)
+#cond2b = ca2018_desp_função['Coluna'].str.contains('fundeb', case=False)
+#cond3 = ca2018_desp_função['mun_nome'].str.contains('belo', case=False)
+#cond = cond1 & (cond2a | cond2b) & cond3
+df_filtro = ca2018_desp_função.loc[cond1 & cond2a, ['mun_nome', 'Conta', 'Coluna', 'Valor']]
+
+'''
+Conta:
+01 - Legislativa
+02 - Judiciária
+03 - Essencial à Justiça
+04 - Administração
+
+'''
+
+##############################################################
+# RECEITA CORRENTE LÍQUIDA ###################################
+##############################################################
+import pandas as pd
+import numpy as np
+pasta = caminho_wd = caminho_base / 'Dados'
+municipios = pd.read_excel(pasta / 'municipios.xlsx', sheet_name='municipios', skiprows=0, dtype={'capital': np.bool})
+capitais = pd.read_excel(pasta / 'capitais.xlsx', sheet_name='capitais', skiprows=0, dtype={'capital': np.bool})
+
+
+pasta = caminho_base / 'Dados' / 'Siconfi' / 'RGF - Municípios' / 'Anexo 01 - Demonstrativo da Despesa Com Pessoal' / 'DTP e Apuração do Cumprimento do Limite Legal'
+rgf2018q3_apuracao = processa_arquivos_zip(arquivo='2018q3.zip',
+                                           caminho=pasta)
+
+rgf2018q3_apuracao.rename(columns={'Cod.IBGE':'mun_cod_ibge'}, inplace=True)
+rgf2018q3_apuracao = rgf2018q3_apuracao.merge(municipios, how='left', left_on='mun_cod_ibge', right_on='mun_cod_ibge')
+rgf2018q3_apuracao = rgf2018q3_apuracao[rgf2018q3_apuracao['capital'] == True]
+rgf2018q3_apuracao.drop(['capital'], axis=1, inplace=True)
+
+
+cond1 = rgf2018q3_apuracao['Conta'].str.contains('receita corrente líquida', case=False)
+#cond2 = ca2018_desp_função['Coluna'].str.contains('Despesas Liquidadas', case=False)
+df_filtro = rgf2018q3_apuracao.loc[cond1, ['mun_nome', 'Conta', 'Coluna', 'Valor']]
+df_filtro = df_filtro.groupby(['mun_nome']).first()
+df_filtro = df_filtro[['Valor']]
+df_filtro.rename(columns={'Valor':'RCL'}, inplace=True)
+
+
+capitais = capitais.merge(df_filtro, how='left', left_on='mun_nome', right_on='mun_nome')
 
 
 
-
-
-
-
-
-
+df_filtro = df_filtro.group
 
