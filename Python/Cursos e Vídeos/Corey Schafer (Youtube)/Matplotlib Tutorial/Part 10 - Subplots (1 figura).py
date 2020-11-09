@@ -9,19 +9,17 @@ globals().clear()
 from pathlib import Path
 import getpass
 if getpass.getuser() == "pedro":
-    print('Logado de casa')
     caminho = Path(r'D:\Códigos, Dados, Documentação e Cheat Sheets')
 elif getpass.getuser() == "pedro-salj":
-    print('Logado da salj-alems')
     caminho = Path(r'C:\Users\pedro-salj\Desktop\Pedro Nakashima\Códigos, Dados, Documentação e Cheat Sheets')
-
 
 import pandas as pd
 from matplotlib import pyplot as plt
 
 plt.style.use('seaborn')
 
-data = pd.read_csv(caminho / 'Cursos e Livros' / 'Corey Schafer - Youtube' / 'Matplotlib Tutorials' / 'Part 10' /'data.csv',
+pasta = caminho_base / 'Dados' / 'Cursos e Livros' / 'Corey Schafer - Youtube' / 'Matplotlib Tutorials' / 'Part 10'
+data = pd.read_csv(pasta / 'data.csv',
                        encoding = 'latin',
                        delimiter = ',',
                        decimal = ".")

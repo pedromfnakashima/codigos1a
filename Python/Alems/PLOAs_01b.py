@@ -11,10 +11,8 @@ import os
 from pathlib import Path
 import getpass
 if getpass.getuser() == "pedro":
-    print('\nLogado de casa')
     caminho_base = Path(r'D:\Códigos, Dados, Documentação e Cheat Sheets')
 elif getpass.getuser() == "pedro-salj":
-    print('\nLogado da salj-alems')
     caminho_base = Path(r'C:\Users\pedro-salj\Desktop\Pedro Nakashima\Códigos, Dados, Documentação e Cheat Sheets')
 
 ######################################
@@ -46,15 +44,15 @@ Despesa por órgão
 '''
 pasta = caminho_wd = caminho_base / 'Dados' / 'alems' / 'LOA, LDO - MS'
 df1 = pd.read_excel(pasta / 'LOAs.xlsx', sheet_name='Desp-Órgão-até2014', skiprows=0, na_values=['-'])
-df1 = df1[['LOA', 'Poder', 'Órgão', 'TOTAL']]
+df1 = df1[['Competência', 'Poder', 'Órgão', 'TOTAL', 'Projeto']]
 
 pasta = caminho_wd = caminho_base / 'Dados' / 'alems' / 'LOA, LDO - MS'
 df2 = pd.read_excel(pasta / 'LOAs.xlsx', sheet_name='Desp-Órgão-2015-', skiprows=0, na_values=['-'])
-df2 = df2[['LOA', 'Poder', 'Órgão', 'TOTAL']]
+df2 = df2[['Competência', 'Poder', 'Órgão', 'TOTAL', 'Projeto']]
 
 df2 = df2.append(df1)
 
-df2 = df2.sort_values(by=['LOA', 'Poder', 'Órgão'], ascending=[True, True, True])
+df2 = df2.sort_values(by=['Competência', 'Poder', 'Órgão'], ascending=[True, True, True])
 
 with pd.ExcelWriter(pasta / 'LOAs - Séries.xlsx', mode='a', engine="openpyxl") as writer:  
     df2.to_excel(writer, sheet_name='Desp_Tot_Orgão', index=False)

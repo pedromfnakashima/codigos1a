@@ -35,7 +35,8 @@ from matplotlib import pyplot as plt
 
 plt.style.use('seaborn')
 
-data = pd.read_csv('data.csv',
+pasta = caminho_base / 'Dados' / 'Cursos e Livros' / 'Corey Schafer - Youtube' / 'Matplotlib Tutorials' / 'Part 10'
+data = pd.read_csv(pasta / 'data.csv',
                        encoding = 'latin',
                        delimiter = ',',
                        decimal = ".")

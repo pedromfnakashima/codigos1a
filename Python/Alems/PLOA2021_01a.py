@@ -23,6 +23,9 @@ elif getpass.getuser() == "pedro-salj":
 
 ######################################
 
+pasta = caminho_wd = caminho_base / 'Dados' / 'alems' / 'LOA, LDO - MS'
+df1 = pd.read_excel(pasta / 'LOAs - Séries.xlsx', sheet_name='Desp_Tot_Orgão', skiprows=0, na_values=['-'])
+
 '''
 1. Evolução do orçamento de cada poder, em valores atuais.
 '''
@@ -31,36 +34,100 @@ import pandas as pd
 
 pasta = caminho_wd = caminho_base / 'Dados' / 'alems' / 'LOA, LDO - MS'
 df1 = pd.read_excel(pasta / 'LOAs - Séries.xlsx', sheet_name='Desp_Tot_Orgão', skiprows=0, na_values=['-'])
+df1['Submissão'] = df1['Competência'] - 1
 
-def orc_orgao(orgao):
-    
-    cond = df1['Órgão'] == orgao
-    filtro = df1.loc[cond,:]
-    filtro.set_index('LOA', inplace=True)
-    filtro.index.freq = 'AS'
-    filtro.drop(['Poder', 'Órgão'], axis=1, inplace=True)
-    
-    df_ipca['mês'] = df_ipca.index.month
-    df_ipca['ano'] = df_ipca.index.year
-    cond = df_ipca['mês'] == 10
-    df_ipca2 = df_ipca.loc[cond,:]
-    df_ipca2.set_index('ano', inplace=True)
-    df_ipca2.index.freq = 'AS'
-    df_ipca2.drop(['mês'], axis=1, inplace=True)
-    
-    filtro = filtro.merge(df_ipca2, how='left', left_index=True, right_index=True)
-    
-    atual = filtro.loc[filtro.index.max(), 'índice']
-    
-    filtro['deflator'] = atual / filtro['índice']
-    filtro['total2'] = filtro['TOTAL'] * filtro['deflator']
-    
-    return filtro.loc[:,'total2'].to_frame()
 
-del df_alems
+orgao = 'Assembleia Legislativa'
 
-df_alems = orc_orgao('Assembleia Legislativa')
-df_alems['total2'].plot()
+cond = df1['Órgão'] == orgao
+filtro = df1.loc[cond,:]
+
+filtro.drop(['Poder', 'Órgão'], axis=1, inplace=True)
+
+filtro = filtro.merge(df_ipca, how='left', left_on='Submissão', right_on='ano')
+
+atual = filtro.loc[filtro.index.max(), 'Índice']
+filtro['deflator'] = atual / filtro['Índice']
+
+filtro['TOTAL_atualizado'] = filtro['TOTAL'] * filtro['deflator']
+
+filtro.drop(['ano', 'mês'], axis=1, inplace=True)
+
+##########################################################################################################
+
+
+
+def orc_orgao(orgao, competencia):
+        
+    import pandas as pd
+    
+    pasta = caminho_base / 'Dados' / 'alems' / 'LOA, LDO - MS'
+    df1 = pd.read_excel(pasta / 'LOAs - Séries.xlsx', sheet_name='Desp_Tot_Orgão', skiprows=0, na_values=['-'])
+    #df1['Submissão'] = df1['Competência'] - 1
+    
+    #orgao = 'Assembleia Legislativa'
+    #orgao = 'PODER EXECUTIVO'
+    #orgao = 'DEFENSORIA PÚBLICA'
+    #competencia = 2016
+    
+    if orgao == 'PODER EXECUTIVO' or orgao == 'PODER JUDICIÁRIO' or orgao == 'MINISTÉRIO PÚBLICO':
+        cond1 = df1['Competência'] >= competencia
+        cond2 = df1['Poder'] == orgao
+        cond3 = ~ df1['Órgão'].str.contains('defensoria', case=False)
+        filtro = df1.loc[cond1 & cond2 & cond3,:]
+        filtro = filtro.groupby(['Competência'])['TOTAL'].sum().to_frame()
+        filtro.reset_index(inplace=True)
+        
+        
+    elif orgao == 'DEFENSORIA PÚBLICA':
+        cond1 = df1['Competência'] >= competencia
+        cond2 = df1['Órgão'].str.contains('defensoria', case=False)
+        filtro = df1.loc[cond1 & cond2,:]
+        filtro = filtro.groupby(['Competência'])['TOTAL'].sum().to_frame()
+        filtro.reset_index(inplace=True)
+
+    elif orgao == 'TRIBUNAL DE CONTAS':
+        cond1 = df1['Competência'] >= competencia
+        cond2 = df1['Órgão'].str.contains('tribunal de contas', case=False)
+        filtro = df1.loc[cond1 & cond2,:]
+        filtro = filtro.groupby(['Competência'])['TOTAL'].sum().to_frame()
+        filtro.reset_index(inplace=True)
+    else:
+        cond1 = df1['Competência'] >= competencia
+        cond2 = df1['Órgão'] == orgao
+        filtro = df1.loc[cond1 & cond2,:]
+        filtro.drop(['Poder', 'Órgão'], axis=1, inplace=True)
+
+        
+    filtro['Submissão'] = filtro['Competência'] - 1
+    filtro = filtro.merge(df_ipca, how='left', left_on='Submissão', right_on='ano')
+    atual = filtro.loc[filtro.index.max(), 'Índice']
+    filtro['deflator'] = atual / filtro['Índice']
+    filtro['TOTAL_atualizado'] = filtro['TOTAL'] * filtro['deflator']
+    filtro['TOTAL_atualizado_milhões'] = filtro['TOTAL_atualizado'] / 1_000_000
+    filtro['TOTAL_atualizado_bilhões'] = filtro['TOTAL_atualizado'] / 1_000_000_000
+    filtro.drop(['ano', 'mês'], axis=1, inplace=True)
+    
+       
+    return filtro
+        
+
+df_alems = orc_orgao('Assembleia Legislativa', 2016)
+df_execut = orc_orgao('PODER EXECUTIVO', 2016)
+df_jud = orc_orgao('PODER JUDICIÁRIO', 2016)
+df_mpe = orc_orgao('MINISTÉRIO PÚBLICO', 2016)
+df_dp = orc_orgao('DEFENSORIA PÚBLICA', 2016)
+df_tce = orc_orgao('TRIBUNAL DE CONTAS', 2016)
+
+
+
+
+
+
+
+
+df_alems.set_index('Competência', inplace=True)
+df_alems['TOTAL_atualizado_milhões'].plot()
 
 ##########################################################################################################
 '''

@@ -112,7 +112,6 @@ def ipca():
 
 df_ipca = ipca()
 
-
 df_ipca['mês'] = df_ipca.index.month
 df_ipca['ano'] = df_ipca.index.year
 
