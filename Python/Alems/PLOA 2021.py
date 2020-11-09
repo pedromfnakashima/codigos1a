@@ -18,10 +18,8 @@ elif getpass.getuser() == "pedro-salj":
     caminho_base = Path(r'C:\Users\pedro-salj\Desktop\Pedro Nakashima\Códigos, Dados, Documentação e Cheat Sheets')
 
 """ Mudar diretório para dados Siconfi"""
-caminho_wd = caminho_base / 'Dados' / 'Siconfi'
-print('\nDiretório anterior:\n', os.getcwd())
+caminho_wd = caminho_base / 'Dados' / 'alems'
 os.chdir(caminho_wd)
-print('\nDiretório atual:\n', os.getcwd())
 
 #pip install tabula-py
 
@@ -41,6 +39,17 @@ for (columnName, columnData) in df.loc[:, df.columns != 'Sub Categoria'].iterite
 del columnName, columnData
 df.set_index('Sub Categoria', inplace=True)
 df = df.T
+
+
+
+
+
+
+
+
+
+
+
 
 
 

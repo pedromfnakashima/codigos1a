@@ -30,7 +30,8 @@ os.chdir(caminho_wd)
 import numpy as np
 import pandas as pd
 
-pip install tabula-py
+
+#pip install tabula-py
 
 import tabula
 
@@ -52,12 +53,44 @@ print(df2.dtypes)
 df = tabula.read_pdf(caminho_wd / 'LOA 2020.pdf', pages=[7])
 
 
+'''
+DESPESAS CORRENTES
+pág. 7
+Pessoal, Juros, Investimentos
+10 - Fiscal 20 - Seguridade
+'''
+import tabula
+
+df = tabula.read_pdf(caminho_wd / 'LOA 2020.pdf', pages=[7])
 
 
+'''
+DESPESA POR FUNÇÃO
+pág. 10
 
+'''
+import tabula
 
+df = tabula.read_pdf(caminho_wd / 'LOA 2020.pdf', pages=[10])
 
+'''
+DESPESA COM PESSOAL E JUROS
+INVESTIMENTOS
+pág. 12
 
+'''
+import tabula
+
+df = tabula.read_pdf(caminho_wd / 'LOA 2020.pdf', pages=[12])
+
+'''
+APLICAÇÃO DO ICMS NA SAÚDE: pág. 13
+APLICAÇÃO DO ICMS NA EDUCAÇÃO: pág. 14
+
+'''
+import tabula
+
+df = tabula.read_pdf(caminho_wd / 'LOA 2020.pdf', pages=[12])
 
 
 
