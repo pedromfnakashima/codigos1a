@@ -19,164 +19,97 @@ import pandas as pd
 #################
 
 pasta = caminho_base / 'Dados' / 'Siconfi' / 'RREO - Estados' / 'Anexo 03 - Demonstrativo da Receita Corrente Líquida'
-rreo_rcl = processa_arquivos_zip(arquivo='2020b4.zip',
+df = processa_arquivos_zip(arquivo='2020b4.zip',
+                                           caminho=pasta,
+                                           pasta=False)
+range_max = 7
+multiplicador = 2
+
+for num_per in list(range(1,range_max)):
+    cond = df['periodo'] == num_per
+    df.loc[cond, 'mes_final_periodo'] = num_per * multiplicador
+df.rename(columns={'exercicio':'year','mes_final_periodo':'month'}, inplace=True)
+df['day'] = 1
+df['data_inicio_periodo'] = pd.to_datetime(df[['year', 'month', 'day']])
+df.rename(columns={'year':'exercicio'}, inplace=True)
+df.drop(['month','day'],axis=1,inplace=True)
+cond = df['Coluna'] == '<MR>'
+df.loc[cond, 'mês'] = df['data_inicio_periodo']
+for num in list(range(1,12)):
+    str1 = f'<MR-{num}>'
+    cond = df['Coluna'] == str1
+    df.loc[cond, 'mês'] = df['data_inicio_periodo'] - pd.DateOffset(months=num)
+del df['data_inicio_periodo']
+
+
+
+
+
+
+
+
+
+# ------------------------------------------------------------------------------
+pasta = caminho_base / 'Dados' / 'Siconfi' / 'RGF - Estados' / 'Anexo 01 - Demonstrativo da Despesa Com Pessoal' / 'DTP e Apuração do Cumprimento do Limite Legal'
+df = processa_arquivos_zip(arquivo='2020q1.zip',
+                                           caminho=pasta,
+                                           pasta=False)
+
+cond = df['Coluna'].str.contains('MR', case=True)
+soma = cond.sum()
+print(soma)
+
+
+pasta = caminho_base / 'Dados' / 'Siconfi' / 'RGF - Estados' / 'Anexo 01 - Demonstrativo da Despesa Com Pessoal' / 'Despesas com pessoal'
+df = processa_arquivos_zip(arquivo='2020q2.zip',
+                                           caminho=pasta,
+                                           pasta=False)
+
+cond = df['Coluna'].str.contains('MR', case=True)
+soma = cond.sum()
+print(soma)
+
+
+cond1 = df['exercicio'] >= 2016
+cond2 = df['Conta'].str.contains('DESPESA BRUTA COM PESSOAL', case=False)
+cond3 = df['UF'] == 'MS'
+cond4 = df['PODER'].str.contains('Executivo', case=False)
+cond = cond1 & cond2 & cond3 & cond4
+filtro = df.loc[cond, :]
+
+
+
+
+
+
+pasta = caminho_base / 'Dados' / 'Siconfi' / 'RGF - Estados' / 'Anexo 01 - Demonstrativo da Despesa Com Pessoal' / 'Despesas com pessoal'
+df = processa_arquivos_zip(arquivo='2020q2.zip',
                                            caminho=pasta,
                                            pasta=False)
 
 
-rreo_rcl['início'] = pd.to_datetime('2020/8/1', format='%Y/%m/%d')
-
-
-
-
-
-
-
-
-
-
-
-data = pd.to_datetime(['2020/8/1'], format='%Y/%m/%d')
-data.freq = 'MS'
-mes = pd.Timedelta(1, unit ='MS')
-
-
-# icms
-cond1 = rreo_rcl['exercicio'] >= 2016
-cond2 = rreo_rcl['Conta'].str.contains('icms', case=False)
-cond3 = rreo_rcl['UF'] == 'MS'
-cond = cond1 & cond2 & cond3
-filtro = rreo_rcl.loc[cond, :]
-
-
-
-
-
-cond1 = rreo_rcl['exercicio'] >= 2016
-cond2 = rreo_rcl['Conta'].str.contains('RECEITA CORRENTE LÍQUIDA AJUSTADA PARA CÁLCULO DOS LIMITES DA DESPESA COM PESSOAL', case=False)
-cond3 = rreo_rcl['UF'] == 'MS'
-cond = cond1 & cond2 & cond3
-filtro = rreo_rcl.loc[cond, :]
-
-#--------------------------------------------------------------------------------------------
-cond1 = filtro['bimestre'] == 4
-cond2 = filtro['Coluna'] == '<MR>'
-filtro.loc[cond1 & cond2,'mês'] = 8
-
-cond1 = filtro['bimestre'] == 4
-cond2 = filtro['Coluna'] == '<MR-1>'
-filtro.loc[cond1 & cond2,'mês'] = 7
-
-cond1 = filtro['bimestre'] == 4
-cond2 = filtro['Coluna'] == '<MR-2>'
-filtro.loc[cond1 & cond2,'mês'] = 6
-
-cond1 = filtro['bimestre'] == 4
-cond2 = filtro['Coluna'] == '<MR-3>'
-filtro.loc[cond1 & cond2,'mês'] = 5
-
-cond1 = filtro['bimestre'] == 4
-cond2 = filtro['Coluna'] == '<MR-4>'
-filtro.loc[cond1 & cond2,'mês'] = 4
-
-cond1 = filtro['bimestre'] == 4
-cond2 = filtro['Coluna'] == '<MR-5>'
-filtro.loc[cond1 & cond2,'mês'] = 3
-
-cond1 = filtro['bimestre'] == 4
-cond2 = filtro['Coluna'] == '<MR-6>'
-filtro.loc[cond1 & cond2,'mês'] = 2
-
-cond1 = filtro['bimestre'] == 4
-cond2 = filtro['Coluna'] == '<MR-7>'
-filtro.loc[cond1 & cond2,'mês'] = 1
-
-cond1 = filtro['bimestre'] == 4
-cond2 = filtro['Coluna'] == '<MR-8>'
-filtro.loc[cond1 & cond2,'mês'] = 12
-
-cond1 = filtro['bimestre'] == 4
-cond2 = filtro['Coluna'] == '<MR-9>'
-filtro.loc[cond1 & cond2,'mês'] = 11
-
-cond1 = filtro['bimestre'] == 4
-cond2 = filtro['Coluna'] == '<MR-10>'
-filtro.loc[cond1 & cond2,'mês'] = 10
-
-cond1 = filtro['bimestre'] == 4
-cond2 = filtro['Coluna'] == '<MR-11>'
-filtro.loc[cond1 & cond2,'mês'] = 9
-#--------------------------------------------------------------------------------------------
-
-filtro.rename(columns={'exercicio':'year'}, inplace=True)
-
-
-
-cond1 = filtro['bimestre'] == 4
-cond2 = filtro['Coluna'] == '<MR>'
-filtro.loc[cond1 & cond2,'month'] = 8
-filtro['day'] = 1
-
-filtro['data'] = pd.to_datetime(filtro[['year', 'month', 'day']])
-
-
-cond1 = rreo_rcl['exercicio'] >= 2016
-cond2 = rreo_rcl['Coluna'].str.contains('mr', case=False)
-cond3 = rreo_rcl['UF'] == 'MS'
-cond = cond1 & cond2 & cond3
-filtro = rreo_rcl.loc[cond, :]
-
-
-
-date = np.array(['2020-08-1', '2020-03-16', '2020-03-17'], dtype='datetime64[Y]')
-
-
-import numpy as np
-
-data = np.array(['2020-08-1'], dtype='datetime64[Y]')
-
-
-import pandas as pd
-
-data = pd.to_datetime(['2020/8/1'], format='%Y/%m/%d')
-data.freq = 'MS'
-mes = pd.Timedelta(1, unit ='MS')
-
-from datetime import date
-from dateutil.relativedelta import relativedelta
-
-print(data)
-
-print(data + relativedelta(months=+6))
-
-import monthdelta
-
-print(monthdelta(1))
-
-
-
-
-# https://www.xspdf.com/resolution/53042314.html
-#https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.tseries.offsets.DateOffset.html
-print(data)
-print(data + pd.DateOffset(months=1))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+range_max = 4
+multiplicador = 4
+
+for num_per in list(range(1,range_max)):
+    cond = df['periodo'] == num_per
+    df.loc[cond, 'mes_final_periodo'] = num_per * multiplicador
+
+df.rename(columns={'exercicio':'year','mes_final_periodo':'month'}, inplace=True)
+df['day'] = 1
+df['data_inicio_periodo'] = pd.to_datetime(df[['year', 'month', 'day']])
+df.rename(columns={'year':'exercicio'}, inplace=True)
+df.drop(['month','day'],axis=1,inplace=True)
+
+cond = df['Coluna'] == '<MR>'
+df.loc[cond, 'mês'] = df['data_inicio_periodo']
+
+for num in list(range(1,12)):
+    str1 = f'<MR-{num}>'
+    cond = df['Coluna'] == str1
+    df.loc[cond, 'mês'] = df['data_inicio_periodo'] - pd.DateOffset(months=num)
+
+del df['data_inicio_periodo']
 
 
 

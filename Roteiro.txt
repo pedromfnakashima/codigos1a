@@ -1,0 +1,21 @@
+Último junta_siconfi: 01c
+Como é a evolução do orçamento de cada Poder, em valores reais?
+Feito.
+Arquivo PLOA2021_01a.py
+
+Como é a evolução do gasto por função, na LOA, em valores reais?
+Feito.
+Arquivo PLOA2021_01c.py
+
+Como tem sido o gasto por função, nas contas anuais, em valores reais?
+Feito.
+Arquivo PLOA2021_01d.py
+
+Como foi a queda de receitas nos estados?
+Feito.
+Arquivo PLOA2021_01f.py
+
+
+Quais são as perspectivas de gastos com pessoal? Como está a situação do limite?
+
+
