@@ -92,6 +92,8 @@ def processa_arquivos_zip(arquivo = 'todos', caminho = os.getcwd()):
     print('Adicionados:')
     
     if arquivo == 'todos':
+        
+        
         import glob
         dicionario = {}
         
@@ -117,10 +119,80 @@ def processa_arquivos_zip(arquivo = 'todos', caminho = os.getcwd()):
         
     return novo_df
 
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+
+def processa_arquivos_zip(arquivo, caminho = os.getcwd(), pasta=False):
+    
+    import zipfile
+    import io
+    from pathlib import Path
+    
+    print('Adicionados:')
+    
+    if pasta == True:
+        
+        os.chdir(caminho)
+        
+        import glob
+        dicionario = {}
+        
+        for arq_nome in glob.glob('*.zip'):
+            #print(arq_nome)
+            pos_ponto = arq_nome.find('.zip')
+            df_nome = f'df_{arq_nome[0:pos_ponto]}'
+            print(df_nome)
+            dicionario[df_nome] = gera_df(arq_nome, caminho)
+        
+        
+        i = 1
+        for key in dicionario.keys():
+            
+            if i == 1:
+                novo_df = dicionario[key]
+            else:
+                novo_df = novo_df.append(dicionario[key])
+            i += 1
+        
+        return novo_df
+        
+    else:
+        novo_df = gera_df(arquivo, caminho)
+        print(f'  {arquivo}')
+        return novo_df
+        
+
+
+############# DESPESAS POR FUNÇÃO
+pasta = caminho_base / 'Dados' / 'Siconfi' / 'Contas Anuais - Estados' / 'Despesas por Função'
+ca2018_desp_função = processa_arquivos_zip(arquivo='2018.zip',
+                                           caminho=pasta,
+                                           pasta=True)
+
+
+
+
+
+pasta = caminho_base / 'Dados' / 'Siconfi' / 'Contas Anuais - Estados' / 'Despesas por Função'
+ca2018_desp_função = processa_arquivos_zip(arquivo='2018.zip',
+                                           caminho=pasta,
+                                           pasta=False)
+
+
+
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+
+
 ############ RECEITAS ORÇAMENTÁRIAS
 pasta = caminho_base / 'Dados' / 'Siconfi' / 'Contas Anuais - Municípios' / 'Receitas Orçamentárias'
 ca2018_rec_orc = processa_arquivos_zip(arquivo='2018.zip',
-                                           caminho=pasta)
+                                           caminho=pasta,
+                                           pasta=False)
 
 ca2018_rec_orc.rename(columns={'Cod.IBGE':'mun_cod_ibge'}, inplace=True)
 ca2018_rec_orc = ca2018_rec_orc.merge(municipios, how='left', left_on='mun_cod_ibge', right_on='mun_cod_ibge')
@@ -131,7 +203,8 @@ ca2018_rec_orc.drop(['capital'], axis=1, inplace=True)
 ############# DESPESAS POR FUNÇÃO
 pasta = caminho_base / 'Dados' / 'Siconfi' / 'Contas Anuais - Municípios' / 'Despesas por Função'
 ca2018_desp_função = processa_arquivos_zip(arquivo='2018.zip',
-                                           caminho=pasta)
+                                           caminho=pasta,
+                                           pasta=False)
 
 ca2018_desp_função.rename(columns={'Cod.IBGE':'mun_cod_ibge'}, inplace=True)
 ca2018_desp_função = ca2018_desp_função.merge(municipios, how='left', left_on='mun_cod_ibge', right_on='mun_cod_ibge')

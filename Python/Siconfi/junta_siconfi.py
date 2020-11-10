@@ -9,6 +9,8 @@ Interpretador Python 3.8
 ##### CONFIGURAÇÃO GERAL ####
 #############################
 globals().clear()
+import numpy as np
+import pandas as pd
 """ Mudar diretório """
 import os
 from pathlib import Path
@@ -19,7 +21,8 @@ elif getpass.getuser() == "pedro-salj":
     caminho_base = Path(r'C:\Users\pedro-salj\Desktop\Pedro Nakashima\Códigos, Dados, Documentação e Cheat Sheets')
 
 """ Mudar diretório para dados Siconfi"""
-caminho_wd = caminho_base / 'Dados' / 'Siconfi' / 'RGF - Estados' / 'Anexo 01 - Demonstrativo da Despesa Com Pessoal' / 'Despesas com pessoal'
+#caminho_wd = caminho_base / 'Dados' / 'Siconfi' / 'RGF - Estados' / 'Anexo 01 - Demonstrativo da Despesa Com Pessoal' / 'Despesas com pessoal'
+caminho_wd = caminho_base / 'Dados' / 'Siconfi' / 'Contas Anuais - Estados' / 'Despesas por Função'
 os.chdir(caminho_wd)
 
 
