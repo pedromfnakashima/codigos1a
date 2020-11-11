@@ -27,9 +27,9 @@ os.chdir(caminho_wd)
 import numpy as np
 import pandas as pd
 
-pasta = caminho_wd = caminho_base / 'Dados'
-municipios = pd.read_excel(pasta / 'municipios.xlsx', sheet_name='municipios', skiprows=0, dtype={'capital': np.bool})
-capitais = pd.read_excel(pasta / 'capitais.xlsx', sheet_name='capitais', skiprows=0, dtype={'capital': np.bool})
+#pasta = caminho_wd = caminho_base / 'Dados'
+#municipios = pd.read_excel(pasta / 'municipios.xlsx', sheet_name='municipios', skiprows=0, dtype={'capital': np.bool})
+#capitais = pd.read_excel(pasta / 'capitais.xlsx', sheet_name='capitais', skiprows=0, dtype={'capital': np.bool})
 
 
 def gera_df(nome_zip, caminho):

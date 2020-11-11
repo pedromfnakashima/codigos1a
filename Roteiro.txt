@@ -1,4 +1,9 @@
 Último junta_siconfi: 01c
+
+Gráficos completos:
+PLOA2021_01d.py
+PLOA2021_01h.py
+
 Como é a evolução do orçamento de cada Poder, em valores reais?
 Feito.
 Arquivo PLOA2021_01a.py
@@ -15,7 +20,18 @@ Como foi a queda de receitas nos estados?
 Feito.
 Arquivo PLOA2021_01f.py
 
+Como tem sido a alocação orçamentária para Pessoal e Juros nas LOA's?
+Feito.
+Arquivo PLOA2021_01g.py
 
-Quais são as perspectivas de gastos com pessoal? Como está a situação do limite?
+Como tem sido o gasto com Pessoal e Juros?
+Feito.
+Arquivo PLOA2021_01h.py
+
+Como é o gasto pessoal/RCL do Estado comparado com outros Estados?
+Fazendo.
+Arquivo PLOA2021_01i.py
+
+Como é o gasto com pessoal, em 2020 em relação a 2019, comparado com outros Estados?
 
 
