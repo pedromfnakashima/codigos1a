@@ -154,6 +154,28 @@ df_poderes = evolucao_orcamento(2016)
 df_poderes_M = df_poderes / 1_000_000
 df_poderes_B = df_poderes / 1_000_000_000
 
+
+pasta = caminho_base / 'Dados' / 'alems' / 'LOA, LDO - MS'
+with pd.ExcelWriter(pasta / 'Dados_para_gráficos.xlsx', mode='a', engine="openpyxl") as writer:  
+    df_poderes_M.to_excel(writer, sheet_name='orcPoderesMilhoes', index=True)
+
+pasta = caminho_base / 'Dados' / 'alems' / 'LOA, LDO - MS'
+with pd.ExcelWriter(pasta / 'Dados_para_gráficos.xlsx', mode='a', engine="openpyxl") as writer:  
+    df_poderes_B.to_excel(writer, sheet_name='orcPoderesBilhoes', index=True)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 from matplotlib import pyplot as plt
 import numpy as np
 

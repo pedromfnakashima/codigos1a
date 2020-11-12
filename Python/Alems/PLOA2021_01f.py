@@ -142,3 +142,20 @@ def variacao_receita():
 
 df_somas = variacao_receita()
 
+pasta = caminho_base / 'Dados' / 'alems' / 'LOA, LDO - MS'
+with pd.ExcelWriter(pasta / 'Dados_para_gráficos.xlsx', mode='a', engine="openpyxl") as writer:  
+    df_somas.to_excel(writer, sheet_name='VariaçãoReceitas', index=False)
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -85,6 +85,23 @@ df_loa_desp_funções = desp_loa_funções()
 df_loa_desp_funções_M = df_loa_desp_funções / 1_000_000
 df_loa_desp_funções_B = df_loa_desp_funções / 1_000_000_000
 
+
+pasta = caminho_base / 'Dados' / 'alems' / 'LOA, LDO - MS'
+with pd.ExcelWriter(pasta / 'Dados_para_gráficos.xlsx', mode='a', engine="openpyxl") as writer:  
+    df_loa_desp_funções_M.to_excel(writer, sheet_name='loa_desp_funç_M', index=True)
+
+pasta = caminho_base / 'Dados' / 'alems' / 'LOA, LDO - MS'
+with pd.ExcelWriter(pasta / 'Dados_para_gráficos.xlsx', mode='a', engine="openpyxl") as writer:  
+    df_loa_desp_funções_B.to_excel(writer, sheet_name='loa_desp_funç_B', index=True)
+
+
+
+
+
+
+
+
+
 df_loa_desp_funções_B['Educação_d'].plot()
 
 
