@@ -26,6 +26,7 @@ print('\nDiretório anterior:\n', os.getcwd())
 os.chdir(caminho_wd)
 print('\nDiretório atual:\n', os.getcwd())
 
+
 #############################
 #############################
 #############################
@@ -120,7 +121,9 @@ print(df.index.argmin())
 
 import pandas as pd
 
-df = pd.read_csv('starbucks.csv', index_col='Date', parse_dates=True)
+
+pasta = caminho_base / 'Dados' / 'Cursos e Livros' / 'Python for time series (Udemy)' / 'Data'
+df = pd.read_csv(pasta / 'starbucks.csv', index_col='Date', parse_dates=True)
 
 print(df.head())
 
@@ -152,7 +155,8 @@ df['Close'].resample('M').max().plot.bar(figsize=(16,6), title=title, color='#1f
 
 import pandas as pd
 
-df = pd.read_csv('starbucks.csv', index_col='Date', parse_dates=True)
+pasta = caminho_base / 'Dados' / 'Cursos e Livros' / 'Python for time series (Udemy)' / 'Data'
+df = pd.read_csv(pasta / 'starbucks.csv', index_col='Date', parse_dates=True)
 
 print(df.head())
 print(df.tail())
@@ -183,7 +187,8 @@ print(df.shift(periods=1, freq='M'))
 
 import pandas as pd
 
-df = pd.read_csv('starbucks.csv', index_col='Date', parse_dates=True)
+pasta = caminho_base / 'Dados' / 'Cursos e Livros' / 'Python for time series (Udemy)' / 'Data'
+df = pd.read_csv(pasta / 'starbucks.csv', index_col='Date', parse_dates=True)
 
 df['Close'].plot()
 
@@ -220,7 +225,8 @@ df['Close'].expanding().mean().plot(figsize=(12,5))
 
 import pandas as pd
 
-df = pd.read_csv('starbucks.csv', index_col='Date', parse_dates=True)
+pasta = caminho_base / 'Dados' / 'Cursos e Livros' / 'Python for time series (Udemy)' / 'Data'
+df = pd.read_csv(pasta / 'starbucks.csv', index_col='Date', parse_dates=True)
 
 print(df.index)
 
@@ -291,7 +297,8 @@ df['Close']['2017-01-01':'2017-12-31'].plot(figsize=(12,4), ylim=[40,70], ls='--
 
 import pandas as pd
 
-df = pd.read_csv('starbucks.csv', index_col='Date', parse_dates=True)
+pasta = caminho_base / 'Dados' / 'Cursos e Livros' / 'Python for time series (Udemy)' / 'Data'
+df = pd.read_csv(pasta / 'starbucks.csv', index_col='Date', parse_dates=True)
 
 df['Close'].plot(xlim=['2017-01-01','2017-03-01'], ylim=[50,60])
 

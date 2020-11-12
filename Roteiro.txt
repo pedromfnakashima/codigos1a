@@ -28,10 +28,24 @@ Como tem sido o gasto com Pessoal e Juros?
 Feito.
 Arquivo PLOA2021_01h.py
 
-Como é o gasto pessoal/RCL do Estado comparado com outros Estados?
-Fazendo.
+Como é o gasto pessoal/RCL do Estado comparado com outros Estados? Total e por órgão?
+Feito.
 Arquivo PLOA2021_01i.py
 
 Como é o gasto com pessoal, em 2020 em relação a 2019, comparado com outros Estados?
+Feito.
+Arquivo PLOA2021_01j.py
+
+Qual é a evolução do gasto com pessoal como proporção da RCL de cada órgão de MS?
+Feito.
+Arquivo PLOA2021_01k.py.
+
+
+
+
+
+
+
+
 
 
