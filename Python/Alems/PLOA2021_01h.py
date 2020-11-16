@@ -86,6 +86,33 @@ despesas_correntes_M = despesas_correntes / 1_000_000
 despesas_correntes_B = despesas_correntes / 1_000_000_000
 
 
+pasta = caminho_base / 'Dados' / 'alems' / 'LOA, LDO - MS'
+with pd.ExcelWriter(pasta / 'Dados_para_gráficos.xlsx', mode='a', engine="openpyxl") as writer:  
+    despesas_correntes_M.to_excel(writer, sheet_name='desp_corr_ca_M', index=True)
+
+pasta = caminho_base / 'Dados' / 'alems' / 'LOA, LDO - MS'
+with pd.ExcelWriter(pasta / 'Dados_para_gráficos.xlsx', mode='a', engine="openpyxl") as writer:  
+    despesas_correntes_B.to_excel(writer, sheet_name='desp_corr_ca_B', index=True)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # GRÁFICOS
 
 from matplotlib import pyplot as plt

@@ -65,7 +65,7 @@ def gera_series_perc_rcl():
         cond1 = df['UF'] == 'MS'
         cond2 = df['Coluna'].str.contains('%', case=False)
         cond3 = df['Conta'].str.contains('total', case=False)
-        cond4 = df['exercicio'] >= 2018 # a partir desse ano, o percentual da RCL é ajustado
+        cond4 = df['exercicio'] >= 2016 # a partir desse ano, o percentual da RCL é ajustado
         cond5 = df['Instituição'] == instituicao
         cond = cond1 & cond2 & cond3 & cond4 & cond5
         filtro = df.loc[cond, ['exercicio', 'periodo', 'Valor']]
@@ -79,6 +79,20 @@ def gera_series_perc_rcl():
     return df_final
 
 series_perc_rcl = gera_series_perc_rcl()
+
+
+pasta = caminho_base / 'Dados' / 'alems' / 'LOA, LDO - MS'
+with pd.ExcelWriter(pasta / 'Dados_para_gráficos.xlsx', mode='a', engine="openpyxl") as writer:  
+    series_perc_rcl.to_excel(writer, sheet_name='perc_rcl', index=False)
+
+
+
+
+
+
+
+
+
 series_perc_rcl.set_index(['exercicio','periodo'], inplace=True)
 
 #series_perc_rcl.set_index(['exercicio','periodo'], inplace=True)

@@ -99,10 +99,12 @@ def gera_df(nome_zip, caminho):
             df.drop(['month','day'],axis=1,inplace=True)
             cond = df['Coluna'] == '<MR>'
             df.loc[cond, 'mês'] = df['data_inicio_periodo']
+            df.loc[cond, 'MR'] = 0
             for num in list(range(1,12)):
                 str1 = f'<MR-{num}>'
                 cond = df['Coluna'] == str1
                 df.loc[cond, 'mês'] = df['data_inicio_periodo'] - pd.DateOffset(months=num)
+                df.loc[cond, 'MR'] = num
             del df['data_inicio_periodo']
             # fim
     else:
@@ -149,9 +151,11 @@ def processa_arquivos_zip(arquivo, caminho = os.getcwd(), pasta=False):
                 novo_df = novo_df.append(dicionario[key])
             i += 1
         
+        novo_df.index = range(len(novo_df))
         return novo_df
         
     else:
         novo_df = gera_df(arquivo, caminho)
+        novo_df.index = range(len(novo_df))
         print(f'  {arquivo}')
         return novo_df

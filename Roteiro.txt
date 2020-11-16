@@ -6,46 +6,56 @@ PLOA2021_01h.py
 
 Como é a evolução do orçamento de cada Poder, em valores reais?
 Feito.
-Colocado no gráfico.
+Gráfico feito.
 Arquivo PLOA2021_01a.py
 
 Como é a evolução do gasto por função, na LOA, em valores reais?
 Feito.
+Gráfico feito.
 Arquivo PLOA2021_01c.py
 
 Como tem sido o gasto por função, nas contas anuais, em valores reais?
 Feito.
+Gráfico feito.
 Arquivo PLOA2021_01d.py
 
 Como foi a queda de receitas nos estados?
 Feito.
-Colocado no texto.
+Gráfico feito.
 Arquivo PLOA2021_01f.py
 
 Como tem sido a alocação orçamentária para Pessoal e Juros nas LOA's?
 Feito.
+Gráfico feito.
 Arquivo PLOA2021_01g.py
 
 Como tem sido o gasto com Pessoal e Juros?
 Feito.
+Gráfico feito.
 Arquivo PLOA2021_01h.py
 
 Como é o gasto pessoal/RCL do Estado comparado com outros Estados? Total e por órgão?
+Gráfico feito.
 Feito.
 Arquivo PLOA2021_01i.py
 
-Como é o gasto com pessoal, em 2020 em relação a 2019, comparado com outros Estados?
+Como é a variação do gasto com pessoal, em 2020 em relação a 2019, comparado com outros Estados?
 Feito.
+Gráfico feito.
 Arquivo PLOA2021_01j.py
 
 Qual é a evolução do gasto com pessoal como proporção da RCL de cada órgão de MS?
 Feito.
+Gráfico feito.
 Arquivo PLOA2021_01k.py.
 
+Arrecadação mensal NOMINAL de cada imposto estadual, de cada transferência recebida, de cada estado?
+Feito.
+Arquivo PLOA2021_01l.py.
 
-
-
-
+Arrecadação mensal REAL de cada imposto estadual, de cada transferência recebida, de cada estado?
+Feito.
+Arquivo PLOA2021_01m.py.
 
 
 

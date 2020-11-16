@@ -176,8 +176,14 @@ def receita_pessoal_ufs():
 
 
 df_somas = receita_pessoal_ufs()
+#df_somas.sort_values(by=['pessoal_rcl'], ascending=[False],inplace=True)
 
-df_somas.sort_values(by=['pessoal_rcl'], ascending=[False],inplace=True)
+pasta = caminho_base / 'Dados' / 'alems' / 'LOA, LDO - MS'
+with pd.ExcelWriter(pasta / 'Dados_para_gráficos.xlsx', mode='a', engine="openpyxl") as writer:  
+    df_somas.to_excel(writer, sheet_name='pessoal_rcl_ufs', index=False)
+
+
+
 
 ####################################################################
 ##################### MONTAR O LOOPING #############################
@@ -192,8 +198,10 @@ def receita_pessoal_ufs_orgaos():
    #Exclusões de UFs (faltam dados): AL, DF
 
    
-    ufs = ['MT', 'AM', 'RO', 'BA', 'SP', 'MS', 'SC', 'GO', 'ES', 'PA', 'TO', 'PR', 'PE', 'AP', 'SE', 'PB', 'MA', 'CE', 'RJ', 'PI', 'AC', 'RS', 'RR', 'MG', 'RN']
-    instituicoes = ['Assembleia Legislativa', 'Governo', 'Tribunal de Contas', 'Tribunal de Justiça', 'Ministério Público', 'Defensoria Pública']
+    ufs = ['MT', 'AM', 'RO', 'BA', 'SP', 'MS', 'SC', 'GO', 'ES', 'PA', 'TO', 'PR', 'PE', 'AP',
+           'SE', 'PB', 'MA', 'CE', 'RJ', 'PI', 'AC', 'RS', 'RR', 'MG', 'RN']
+    
+    instituicoes = ['Governo', 'Tribunal de Contas', 'Tribunal de Justiça', 'Ministério Público', 'Defensoria Pública', 'Assembleia Legislativa']
     
     #ufs = ['MS']
     #instituicoes = ['Assembleia Legislativa', 'Governo']
@@ -263,20 +271,38 @@ def receita_pessoal_ufs_orgaos():
     return dicionario
 
 
-df_orgaos = receita_pessoal_ufs_orgaos()
+dic_orgaos = receita_pessoal_ufs_orgaos()
 
+p_UFs_AL = dic_orgaos['Assembleia Legislativa']
+p_UFs_DP = dic_orgaos['Defensoria Pública']
+p_UFs_Gov = dic_orgaos['Governo']
+p_UFs_MP = dic_orgaos['Ministério Público']
+p_UFs_TC = dic_orgaos['Tribunal de Contas']
+p_UFs_TJ = dic_orgaos['Tribunal de Justiça']
 
+pasta = caminho_base / 'Dados' / 'alems' / 'LOA, LDO - MS'
+with pd.ExcelWriter(pasta / 'Dados_para_gráficos.xlsx', mode='a', engine="openpyxl") as writer:  
+    p_UFs_AL.to_excel(writer, sheet_name='p_UFs_AL', index=False)
 
+pasta = caminho_base / 'Dados' / 'alems' / 'LOA, LDO - MS'
+with pd.ExcelWriter(pasta / 'Dados_para_gráficos.xlsx', mode='a', engine="openpyxl") as writer:  
+    p_UFs_DP.to_excel(writer, sheet_name='p_UFs_DP', index=False)
 
+pasta = caminho_base / 'Dados' / 'alems' / 'LOA, LDO - MS'
+with pd.ExcelWriter(pasta / 'Dados_para_gráficos.xlsx', mode='a', engine="openpyxl") as writer:  
+    p_UFs_Gov.to_excel(writer, sheet_name='p_UFs_Gov', index=False)
 
+pasta = caminho_base / 'Dados' / 'alems' / 'LOA, LDO - MS'
+with pd.ExcelWriter(pasta / 'Dados_para_gráficos.xlsx', mode='a', engine="openpyxl") as writer:  
+    p_UFs_MP.to_excel(writer, sheet_name='p_UFs_MP', index=False)
 
+pasta = caminho_base / 'Dados' / 'alems' / 'LOA, LDO - MS'
+with pd.ExcelWriter(pasta / 'Dados_para_gráficos.xlsx', mode='a', engine="openpyxl") as writer:  
+    p_UFs_TC.to_excel(writer, sheet_name='p_UFs_TC', index=False)
 
-
-
-
-
-
-
+pasta = caminho_base / 'Dados' / 'alems' / 'LOA, LDO - MS'
+with pd.ExcelWriter(pasta / 'Dados_para_gráficos.xlsx', mode='a', engine="openpyxl") as writer:  
+    p_UFs_TJ.to_excel(writer, sheet_name='p_UFs_TJ', index=False)
 
 
 

@@ -112,13 +112,32 @@ desp_funções['Trabalho_d'] = desp_funções['Trabalho'] * desp_funções['Defl
 desp_funções['Habitação_d'] = desp_funções['Habitação'] * desp_funções['Deflator']
 
 desp_funções.drop(['Índice','Deflator','Saúde','Educação','Segurança','Trabalho','Habitação'], axis=1, inplace=True)
-desp_funções.drop(['ano'], axis=1, inplace=True)
+#desp_funções.drop(['ano'], axis=1, inplace=True)
 
 desp_funções.set_index(['exercicio'], inplace=True)
 #desp_funções.index.freq = 'AS'
 
 desp_funções_M = desp_funções / 1_000_000
 desp_funções_B = desp_funções / 1_000_000_000
+
+
+pasta = caminho_base / 'Dados' / 'alems' / 'LOA, LDO - MS'
+with pd.ExcelWriter(pasta / 'Dados_para_gráficos.xlsx', mode='a', engine="openpyxl") as writer:  
+    desp_funções_M.to_excel(writer, sheet_name='desp_funções_M', index=True)
+
+pasta = caminho_base / 'Dados' / 'alems' / 'LOA, LDO - MS'
+with pd.ExcelWriter(pasta / 'Dados_para_gráficos.xlsx', mode='a', engine="openpyxl") as writer:  
+    desp_funções_B.to_excel(writer, sheet_name='desp_funções_B', index=True)
+
+
+
+
+
+
+
+
+
+
 
 desp_funções_B['Saúde_d'].plot()
 
