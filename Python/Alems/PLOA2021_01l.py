@@ -171,7 +171,7 @@ def g_series_mensais():
 
     ufs = ['MS', 'MT', 'AM', 'RO', 'BA', 'SP', 'SC', 'GO', 'ES', 'PA', 'TO', 'PR', 'PE', 'AP',
            'SE', 'PB', 'MA', 'CE', 'RJ', 'PI', 'AC', 'RS', 'RR', 'MG', 'RN', 'AL', 'DF']
-    colunas = ['recCorr', 'itcm', 'icms', 'ipva', 'itcd', 'irrf', 'contrib', 'transfCorr', 'fpe', 'tranfFudeb']
+    colunas = ['recCorr', 'itcm', 'icms', 'ipva', 'itcd', 'irrf', 'contrib', 'transfCorr', 'fpe', 'transfFundeb']
     buscas = ['^receitas correntes','^impostos, taxas','icms','ipva','itcd','irrf','contribuições','^transferências correntes','fpe','Transferências.+FUNDEB']
     
     #ufs = ['SP']
@@ -209,10 +209,6 @@ def g_series_mensais():
 
 dic_series_mensais = g_series_mensais()
 # Valores nominais. Fazer valores reais no arquivo m.
-
-for item in dic_series_mensais.keys():
-    print(item)
-
 
 
 
