@@ -1,5 +1,15 @@
 Para aprender, replicar os dados do Rio Exporta
 
+Séries:
+- Exportações por Estado. Feito. mdic_1b.py
+- MS - principais ncms, principais parceiros
+
+Programas:
+
+gExpImp_ncms(países=['China','EUA'], ufs=['MS','MT'], ncms=[1,2])
+
+mdic_1c.py
+Fazendo
 
 Como identificar os códigos dos itens ncm?
 
