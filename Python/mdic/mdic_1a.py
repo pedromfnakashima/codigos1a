@@ -211,12 +211,77 @@ print(f'\nSoma importações de {ano}: {somas_desag[ano].sum():,.0f}')
 
 s_soma_votos = df_tse_1.groupby(['NM_URNA_CANDIDATO','NM_MUNICIPIO'])['QT_VOTOS_NOMINAIS'].sum()
 
-print(mdic_imp.head())
+################################################################################
+################################################################################
+################################################################################
+import pandas as pd
 
-novo <- df_ncm %>%
-  group_by(CO_ANO, CO_MES, CO_NCM, CO_PAIS, SG_UF_NCM) %>%
-  summarise(VL_FOB = sum(VL_FOB)) %>%
-  arrange(CO_ANO, CO_MES, CO_NCM) # <- Funcionando
+pasta = caminho_base / 'Dados' / 'mdic'
+df_ncm = pd.read_csv(pasta / 'NCM.csv',
+                       encoding = 'latin',
+                       delimiter = ';')
+df_ncm = df_ncm.loc[:, ['CO_NCM','NO_NCM_POR']]
+
+df_pais = pd.read_csv(pasta / 'PAIS.csv',
+                       encoding = 'latin',
+                       delimiter = ';')
+df_pais = df_pais.loc[:, ['CO_PAIS','NO_PAIS']]
+
+
+# ------------------------------------------------------------------------------
+
+pasta = caminho_base / 'Dados' / 'mdic' / 'anos'
+df = pd.read_csv(pasta / 'EXP_2020.csv',
+                       encoding = 'latin',
+                       delimiter = ';')
+
+cond1 = df['SG_UF_NCM'] == 'MS'
+filtro = df.loc[cond1, ['CO_NCM','VL_FOB']]
+soma_por_ncm = filtro.groupby(['CO_NCM'])['VL_FOB'].sum().to_frame()
+soma_por_ncm.reset_index(inplace=True)
+soma_por_ncm.sort_values(by=['VL_FOB'], ascending=[False], inplace=True)
+soma_por_ncm = soma_por_ncm.merge(df_ncm, how='left', left_on='CO_NCM', right_on='CO_NCM')
+
+
+'''
+NCMs (CO_NCM):
+Soja: 12019000
+Celulose: 47032900
+Carne desossada: 2023000
+Açúcar de cana: 17011400
+Milho em grão: 10059010
+
+Países (CO_PAIS):
+China: 160
+Argentina: 63
+Paquistão: 576
+Taiwan (Formosa): 161
+Tailândia: 776
+Estados Unidos
+'''
+
+cond1 = df['SG_UF_NCM'] == 'MS'
+cond2 = df['CO_NCM'] == 47032900
+filtro = df.loc[cond1 & cond2, ['CO_PAIS','VL_FOB']]
+
+soma_por_pais = filtro.groupby(['CO_PAIS'])['VL_FOB'].sum().to_frame()
+soma_por_pais.reset_index(inplace=True)
+soma_por_pais.sort_values(by=['VL_FOB'], ascending=[False], inplace=True)
+
+soma_por_pais = soma_por_pais.merge(df_pais, how='left', left_on='CO_PAIS', right_on='CO_PAIS')
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
