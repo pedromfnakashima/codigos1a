@@ -250,6 +250,7 @@ Celulose: 47032900
 Carne desossada: 2023000
 Açúcar de cana: 17011400
 Milho em grão: 10059010
+Gás natural: 27112100
 
 Países (CO_PAIS):
 China: 160
@@ -257,7 +258,8 @@ Argentina: 63
 Paquistão: 576
 Taiwan (Formosa): 161
 Tailândia: 776
-Estados Unidos
+Estados Unidos: 249
+Bolívia: 97
 '''
 
 cond1 = df['SG_UF_NCM'] == 'MS'
@@ -270,12 +272,33 @@ soma_por_pais.sort_values(by=['VL_FOB'], ascending=[False], inplace=True)
 
 soma_por_pais = soma_por_pais.merge(df_pais, how='left', left_on='CO_PAIS', right_on='CO_PAIS')
 
+# ------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
+import pandas as pd
+
+pasta = caminho_base / 'Dados' / 'mdic' / 'anos'
+df = pd.read_csv(pasta / 'IMP_2020.csv',
+                       encoding = 'latin',
+                       delimiter = ';')
+
+cond1 = df['SG_UF_NCM'] == 'MS'
+filtro = df.loc[cond1, ['CO_NCM','VL_FOB']]
+soma_por_ncm = filtro.groupby(['CO_NCM'])['VL_FOB'].sum().to_frame()
+soma_por_ncm.reset_index(inplace=True)
+soma_por_ncm.sort_values(by=['VL_FOB'], ascending=[False], inplace=True)
+soma_por_ncm = soma_por_ncm.merge(df_ncm, how='left', left_on='CO_NCM', right_on='CO_NCM')
 
 
+cond1 = df['SG_UF_NCM'] == 'MS'
+cond2 = df['CO_NCM'] == 27112100
+filtro = df.loc[cond1 & cond2, ['CO_PAIS','VL_FOB']]
 
+soma_por_pais = filtro.groupby(['CO_PAIS'])['VL_FOB'].sum().to_frame()
+soma_por_pais.reset_index(inplace=True)
+soma_por_pais.sort_values(by=['VL_FOB'], ascending=[False], inplace=True)
 
-
-
+soma_por_pais = soma_por_pais.merge(df_pais, how='left', left_on='CO_PAIS', right_on='CO_PAIS')
 
 
 
