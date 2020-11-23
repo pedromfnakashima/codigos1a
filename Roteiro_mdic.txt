@@ -7,17 +7,17 @@ Séries:
 Programas:
 
 gExpImp_ncms(países=['China','EUA'], ufs=['MS','MT'], ncms=[1,2])
-
 mdic_1c.py
-Fazendo
+Feito
 
 Como identificar os códigos dos itens ncm?
+ok
 
-
-
-
-
-
+gs_ncms(uf=ms, tipo='EXP', ncms=[1,2,3])
+mdic_1d.py
+Não iniciado.
+Descrição: gera séries das ncms especificadas.
+Fazer análogo para o Caged.
 
 
 
