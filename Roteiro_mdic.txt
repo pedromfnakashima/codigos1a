@@ -15,11 +15,13 @@ ok
 
 gs_ncms(uf=ms, tipo='EXP', ncms=[1,2,3])
 mdic_1d.py
-Não iniciado.
+Fazendo.
 Descrição: gera séries das ncms especificadas.
 Fazer análogo para o Caged.
 
-
+Quais são os cinco primeiros de cada mês?
+mdic_1e.py
+Não iniciado.
 
 
 
