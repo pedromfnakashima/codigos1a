@@ -15,17 +15,17 @@ ok
 
 gs_ncms(uf=ms, tipo='EXP', ncms=[1,2,3])
 mdic_1d.py
-Fazendo.
+Feito.
 Descrição: gera séries das ncms especificadas.
 Fazer análogo para o Caged.
 
-Quais são os cinco primeiros de cada mês?
+Para uma dada ncm, quais são os cinco Estados que mais importaram ou mais exportaram, e os países destinos e origem que mais receberam ou enviaram?
 mdic_1e.py
-Não iniciado.
+Feito.
 
-
-
-
+Qual é a série com a média móvel dos últimos 12 meses?
+mdic_1f.py
+Fazendo.
 
 
 

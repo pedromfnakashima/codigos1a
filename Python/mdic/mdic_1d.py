@@ -86,7 +86,13 @@ def gs_mdic(tipo, ufs, ncms):
         df_bruto.set_index('mês',inplace=True)
         
         df_bruto_br = df_bruto.groupby(['mês'])['VL_FOB'].sum().to_frame()
-        col_nome = 'BR' + str(ncm)
+        
+        if tipo == 'EXP':
+            tipo_sigla = 'X'
+        elif tipo == 'IMP':
+            tipo_sigla = 'M'
+        
+        col_nome = tipo_sigla + 'BR' + str(ncm)
         df_bruto_br.rename(columns={'VL_FOB':col_nome},inplace=True)
         
         meses_copia = meses.copy()
@@ -95,7 +101,7 @@ def gs_mdic(tipo, ufs, ncms):
         for uf in ufs:
             cond1 = df_bruto['SG_UF_NCM'] == uf
             df_bruto_uf_i = df_bruto.copy().loc[cond1,['VL_FOB']]
-            col_nome = uf + str(ncm)
+            col_nome = tipo_sigla + uf + str(ncm)
             df_bruto_uf_i.rename(columns={'VL_FOB':col_nome},inplace=True)
             
             meses_copia = meses_copia.merge(df_bruto_uf_i,how='left',left_index=True,right_index=True)
@@ -113,10 +119,9 @@ def gs_mdic(tipo, ufs, ncms):
 ufs = ['MS','MT','GO']
 ncms = [12019000,10059010]
 
-df_series = gs_mdic(tipo='EXP', ufs=ufs, ncms=ncms)
+df_series_exp = gs_mdic(tipo='EXP', ufs=ufs, ncms=ncms)
 
-
-
+df_series_imp = gs_mdic(tipo='IMP', ufs=ufs, ncms=ncms)
 
 
 
