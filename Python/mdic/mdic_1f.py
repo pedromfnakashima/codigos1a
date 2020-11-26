@@ -114,28 +114,26 @@ def gs_mdic(tipo, ufs, ncms):
     df_final.fillna(0, inplace=True)
     
     return df_final
-
+# ------------------------------------
+def g_médiaMóvel(df, períodos):
+    df_copia = df.copy()
+    for coluna in df_copia.columns:
+        df_copia[coluna] = df_copia[coluna].rolling(períodos).mean()
+    return df_copia
+# ------------------------------------
 ufs = ['MS','MT','GO']
 ncms = [12019000,10059010]
+# ------------------------------------
 
 df_series_exp = gs_mdic(tipo='EXP', ufs=ufs, ncms=ncms)
 
+média_móvel = g_médiaMóvel(df_series_exp, períodos=12)
 
 # ------------------------------------
 
 pasta = caminho_base / 'Dados' / 'mdic'
 with pd.ExcelWriter(pasta / 'séries.xlsx', mode='a', engine="openpyxl") as writer:  
     df_series_exp.to_excel(writer, sheet_name='brutas', index=True)
-
-# ------------------------------------
-
-def g_médiaMóvel(df, períodos):
-    df_copia = df.copy()
-    for coluna in df_copia.columns:
-        df_copia[coluna] = df_copia[coluna].rolling(períodos).mean()
-    return df_copia
-
-média_móvel = g_médiaMóvel(df_series_exp, períodos=12)
 
 # ------------------------------------
 
