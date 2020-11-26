@@ -38,7 +38,7 @@ def gs_mdic(tipo, ufs, ncms):
     
     # -----------------------------------------------------------------------------------
     
-    np_datas = np.arange('2018-01-01','2022-01-01', 1, dtype='datetime64[M]')
+    np_datas = np.arange('1997-01-01','2022-01-01', 1, dtype='datetime64[M]')
     meses = pd.to_datetime(np_datas).to_frame()
     meses.rename(columns={0:'mês'}, inplace=True)
     meses.set_index('mês',inplace=True)

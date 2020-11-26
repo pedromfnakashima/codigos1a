@@ -25,7 +25,7 @@ Feito.
 
 Qual é a série com a média móvel dos últimos 12 meses?
 mdic_1f.py
-Fazendo.
+Feito.
 
 
 
