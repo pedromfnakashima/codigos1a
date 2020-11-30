@@ -251,6 +251,42 @@ print(f'{vl_transp:,.2f}\n')
 ############################## IMPORTAÇÕES #############################
 ########################################################################
 
+pasta = caminho_base / 'Dados' / 'mdic' / 'Tabelas - classificações'
+cgce = pd.read_excel(pasta/'TABELAS_AUXILIARES.xlsx', sheet_name='3')
+cgce = cgce[['CO_NCM','NO_CGCE_N3']]
+
+df_imp_cgce = df_imp.merge(cgce,how='left',left_on='CO_NCM',right_on='CO_NCM')
+
+cond1 = df_imp_cgce['NO_CGCE_N3']
+
+
+
+
+
+cond1 = df_imp_cgce['month'] <= 9
+df_imp_cgce = df_imp_cgce.loc[cond1,:]
+
+df_imp_cgce_somaAnos = df_imp_cgce.groupby(['year','NO_CGCE_N3'])['VL_FOB'].sum().to_frame().reset_index()
+
+df_imp_cgce_somaAnos.sort_values(by=['year','VL_FOB'], ascending=[False,False], inplace=True)
+df_imp_cgce_somaAnos.index = range(len(df_imp_cgce_somaAnos))
+
+cond1 = df_imp_cgce_somaAnos['NO_CGCE_N3'].str.contains('indust')
+df_imp_cgce_somaAnosBI = df_imp_cgce_somaAnos.loc[cond1,:]
+
+df_imp_cgce_somaAnos.sort_values(by=['year','VL_FOB'], ascending=[False,False], inplace=True)
+
+df_imp_cgce_somaAnosBI.drop([17,35], axis=0, inplace=True)
+
+df_imp_cgce_somaAnosBI_somaAno = df_imp_cgce_somaAnosBI.groupby(['year'])['VL_FOB'].sum()
+
+df_imp_cgce_somaAnosBI_somaAno2020 = df_imp_cgce_somaAnosBI_somaAno[2020]
+df_imp_cgce_somaAnosBI_somaAno2019 = df_imp_cgce_somaAnosBI_somaAno[2019]
+
+diferençaB = df_imp_cgce_somaAnosBI_somaAno2020 - df_imp_cgce_somaAnosBI_somaAno2019
+
+print(f'\nBens industriais:')
+print(f'{df_imp_cgce_somaAnosBI_somaAno2020:,.2f}\n')
 
 
 
@@ -259,7 +295,8 @@ print(f'{vl_transp:,.2f}\n')
 
 
 
-print(f'{:,.2f}\n')
+
+
 print(f'{:,.2f}\n')
 
 
