@@ -199,205 +199,122 @@ def mdic_01b(uf, anos, milhões=False):
     #     --->>>> Coloca no dicionário <<<<< ---   #
     dicionário['Média Móvel de 12 meses - Valor'] = df_media12m
     
+    # /\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
+    # /\/\/\/\/\/\/\/\/ Entradas do dicionário até aqui \/\/\/\/\/\/\/\\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
+    # /\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
+    
+    l_variaveis = pd.Series(['Mensal - Valor','Acumulado no Ano - Valor','Acumulado em 12 meses - Valor','Média Móvel de 12 meses - Valor'])
+
+    
     # /\/\/\/\/\/\/\//\/\/\/\/\/\/\//\/\/\/\/\/\/\//\/\/\/\/\/\/\//\/\/\/\/\/\/\//\/\/\/\/\/\/\/\/\/\/
     # /\/\/\/\/\/\/\//\ Participação /\/\/\/\//\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\\/\/\/
     # /\/\/\/\/\/\/\//\/\/\/\/\/\/\//\/\/\/\/\/\/\//\/\/\/\/\/\/\//\/\/\/\/\/\/\//\/\/\/\/\/\/\/\/\/\/
     
-    ##################################################################################################
-    ########## Mensal - Participação #################################################################
-    ##################################################################################################
-    df_mensal_part = df_mensal.copy()
-    colunas = pd.Series(df_mensal_part.columns)
-    cond1 = colunas.str.contains('Imp\.')
-    colunas = list(colunas[cond1])
-    for coluna in colunas:
-        df_mensal_part[coluna] = (df_mensal_part[coluna] / df_mensal_part['Importações']) * 100
-    colunas = pd.Series(df_mensal_part.columns)
-    cond1 = colunas.str.contains('Exp\.')
-    colunas = list(colunas[cond1])
-    for coluna in colunas:
-        df_mensal_part[coluna] = (df_mensal_part[coluna] / df_mensal_part['Exportações']) * 100
-    df_mensal_part.drop(['Saldo Comercial','Corrente de Comércio'],axis=1,inplace=True)
-    df_mensal_part.dropna(thresh=1, inplace=True)
-    df_mensal_part['Exportações'] = 100
-    df_mensal_part['Importações'] = 100
-    #     --->>>> Coloca no dicionário <<<<< ---   #
-    dicionário['Mensal - Participação'] = df_mensal_part
-    ##################################################################################################
-    ########## Acumulado no Ano - Participação #######################################################
-    ##################################################################################################
-    df_acumAno_part = df_acumAno.copy()
-    colunas = pd.Series(df_acumAno_part.columns)
-    cond1 = colunas.str.contains('Imp\.')
-    colunas = list(colunas[cond1])
-    for coluna in colunas:
-        df_acumAno_part[coluna] = (df_acumAno_part[coluna] / df_acumAno_part['Importações']) * 100
-    colunas = pd.Series(df_acumAno_part.columns)
-    cond1 = colunas.str.contains('Exp\.')
-    colunas = list(colunas[cond1])
-    for coluna in colunas:
-        df_acumAno_part[coluna] = (df_acumAno_part[coluna] / df_acumAno_part['Exportações']) * 100
-    df_acumAno_part.drop(['Saldo Comercial','Corrente de Comércio'],axis=1,inplace=True)
-    df_acumAno_part.dropna(thresh=1, inplace=True)
-    df_acumAno_part['Exportações'] = 100
-    df_acumAno_part['Importações'] = 100
-    #     --->>>> Coloca no dicionário <<<<< ---   #
-    dicionário['Acumulado no Ano - Participação'] = df_acumAno_part
-    ##################################################################################################
-    ########## Acumulado em 12 meses - Participação ##################################################
-    ##################################################################################################
-    df_acum12m_part = df_acum12m.copy()
-    colunas = pd.Series(df_acum12m_part.columns)
-    cond1 = colunas.str.contains('Imp\.')
-    colunas = list(colunas[cond1])
-    for coluna in colunas:
-        df_acum12m_part[coluna] = (df_acum12m_part[coluna] / df_acum12m_part['Importações']) * 100
-    colunas = pd.Series(df_acum12m_part.columns)
-    cond1 = colunas.str.contains('Exp\.')
-    colunas = list(colunas[cond1])
-    for coluna in colunas:
-        df_acum12m_part[coluna] = (df_acum12m_part[coluna] / df_acum12m_part['Exportações']) * 100
-    df_acum12m_part.drop(['Saldo Comercial','Corrente de Comércio'],axis=1,inplace=True)
-    df_acum12m_part.dropna(thresh=1, inplace=True)
-    df_acum12m_part['Exportações'] = 100
-    df_acum12m_part['Importações'] = 100
-    #     --->>>> Coloca no dicionário <<<<< ---   #
-    dicionário['Acumulado em 12 meses - Participação'] = df_acum12m_part
-    ##################################################################################################
-    ########## Média Móvel de 12 meses - Participação ################################################
-    ##################################################################################################
-    df_media12m_part = df_media12m.copy()
-    colunas = pd.Series(df_media12m_part.columns)
-    cond1 = colunas.str.contains('Imp\.')
-    colunas = list(colunas[cond1])
-    for coluna in colunas:
-        df_media12m_part[coluna] = (df_media12m_part[coluna] / df_media12m_part['Importações']) * 100
-    colunas = pd.Series(df_media12m_part.columns)
-    cond1 = colunas.str.contains('Exp\.')
-    colunas = list(colunas[cond1])
-    for coluna in colunas:
-        df_media12m_part[coluna] = (df_media12m_part[coluna] / df_media12m_part['Exportações']) * 100
-    df_media12m_part.drop(['Saldo Comercial','Corrente de Comércio'],axis=1,inplace=True)
-    df_media12m_part.dropna(thresh=1, inplace=True)
-    df_media12m_part['Exportações'] = 100
-    df_media12m_part['Importações'] = 100
-    #     --->>>> Coloca no dicionário <<<<< ---   #
-    dicionário['Média Móvel de 12 meses - Participação'] = df_media12m_part
+    novos_nomes = l_variaveis.str.replace('- Valor','- Participação')
     
-    # /\/\/\/\/\/\/\//\/\/\/\/\/\/\//\/\/\/\/\/\/\//\/\/\/\/\/\/\//\/\/\/\/\/\/\//\/\/\/\/\/\/\/\/\/\/
-    # /\/\/\/\/\/\/\//\ Variação Bruta com relação ao ano anterior /\/\/\/\//\/\/\/\/\/\/\/\/\/\\/\/\/
-    # /\/\/\/\/\/\/\//\/\/\/\/\/\/\//\/\/\/\/\/\/\//\/\/\/\/\/\/\//\/\/\/\/\/\/\//\/\/\/\/\/\/\/\/\/\/
+    for l_variavel, novo_nome in zip(l_variaveis, novos_nomes):
+        df_part = dicionário[l_variavel].copy()
+        # Importações
+        colunas = pd.Series(dicionário[l_variavel].columns)
+        cond1 = colunas.str.contains('Imp\.')
+        colunas = list(colunas[cond1])
+        for coluna in colunas:
+            df_part[coluna] = (df_part[coluna] / df_part['Importações']) * 100
+        # Exportações
+        colunas = pd.Series(dicionário[l_variavel].columns)
+        cond1 = colunas.str.contains('Exp\.')
+        colunas = list(colunas[cond1])
+        for coluna in colunas:
+            df_part[coluna] = (df_part[coluna] / df_part['Exportações']) * 100
+        # Deleta colunas inúteis do DF
+        df_part.drop(['Saldo Comercial','Corrente de Comércio'],axis=1,inplace=True)
+        df_part.dropna(thresh=1, inplace=True)
+        df_part['Exportações'] = 100
+        df_part['Importações'] = 100
+        #     --->>>> Coloca no dicionário <<<<< ---   #
+        dicionário[novo_nome] = df_part
     
-    ##################################################################################################
-    ########## Mensal - Variação Bruta com relação ao ano anterior ###################################
-    ##################################################################################################
-    df_mensal_varB = df_mensal.copy()
-    df_mensal_varB_L12 = df_mensal_varB.shift(periods=12)
-    colunas = list(df_mensal_varB.columns)
-    for coluna in colunas:
-        df_mensal_varB[coluna] = df_mensal_varB[coluna] - df_mensal_varB_L12[coluna]
-    df_mensal_varB.dropna(thresh=1, inplace=True)
-    #     --->>>> Preenche NA com 0 <<<<< ---   #
-    df_mensal_varB.fillna(0, inplace=True)
-    #     --->>>> Coloca no dicionário <<<<< ---   #
-    dicionário['Mensal - Variação Bruta com relação ao ano anterior'] = df_mensal_varB
-    ##################################################################################################
-    ########## Acumulado no Ano - Variação Bruta com relação ao ano anterior #########################
-    ##################################################################################################
-    df_acumAno_varB = df_acumAno.copy()
-    df_acumAno_varB_L12 = df_acumAno_varB.shift(periods=12)
-    colunas = list(df_acumAno_varB.columns)
-    for coluna in colunas:
-        df_acumAno_varB[coluna] = df_acumAno_varB[coluna] - df_acumAno_varB_L12[coluna]
-    df_acumAno_varB.dropna(thresh=1, inplace=True)
-    #     --->>>> Preenche NA com 0 <<<<< ---   #
-    df_acumAno_varB.fillna(0, inplace=True)
-    #     --->>>> Coloca no dicionário <<<<< ---   #
-    dicionário['Acumulado no Ano - Variação Bruta com relação ao ano anterior'] = df_acumAno_varB
-    ##################################################################################################
-    ########## Acumulado em 12 meses - Variação Bruta com relação ao ano anterior ####################
-    ##################################################################################################
-    df_acum12m_varB = df_acum12m.copy()
-    df_acum12m_varB_L12 = df_acum12m_varB.shift(periods=12)
-    colunas = list(df_acum12m_varB.columns)
-    for coluna in colunas:
-        df_acum12m_varB[coluna] = df_acum12m_varB[coluna] - df_acum12m_varB_L12[coluna]
-    df_acum12m_varB.dropna(thresh=1, inplace=True)
-    #     --->>>> Preenche NA com 0 <<<<< ---   #
-    df_acum12m_varB.fillna(0, inplace=True)
-    #     --->>>> Coloca no dicionário <<<<< ---   #
-    dicionário['Acumulado em 12 meses - Variação Bruta com relação ao ano anterior'] = df_acum12m_varB
-    ##################################################################################################
-    ########## Média Móvel de 12 meses - Variação Bruta com relação ao ano anterior ##################
-    ##################################################################################################
-    df_media12m_varB = df_media12m.copy()
-    df_media12m_varB_L12 = df_media12m_varB.shift(periods=12)
-    colunas = list(df_media12m_varB.columns)
-    for coluna in colunas:
-        df_media12m_varB[coluna] = df_media12m_varB[coluna] - df_media12m_varB_L12[coluna]
-    df_media12m_varB.dropna(thresh=1, inplace=True)
-    #     --->>>> Preenche NA com 0 <<<<< ---   #
-    df_media12m_varB.fillna(0, inplace=True)
-    #     --->>>> Coloca no dicionário <<<<< ---   #
-    dicionário['Média Móvel de 12 meses - Variação Bruta com relação ao ano anterior'] = df_media12m_varB
-    # *************************************************************************************************
     
-    # /\/\/\/\/\/\/\//\/\/\/\/\/\/\//\/\/\/\/\/\/\//\/\/\/\/\/\/\//\/\/\/\/\/\/\//\/\/\/\/\/\/\/\/\/\/
-    # /\/\/\/\/\/\/\//\ Variação Percentual com relação ao ano anterior /\/\/\/\//\/\/\/\/\/\/\/\/\/\/
-    # /\/\/\/\/\/\/\//\/\/\/\/\/\/\//\/\/\/\/\/\/\//\/\/\/\/\/\/\//\/\/\/\/\/\/\//\/\/\/\/\/\/\/\/\/\/
+    # /\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
+    # /\/\/\/\/\/\/\/\/ Variação Bruta com relação ao ano anterior /\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
+    # /\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
     
-    ##################################################################################################
-    ########## Mensal - Variação Percentual com relação ao ano anterior ##############################
-    ##################################################################################################
-    df_mensal_varP = df_mensal.copy()
-    df_mensal_varP_L12 = df_mensal_varP.shift(periods=12)
-    colunas = list(df_mensal_varP.columns)
-    for coluna in colunas:
-        df_mensal_varP[coluna] = ((df_mensal_varP[coluna] - df_mensal_varP_L12[coluna]) / df_mensal_varP_L12[coluna]) * 100
-    df_mensal_varP.dropna(thresh=1, inplace=True)
-    #     --->>>> Preenche NA com 0 <<<<< ---   #
-    df_mensal_varP.fillna(0, inplace=True)
-    #     --->>>> Coloca no dicionário <<<<< ---   #
-    dicionário['Mensal - Variação Percentual com relação ao ano anterior'] = df_mensal_varP
-    ##################################################################################################
-    ########## Acumulado no Ano - Variação Percentual com relação ao ano anterior ####################
-    ##################################################################################################
-    df_acumAno_varP = df_acumAno.copy()
-    df_acumAno_varP_L12 = df_acumAno_varP.shift(periods=12)
-    colunas = list(df_acumAno_varP.columns)
-    for coluna in colunas:
-        df_acumAno_varP[coluna] = ((df_acumAno_varP[coluna] - df_acumAno_varP_L12[coluna]) / df_acumAno_varP_L12[coluna]) * 100
-    df_acumAno_varP.dropna(thresh=1, inplace=True)
-    #     --->>>> Preenche NA com 0 <<<<< ---   #
-    df_acumAno_varP.fillna(0, inplace=True)
-    #     --->>>> Coloca no dicionário <<<<< ---   #
-    dicionário['Acumulado no Ano - Variação Percentual com relação ao ano anterior'] = df_acumAno_varP
-    ##################################################################################################
-    ########## Acumulado em 12 meses - Variação Percentual com relação ao ano anterior ###############
-    ##################################################################################################
-    df_acum12m_varP = df_acum12m.copy()
-    df_acum12m_varP_L12 = df_acum12m_varP.shift(periods=12)
-    colunas = list(df_acum12m_varP.columns)
-    for coluna in colunas:
-        df_acum12m_varP[coluna] = ((df_acum12m_varP[coluna] - df_acum12m_varP_L12[coluna]) / df_acum12m_varP_L12[coluna]) * 100
-    df_acum12m_varP.dropna(thresh=1, inplace=True)
-    #     --->>>> Preenche NA com 0 <<<<< ---   #
-    df_acum12m_varP.fillna(0, inplace=True)
-    #     --->>>> Coloca no dicionário <<<<< ---   #
-    dicionário['Acumulado em 12 meses - Variação Percentual com relação ao ano anterior'] = df_acum12m_varP
-    ##################################################################################################
-    ########## Média Móvel de 12 meses - Variação Percentual com relação ao ano anterior #############
-    ##################################################################################################
-    df_media12m_varP = df_media12m.copy()
-    df_media12m_varP_L12 = df_media12m_varP.shift(periods=12)
-    colunas = list(df_media12m_varP.columns)
-    for coluna in colunas:
-        df_media12m_varP[coluna] = ((df_media12m_varP[coluna] - df_media12m_varP_L12[coluna]) / df_media12m_varP_L12[coluna]) * 100
-    df_media12m_varP.dropna(thresh=1, inplace=True)
-    #     --->>>> Preenche NA com 0 <<<<< ---   #
-    df_media12m_varP.fillna(0, inplace=True)
-    #     --->>>> Coloca no dicionário <<<<< ---   #
-    dicionário['Média Móvel de 12 meses - Variação Percentual com relação ao ano anterior'] = df_media12m_varP
+    novos_nomes = l_variaveis.str.replace('- Valor','- Variação Bruta com relação ao ano anterior')
+    
+    for l_variavel, novo_nome in zip(l_variaveis, novos_nomes):
+        
+        df_varB = dicionário[l_variavel].copy()
+        df_varB_L12 = df_varB.shift(periods=12)
+        colunas = list(df_varB.columns)
+        
+        for coluna in colunas:
+            df_varB[coluna] = df_varB[coluna] - df_varB_L12[coluna]
+        df_varB.dropna(thresh=1, inplace=True)
+        #     --->>>> Preenche NA com 0 <<<<< ---   #
+        df_varB.fillna(0, inplace=True)
+        #     --->>>> Coloca no dicionário <<<<< ---   #
+        dicionário[novo_nome] = df_varB
+    
+    # /\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
+    # /\/\/\/\/\/\/\/\/ Variação Percentual com relação ao ano anterior /\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
+    # /\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
+    
+    novos_nomes = l_variaveis.str.replace('- Valor','- Variação Percentual com relação ao ano anterior')
+    
+    for l_variavel, novo_nome in zip(l_variaveis, novos_nomes):
+        
+        df_varP = dicionário[l_variavel].copy()
+        df_varP_L12 = df_varP.shift(periods=12)
+        colunas = list(df_varP.columns)
+        
+        for coluna in colunas:
+            df_varP[coluna] = ((df_varP[coluna] - df_varP_L12[coluna]) / df_varP_L12[coluna]) * 100
+        df_varP.dropna(thresh=1, inplace=True)
+        #     --->>>> Preenche NA com 0 <<<<< ---   #
+        df_varP.fillna(0, inplace=True)
+        #     --->>>> Coloca no dicionário <<<<< ---   #
+        dicionário[novo_nome] = df_varP
+    
+    # /\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
+    # /\/\/\/\/\/\/\/\/ Variação Bruta com relação ao mês anterior /\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
+    # /\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
+    
+    novos_nomes = l_variaveis.str.replace('- Valor','- Variação Bruta com relação ao mês anterior')
+    
+    for l_variavel, novo_nome in zip(l_variaveis, novos_nomes):
+        
+        df_varB = dicionário[l_variavel].copy()
+        df_varB_L1 = df_varB.shift(periods=1)
+        colunas = list(df_varB.columns)
+        
+        for coluna in colunas:
+            df_varB[coluna] = df_varB[coluna] - df_varB_L1[coluna]
+        df_varB.dropna(thresh=1, inplace=True)
+        #     --->>>> Preenche NA com 0 <<<<< ---   #
+        df_varB.fillna(0, inplace=True)
+        #     --->>>> Coloca no dicionário <<<<< ---   #
+        dicionário[novo_nome] = df_varB
+    
+    # /\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
+    # /\/\/\/\/\/\/\/\/ Variação Percentual com relação ao mês anterior /\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
+    # /\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
+    
+    novos_nomes = l_variaveis.str.replace('- Valor','- Variação Percentual com relação ao mês anterior')
+    
+    for l_variavel, novo_nome in zip(l_variaveis, novos_nomes):
+        
+        df_varP = dicionário[l_variavel].copy()
+        df_varP_L1 = df_varP.shift(periods=1)
+        colunas = list(df_varP.columns)
+        
+        for coluna in colunas:
+            df_varP[coluna] = ((df_varP[coluna] - df_varP_L1[coluna]) / df_varP_L1[coluna]) * 100
+        df_varP.dropna(thresh=1, inplace=True)
+        #     --->>>> Preenche NA com 0 <<<<< ---   #
+        df_varP.fillna(0, inplace=True)
+        #     --->>>> Coloca no dicionário <<<<< ---   #
+        dicionário[novo_nome] = df_varP
+    
     # *************************************************************************************************
     #     --->>>> Retorna o dicionário <<<<< ---   #
     return dicionário
