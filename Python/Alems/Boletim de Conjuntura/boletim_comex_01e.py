@@ -249,18 +249,71 @@ for l_variavel, novo_nome in zip(l_variaveis, novos_nomes):
     dicionário[novo_nome] = df_varP
 
 ########################################################################################################
-############################## Transpõe Valor Acumulado em 12 meses#####################################
+############################## Top Acumulado em 12 meses################################################
 ########################################################################################################
 
 df_acum12m_cp = dicionário['Acumulado em 12 meses - Valor'].copy()
 df_acum12m_cp['dt_ano_mes'] = df_acum12m_cp.index.year.astype('str') + '_' + df_acum12m_cp.index.month.astype('str')
+df_acum12m_cp.drop([tipo_extenso],axis=1,inplace=True)
+
 ultimo = df_acum12m_cp.iloc[-1,-1]
 df_acum12m_cp.sort_index(ascending=False, inplace=True)
 df_acum12m_cp.set_index('dt_ano_mes',inplace=True)
 df_acum12m_cp_T = df_acum12m_cp.T
 df_acum12m_cp_T.sort_values(by=[ultimo],ascending=[False],inplace=True)
 
-dicionário['Acumulado em 12 meses - Maiores setores'] = df_acum12m_cp_T
+dicionário2 = {}
+
+dicionário2['Acumulado em 12 meses - Maiores setores (longo)'] = df_acum12m_cp_T
+
+top10 = dicionário2['Acumulado em 12 meses - Maiores setores (longo)'].iloc[0:10,:]
+top10_variaveis = list(top10.copy().reset_index()['index'])
+
+outros = dicionário2['Acumulado em 12 meses - Maiores setores (longo)'].iloc[10:,:]
+outros_variaveis = list(outros.copy().reset_index()['index'])
+outros = outros.sum(axis=1).to_frame().T
+outros.rename(mapper={0:'Outros'},axis=0,inplace=True)
+top10 = top10.append(outros)
+dicionário2['Acumulado em 12 meses - Maiores setores (curto)'] = top10
+dicionário2['Acumulado em 12 meses - Maiores setores (curto)'].loc['Total Geral',:] = dicionário2['Acumulado em 12 meses - Maiores setores (curto)'].sum(axis=0)
+
+########################################################################################################
+############################## Top mensal ##############################################################
+########################################################################################################
+
+df_mensal_cp = dicionário['Mensal - Valor'].copy()
+df_mensal_cp_Top10 = df_mensal_cp[top10_variaveis]
+df_mensal_cp_Top10.loc[:,'dt_ano_mes'] = df_mensal_cp_Top10.index.year.astype('str') + '_' + df_mensal_cp_Top10.index.month.astype('str')
+df_mensal_cp_Top10.sort_index(ascending=False, inplace=True)
+df_mensal_cp_Top10.set_index('dt_ano_mes',inplace=True)
+df_mensal_cp_Top10T = df_mensal_cp_Top10.T
+df_mensal_cp_Top10T.sort_values(by=[ultimo],ascending=[False],inplace=True)
+
+
+
+
+
+
+
+df_mensal_cp = dicionário['Mensal - Valor'].copy()
+outros = df_mensal_cp[outros_variaveis]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
