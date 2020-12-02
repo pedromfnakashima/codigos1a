@@ -249,54 +249,95 @@ for l_variavel, novo_nome in zip(l_variaveis, novos_nomes):
     dicionário[novo_nome] = df_varP
 
 ########################################################################################################
-############################## Top Acumulado em 12 meses################################################
-########################################################################################################
-
-df_acum12m_cp = dicionário['Acumulado em 12 meses - Valor'].copy()
-df_acum12m_cp['dt_ano_mes'] = df_acum12m_cp.index.year.astype('str') + '_' + df_acum12m_cp.index.month.astype('str')
-df_acum12m_cp.drop([tipo_extenso],axis=1,inplace=True)
-
-ultimo = df_acum12m_cp.iloc[-1,-1]
-df_acum12m_cp.sort_index(ascending=False, inplace=True)
-df_acum12m_cp.set_index('dt_ano_mes',inplace=True)
-df_acum12m_cp_T = df_acum12m_cp.T
-df_acum12m_cp_T.sort_values(by=[ultimo],ascending=[False],inplace=True)
 
 dicionário2 = {}
 
-dicionário2['Acumulado em 12 meses - Maiores setores (longo)'] = df_acum12m_cp_T
+######################################################################################################################
+############################## Função que retorna duas listas com as variáveis mais e menos importantes ##############
+######################################################################################################################
 
-top10 = dicionário2['Acumulado em 12 meses - Maiores setores (longo)'].iloc[0:10,:]
-top10_variaveis = list(top10.copy().reset_index()['index'])
+def mais_relevantes(df):
+    # Copia o data frame
+    df_cp = df.copy()
+    # Cria coluna do mês por extenso
+    df_cp['dt_ano_mes'] = df_cp.index.year.astype('str') + '_' + df_cp.index.month.astype('str')
+    # Deleta coluna das exportações ou importações
+    df_cp.drop([tipo_extenso],axis=1,inplace=True)
+    # Pega o último mês, que vai servir de referência para a ordenação
+    ultimo = df_cp.iloc[-1,-1]
+    # Ordena o index por ordem decrescente
+    df_cp.sort_index(ascending=False, inplace=True)
+    # Coloca o mês string no índice
+    df_cp.set_index('dt_ano_mes',inplace=True)
+    # Transpõe o df
+    df_longo = df_cp.T
+    # Ordena pela coluna do último mês
+    df_longo.sort_values(by=[ultimo],ascending=[False],inplace=True)
+    # Seleciona os setores MAIS e MENOS importantes
+    df_importantesMais = df_longo.iloc[0:10,:]
+    df_importantesMenos = df_longo.iloc[10:,:]
+    # Coloca na lista as variáveis dos setores MAIS e MENOS importantes (usado nos loopings do próximo bloco)
+    li_importantesMais_variaveis = list(df_importantesMais.copy().reset_index()['index'])
+    li_importantesMenos_variaveis = list(df_importantesMenos.copy().reset_index()['index'])
+    
+    return li_importantesMais_variaveis, li_importantesMenos_variaveis, ultimo
 
-outros = dicionário2['Acumulado em 12 meses - Maiores setores (longo)'].iloc[10:,:]
-outros_variaveis = list(outros.copy().reset_index()['index'])
-outros = outros.sum(axis=1).to_frame().T
-outros.rename(mapper={0:'Outros'},axis=0,inplace=True)
-top10 = top10.append(outros)
-dicionário2['Acumulado em 12 meses - Maiores setores (curto)'] = top10
-dicionário2['Acumulado em 12 meses - Maiores setores (curto)'].loc['Total Geral',:] = dicionário2['Acumulado em 12 meses - Maiores setores (curto)'].sum(axis=0)
+li_importantesMais_variaveis, li_importantesMenos_variaveis, ultimo = mais_relevantes(dicionário['Acumulado em 12 meses - Valor'])
+
 
 ########################################################################################################
-############################## Top mensal ##############################################################
+########### Top: Mensal, Acumulado no ano, acumulado em 12 meses, e média móvel de 12 meses ############
 ########################################################################################################
 
-df_mensal_cp = dicionário['Mensal - Valor'].copy()
-df_mensal_cp_Top10 = df_mensal_cp[top10_variaveis]
-df_mensal_cp_Top10.loc[:,'dt_ano_mes'] = df_mensal_cp_Top10.index.year.astype('str') + '_' + df_mensal_cp_Top10.index.month.astype('str')
-df_mensal_cp_Top10.sort_index(ascending=False, inplace=True)
-df_mensal_cp_Top10.set_index('dt_ano_mes',inplace=True)
-df_mensal_cp_Top10T = df_mensal_cp_Top10.T
-df_mensal_cp_Top10T.sort_values(by=[ultimo],ascending=[False],inplace=True)
+# Coloca na lista as variáveis dos setores MAIS e MENOS importantes
+
+li_variaveis = pd.Series(['Mensal - Valor','Acumulado no Ano - Valor','Acumulado em 12 meses - Valor', 'Média Móvel de 12 meses - Valor'])
+
+# ------------------------------------------------------------------------------------------------------
+
+for vl_variavel in li_variaveis:
+    
+    #vl_variavel = 'Mensal - Valor'
+    
+    # Copia o df
+    df_cp = dicionário[vl_variavel].copy()
+    # Deleta coluna das exportações ou importações
+    df_cp.drop([tipo_extenso],axis=1,inplace=True)
+    # Cria coluna do mês por extenso
+    df_cp['dt_ano_mes'] = df_cp.index.year.astype('str') + '_' + df_cp.index.month.astype('str')
+    # Ordena o index por ordem decrescente
+    df_cp.sort_index(ascending=False, inplace=True)
+    # Coloca o mês string no índice
+    df_cp.set_index('dt_ano_mes',inplace=True)
+    # Transpõe o df
+    df_longo = df_cp.T
+    # Ordena pela coluna do último mês
+    df_longo.sort_values(by=[ultimo],ascending=[False],inplace=True)
+    
+    # Seleciona os setores MAIS e MENOS importantes
+    df_importantesMais = df_longo.loc[li_importantesMais_variaveis,:]
+    df_importantesMenos = df_longo.loc[li_importantesMenos_variaveis,:]
+    
+    # Soma (ao longo das linhas), para cada mês (nas colunas), o valor dos setores menos importantes
+    df_importantesMenos_soma = df_importantesMenos.sum(axis=0).to_frame().T
+    
+    # Renomeia a linha da soma para 'Outros'
+    df_importantesMenos_soma.rename(mapper={0:'Outros'},axis=0,inplace=True)
+    
+    # Junta a soma dos valores menos importantes aos setores mais importantes
+    df_importantesMais = df_importantesMais.append(df_importantesMenos_soma)
+    
+    # Cria linha com total geral
+    df_importantesMais.loc['Total Geral',:] = df_importantesMais.sum(axis=0)
+    
+    nome_longo = vl_variavel + ' - Maiores setores (longo)'
+    nome_curto = vl_variavel + ' - Maiores setores (curto)'
+    
+    # Adiciona a dicionário2
+    dicionário2[nome_longo] = df_longo.copy()
+    dicionário2[nome_curto] = df_importantesMais.copy()
 
 
-
-
-
-
-
-df_mensal_cp = dicionário['Mensal - Valor'].copy()
-outros = df_mensal_cp[outros_variaveis]
 
 
 
