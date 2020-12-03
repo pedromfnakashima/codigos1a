@@ -37,27 +37,48 @@ arq_nome = 'CAGEDMOV201912.csv'
 
 arq_nome = 'CAGEDMOV202001.csv'
 
+import pandas as pd
+
 pasta = caminho_base / 'Dados' / 'trabalho' / 'caged_vinculos' / 'microdados' / 'csv_processados'
 df = pd.read_csv(pasta / arq_nome,
                  delimiter = ';',
                  decimal=',')
 
+import glob
+import pandas as pd
+from pathlib import Path
 
-print(df.columns)
+os.chdir(pasta)
+
+vetor1 = []
+
+for arq_num, arq_nome in enumerate(glob.glob('*.csv')):
+    print(arq_nome)
+    
+    df = pd.read_csv(pasta / arq_nome,
+                 delimiter = ';',
+                 decimal=',')
+    
+    colunas = df.columns
+    
+    vl_bool = 'classe.1' in colunas
+    
+    vetor1.append(vl_bool)
+    
+    
+    
+    
+colunas = df.columns
+
+print('competência' in colunas)
 
 
+vl_bool = 'classe.1' in colunas
 
 
+vetor1 = []
 
-
-
-
-
-
-
-
-
-
+vetor1.append(vl_bool)
 
 
 
