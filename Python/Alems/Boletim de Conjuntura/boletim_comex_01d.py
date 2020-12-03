@@ -59,7 +59,7 @@ def mdic_01a(tipo, uf, anos):
     return df_bruto
 
 def mdic_01b(uf, anos, milhões=False):
-    dicionário = {}
+    dicionário1 = {}
     # /\/\/\/\/\/\/\//\/\/\/\/\/\/\//\/\/\/\/\/\/\//\/\/\/\/\/\/\//\/\/\/\/\/\/\//\/\/\/\/\/\/\/\/\/\/
     # /\/\/\/\/\/\/\//\ Valor /\/\/\/\//\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
     # /\/\/\/\/\/\/\//\/\/\/\/\/\/\//\/\/\/\/\/\/\//\/\/\/\/\/\/\//\/\/\/\/\/\/\//\/\/\/\/\/\/\/\/\/\/
@@ -154,13 +154,22 @@ def mdic_01b(uf, anos, milhões=False):
     df_mensal['Corrente de Comércio'] = df_mensal['Exportações'] + df_mensal['Importações']
     #     --->>>> Preenche NA com 0 <<<<< ---   #
     df_mensal.fillna(0, inplace=True)
+    # Muda a ordem
+    cols_ordem = ['Exportações', 'Exp. Básicos', 'Exp. Industrializados', 'Exp. Manufaturados',
+       'Exp. Semimanufaturados', 'Importações', 'Imp. Bens Industriais',
+       'Imp. Bens Intermediários', 'Imp. Bens de Capital', 'Imp. Combustíveis e Lubrificantes',
+        'Imp. Bens de Consumo', 'Imp. Bens de Consumo não-duráveis', 'Imp. Bens de Consumo duráveis',
+        'Imp. Não Classificados', 'Saldo Comercial', 'Corrente de Comércio']
+       
+    df_mensal = df_mensal.loc[:, cols_ordem]
+    
     #     --->>>> Converte para milhões <<<<< ---   #
     if milhões == True:
         df_mensal = df_mensal / 1_000_000
     #     --->>>> Muda a frequência do index para MS <<<<< ---   #
     df_mensal.index.freq = 'MS'
-    #     --->>>> Coloca no dicionário <<<<< ---   #
-    dicionário['Mensal - Valor'] = df_mensal
+    #     --->>>> Coloca no dicionário1 <<<<< ---   #
+    dicionário1['Mensal - Valor'] = df_mensal
     ##################################################################################################
     ########## Acumulado no Ano - Valor ##############################################################
     ##################################################################################################
@@ -172,8 +181,8 @@ def mdic_01b(uf, anos, milhões=False):
     df_acumAno.drop(['dt_ano'],axis=1,inplace=True)
     #     --->>>> Muda a frequência do index para MS <<<<< ---   #
     df_acumAno.index.freq = 'MS'
-    #     --->>>> Coloca no dicionário <<<<< ---   #
-    dicionário['Acumulado no Ano - Valor'] = df_acumAno
+    #     --->>>> Coloca no dicionário1 <<<<< ---   #
+    dicionário1['Acumulado no Ano - Valor'] = df_acumAno
     ##################################################################################################
     ########## Acumulado em 12 meses - Valor #########################################################
     ##################################################################################################
@@ -184,8 +193,8 @@ def mdic_01b(uf, anos, milhões=False):
     df_acum12m.dropna(thresh=1, inplace=True)
     #     --->>>> Muda a frequência do index para MS <<<<< ---   #
     df_acum12m.index.freq = 'MS'
-    #     --->>>> Coloca no dicionário <<<<< ---   #
-    dicionário['Acumulado em 12 meses - Valor'] = df_acum12m
+    #     --->>>> Coloca no dicionário1 <<<<< ---   #
+    dicionário1['Acumulado em 12 meses - Valor'] = df_acum12m
     ##################################################################################################
     ########## Média Móvel de 12 meses - Valor #######################################################
     ##################################################################################################
@@ -196,8 +205,8 @@ def mdic_01b(uf, anos, milhões=False):
     df_media12m.dropna(thresh=1, inplace=True)
     #     --->>>> Muda a frequência do index para MS <<<<< ---   #
     df_media12m.index.freq = 'MS'
-    #     --->>>> Coloca no dicionário <<<<< ---   #
-    dicionário['Média Móvel de 12 meses - Valor'] = df_media12m
+    #     --->>>> Coloca no dicionário1 <<<<< ---   #
+    dicionário1['Média Móvel de 12 meses - Valor'] = df_media12m
     
     # /\/\/\/\/\/\/\//\/\/\/\/\/\/\//\/\/\/\/\/\/\//\/\/\/\/\/\/\//\/\/\/\/\/\/\//\/\/\/\/\/\/\/\/\/\/
     # /\/\/\/\/\/\/\//\ Participação /\/\/\/\//\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\\/\/\/
@@ -221,8 +230,8 @@ def mdic_01b(uf, anos, milhões=False):
     df_mensal_part.dropna(thresh=1, inplace=True)
     df_mensal_part['Exportações'] = 100
     df_mensal_part['Importações'] = 100
-    #     --->>>> Coloca no dicionário <<<<< ---   #
-    dicionário['Mensal - Participação'] = df_mensal_part
+    #     --->>>> Coloca no dicionário1 <<<<< ---   #
+    dicionário1['Mensal - Participação'] = df_mensal_part
     ##################################################################################################
     ########## Acumulado no Ano - Participação #######################################################
     ##################################################################################################
@@ -241,8 +250,8 @@ def mdic_01b(uf, anos, milhões=False):
     df_acumAno_part.dropna(thresh=1, inplace=True)
     df_acumAno_part['Exportações'] = 100
     df_acumAno_part['Importações'] = 100
-    #     --->>>> Coloca no dicionário <<<<< ---   #
-    dicionário['Acumulado no Ano - Participação'] = df_acumAno_part
+    #     --->>>> Coloca no dicionário1 <<<<< ---   #
+    dicionário1['Acumulado no Ano - Participação'] = df_acumAno_part
     ##################################################################################################
     ########## Acumulado em 12 meses - Participação ##################################################
     ##################################################################################################
@@ -261,8 +270,8 @@ def mdic_01b(uf, anos, milhões=False):
     df_acum12m_part.dropna(thresh=1, inplace=True)
     df_acum12m_part['Exportações'] = 100
     df_acum12m_part['Importações'] = 100
-    #     --->>>> Coloca no dicionário <<<<< ---   #
-    dicionário['Acumulado em 12 meses - Participação'] = df_acum12m_part
+    #     --->>>> Coloca no dicionário1 <<<<< ---   #
+    dicionário1['Acumulado em 12 meses - Participação'] = df_acum12m_part
     ##################################################################################################
     ########## Média Móvel de 12 meses - Participação ################################################
     ##################################################################################################
@@ -281,8 +290,8 @@ def mdic_01b(uf, anos, milhões=False):
     df_media12m_part.dropna(thresh=1, inplace=True)
     df_media12m_part['Exportações'] = 100
     df_media12m_part['Importações'] = 100
-    #     --->>>> Coloca no dicionário <<<<< ---   #
-    dicionário['Média Móvel de 12 meses - Participação'] = df_media12m_part
+    #     --->>>> Coloca no dicionário1 <<<<< ---   #
+    dicionário1['Média Móvel de 12 meses - Participação'] = df_media12m_part
     
     # /\/\/\/\/\/\/\//\/\/\/\/\/\/\//\/\/\/\/\/\/\//\/\/\/\/\/\/\//\/\/\/\/\/\/\//\/\/\/\/\/\/\/\/\/\/
     # /\/\/\/\/\/\/\//\ Variação Bruta com relação ao ano anterior /\/\/\/\//\/\/\/\/\/\/\/\/\/\\/\/\/
@@ -299,8 +308,8 @@ def mdic_01b(uf, anos, milhões=False):
     df_mensal_varB.dropna(thresh=1, inplace=True)
     #     --->>>> Preenche NA com 0 <<<<< ---   #
     df_mensal_varB.fillna(0, inplace=True)
-    #     --->>>> Coloca no dicionário <<<<< ---   #
-    dicionário['Mensal - Variação Bruta com relação ao ano anterior'] = df_mensal_varB
+    #     --->>>> Coloca no dicionário1 <<<<< ---   #
+    dicionário1['Mensal - Variação Bruta com relação ao ano anterior'] = df_mensal_varB
     ##################################################################################################
     ########## Acumulado no Ano - Variação Bruta com relação ao ano anterior #########################
     ##################################################################################################
@@ -312,8 +321,8 @@ def mdic_01b(uf, anos, milhões=False):
     df_acumAno_varB.dropna(thresh=1, inplace=True)
     #     --->>>> Preenche NA com 0 <<<<< ---   #
     df_acumAno_varB.fillna(0, inplace=True)
-    #     --->>>> Coloca no dicionário <<<<< ---   #
-    dicionário['Acumulado no Ano - Variação Bruta com relação ao ano anterior'] = df_acumAno_varB
+    #     --->>>> Coloca no dicionário1 <<<<< ---   #
+    dicionário1['Acumulado no Ano - Variação Bruta com relação ao ano anterior'] = df_acumAno_varB
     ##################################################################################################
     ########## Acumulado em 12 meses - Variação Bruta com relação ao ano anterior ####################
     ##################################################################################################
@@ -325,8 +334,8 @@ def mdic_01b(uf, anos, milhões=False):
     df_acum12m_varB.dropna(thresh=1, inplace=True)
     #     --->>>> Preenche NA com 0 <<<<< ---   #
     df_acum12m_varB.fillna(0, inplace=True)
-    #     --->>>> Coloca no dicionário <<<<< ---   #
-    dicionário['Acumulado em 12 meses - Variação Bruta com relação ao ano anterior'] = df_acum12m_varB
+    #     --->>>> Coloca no dicionário1 <<<<< ---   #
+    dicionário1['Acumulado em 12 meses - Variação Bruta com relação ao ano anterior'] = df_acum12m_varB
     ##################################################################################################
     ########## Média Móvel de 12 meses - Variação Bruta com relação ao ano anterior ##################
     ##################################################################################################
@@ -338,8 +347,8 @@ def mdic_01b(uf, anos, milhões=False):
     df_media12m_varB.dropna(thresh=1, inplace=True)
     #     --->>>> Preenche NA com 0 <<<<< ---   #
     df_media12m_varB.fillna(0, inplace=True)
-    #     --->>>> Coloca no dicionário <<<<< ---   #
-    dicionário['Média Móvel de 12 meses - Variação Bruta com relação ao ano anterior'] = df_media12m_varB
+    #     --->>>> Coloca no dicionário1 <<<<< ---   #
+    dicionário1['Média Móvel de 12 meses - Variação Bruta com relação ao ano anterior'] = df_media12m_varB
     # *************************************************************************************************
     
     # /\/\/\/\/\/\/\//\/\/\/\/\/\/\//\/\/\/\/\/\/\//\/\/\/\/\/\/\//\/\/\/\/\/\/\//\/\/\/\/\/\/\/\/\/\/
@@ -357,8 +366,8 @@ def mdic_01b(uf, anos, milhões=False):
     df_mensal_varP.dropna(thresh=1, inplace=True)
     #     --->>>> Preenche NA com 0 <<<<< ---   #
     df_mensal_varP.fillna(0, inplace=True)
-    #     --->>>> Coloca no dicionário <<<<< ---   #
-    dicionário['Mensal - Variação Percentual com relação ao ano anterior'] = df_mensal_varP
+    #     --->>>> Coloca no dicionário1 <<<<< ---   #
+    dicionário1['Mensal - Variação Percentual com relação ao ano anterior'] = df_mensal_varP
     ##################################################################################################
     ########## Acumulado no Ano - Variação Percentual com relação ao ano anterior ####################
     ##################################################################################################
@@ -370,8 +379,8 @@ def mdic_01b(uf, anos, milhões=False):
     df_acumAno_varP.dropna(thresh=1, inplace=True)
     #     --->>>> Preenche NA com 0 <<<<< ---   #
     df_acumAno_varP.fillna(0, inplace=True)
-    #     --->>>> Coloca no dicionário <<<<< ---   #
-    dicionário['Acumulado no Ano - Variação Percentual com relação ao ano anterior'] = df_acumAno_varP
+    #     --->>>> Coloca no dicionário1 <<<<< ---   #
+    dicionário1['Acumulado no Ano - Variação Percentual com relação ao ano anterior'] = df_acumAno_varP
     ##################################################################################################
     ########## Acumulado em 12 meses - Variação Percentual com relação ao ano anterior ###############
     ##################################################################################################
@@ -383,8 +392,8 @@ def mdic_01b(uf, anos, milhões=False):
     df_acum12m_varP.dropna(thresh=1, inplace=True)
     #     --->>>> Preenche NA com 0 <<<<< ---   #
     df_acum12m_varP.fillna(0, inplace=True)
-    #     --->>>> Coloca no dicionário <<<<< ---   #
-    dicionário['Acumulado em 12 meses - Variação Percentual com relação ao ano anterior'] = df_acum12m_varP
+    #     --->>>> Coloca no dicionário1 <<<<< ---   #
+    dicionário1['Acumulado em 12 meses - Variação Percentual com relação ao ano anterior'] = df_acum12m_varP
     ##################################################################################################
     ########## Média Móvel de 12 meses - Variação Percentual com relação ao ano anterior #############
     ##################################################################################################
@@ -396,197 +405,44 @@ def mdic_01b(uf, anos, milhões=False):
     df_media12m_varP.dropna(thresh=1, inplace=True)
     #     --->>>> Preenche NA com 0 <<<<< ---   #
     df_media12m_varP.fillna(0, inplace=True)
-    #     --->>>> Coloca no dicionário <<<<< ---   #
-    dicionário['Média Móvel de 12 meses - Variação Percentual com relação ao ano anterior'] = df_media12m_varP
+    #     --->>>> Coloca no dicionário1 <<<<< ---   #
+    dicionário1['Média Móvel de 12 meses - Variação Percentual com relação ao ano anterior'] = df_media12m_varP
     # *************************************************************************************************
-    #     --->>>> Retorna o dicionário <<<<< ---   #
-    return dicionário
-
-######################################################################################################
-######################################################################################################
-######################################################################################################
-
-tabMdicMS = mdic_01b('MS', anos=[2018,2019,2020], milhões=True)
-
-tabMdicRJ = mdic_01b('RJ', anos=[2018,2019,2020], milhões=True)
-
-tabMdicSP = mdic_01b('SP', anos=[2018,2019,2020], milhões=True)
-
-tabMdicBR = mdic_01b('BR', anos=[2018,2019,2020], milhões=True)
-
-######################################################################################################
-######################################################################################################
-######################################################################################################
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-df_mensal = tabMdicSP['Mensal - Valor'].copy()
-
-df_mensal.fillna(0, inplace=True)
-
-
-
-
-
-
-
-
-
-
-df_acum12m = tabMdicMS['Mensal - Valor'].copy()
-colunas = list(df_acum12m.columns)
-for coluna in colunas:
-    print(coluna)
-    df_acum12m[coluna] = df_acum12m[coluna].rolling(12).sum()
-
-
-df_acum12m.dropna(thresh=1, inplace=True)
-#     --->>>> Muda a frequência do index para MS <<<<< ---   #
-df_acum12m.index.freq = 'MS'
-#     --->>>> Coloca no dicionário <<<<< ---   #
-dicionário['Acumulado em 12 meses - Valor'] = df_acum12m
-
-
-
-
-
-
-
-tabMdic_cp = tabMdic['Mensal - Valor'].copy()
-tabMdic_cp_L12 = tabMdic_cp.shift(periods=12)
-colunas = list(tabMdic_cp.columns)
-for coluna in colunas:
-    print(coluna)
-    tabMdic_cp[coluna] = ((tabMdic_cp[coluna] - tabMdic_cp_L12[coluna]) / tabMdic_cp_L12[coluna]) * 100
-tabMdic_cp.dropna(inplace=True)
-
-
-df.shift(periods=3)
-
-
-print(tabMdic_cp.index)
-
-colunas = list(tabMdic_cp.columns)
-for coluna in colunas:
-    tabMdic_cp[coluna] = tabMdic_cp[coluna].rolling(12).sum()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-tabMdic_cp = tabMdic['Acumulado em 12 meses - Participação'].copy()
-tabMdic_cp.drop(['Exportações','Importações'],axis=1,inplace=True)
-tabMdic_cp.dropna(inplace=True)
-
-
-tabMdic_cp = tabMdic['Valor Mensal'].copy() / 1_000_000
-
-colunas = pd.Series(tabMdic_cp.columns)
-cond1 = colunas.str.contains('Imp\.')
-colunas = list(colunas[cond1])
-for coluna in colunas:
-    print(coluna)
-    tabMdic_cp[coluna] = (tabMdic_cp[coluna] / tabMdic_cp['Importações']) * 100
-
-colunas = pd.Series(tabMdic_cp.columns)
-cond1 = colunas.str.contains('Exp\.')
-colunas = list(colunas[cond1])
-for coluna in colunas:
-    print(coluna)
-    tabMdic_cp[coluna] = (tabMdic_cp[coluna] / tabMdic_cp['Exportações']) * 100
     
+    dicionário2 = {}
 
-['Saldo Comercial','Corrente de Comércio']
-
-str1 = 'abc'
-print('d' in str1)
-
-
-
-
-del bool
-
-
-
-
-tabMdic_cp = tabMdic['Valor Mensal'].copy() / 1_000_000
-colunas = list(tabMdic_cp.columns)
-for coluna in colunas:
-    tabMdic_cp[coluna] = tabMdic_cp[coluna].rolling(12).sum()
+    for key in dicionário1.keys():
+        print(key)
+        df_bc = dicionário1[key].copy()
+        df_bc['dt_ano_mes'] =  df_bc.index.year.astype('str') + '_' + df_bc.index.month.astype('str')
+        df_bc.sort_index(ascending=False, inplace=True)
+        df_bc.set_index('dt_ano_mes',inplace=True)
+        df_bc = df_bc.T
+        dicionário2[key] = df_bc
+    
+    #     --->>>> Retorna o dicionário1 e dicionário2 <<<<< ---   #
+    return dicionário1, dicionário2
 
 
+######################################################################################################
+######################################################################################################
+######################################################################################################
 
-tabMdic_cp = tabMdic['Valor Mensal'].copy() / 1_000_000
-tabMdic_cp['dt_ano'] = bcnd.index.year
-colunas = list(set(list(tabMdic_cp.columns)) - {'dt_ano'})
-for coluna in colunas:
-    print(coluna)
-    tabMdic_cp[coluna] = tabMdic_cp.groupby(['dt_ano'])[coluna].cumsum()
-tabMdic_cp.drop(['dt_ano'],axis=1,inplace=True)
+seriesRJ, tabelasRJ = mdic_01b('RJ', anos=[2018,2019,2020], milhões=True)
 
 
+seriesMS, tabelasMS = mdic_01b('MS', anos=[2018,2019,2020], milhões=True)
+seriesSP, tabelasSP = mdic_01b('SP', anos=[2018,2019,2020], milhões=True)
+seriesBR, tabelasBR = mdic_01b('BR', anos=[2018,2019,2020], milhões=True)
 
+######################################################################################################
+######################################################################################################
+######################################################################################################
 
 
 
 
 
-
-
-tabMdic_cp = tabMdic_cp.groupby(['dt_ano'])['Imp. Bens de Consumo não-duráveis'].cumsum()
-
-
-bcnd = tabMdic_cp['Imp. Bens de Consumo não-duráveis'].to_frame()
-bcnd['dt_ano'] = bcnd.index.year
-
-bcnd['cumsum'] = bcnd.groupby(['dt_ano'])['Imp. Bens de Consumo não-duráveis'].cumsum()
-
-
-
-print(tabMdic_cp.columns)
-
-
-
-pasta = caminho_base / 'Dados' / 'alems' / 'Boletim de conjuntura'
-with pd.ExcelWriter(pasta / 'Dados_01a.xlsx', mode='a', engine="openpyxl") as writer:  
-    bcnd.to_excel(writer, sheet_name='planTeste1', index=True)
 
 
 

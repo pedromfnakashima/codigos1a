@@ -33,7 +33,7 @@ print('\nDiretório atual:\n', os.getcwd())
 
 '''
 META 1
-Ler um arquivo em uma pasta, csv, e salvar em outra, em xlsx
+Ler um arquivo em uma pasta, csv, e salvar em outra, em csv
 '''
 
 def cgd_agrega():
@@ -47,7 +47,7 @@ def cgd_agrega():
     for arq_num, arq_nome in enumerate(glob.glob('CAGEDMOV2020*.txt')):
         
         print(f'Processando {arq_nome}')
-
+        
         dic_colunas_tipos_0 = {'competência':'string',
                                'município':pd.Int64Dtype(),
                                'cbo2002ocupação':pd.Int64Dtype(),
@@ -104,8 +104,8 @@ def cgd_agrega():
         novo_nome = arq_nome_semExt + '.csv'
         df.to_csv(caminho_destino / novo_nome, sep=';', decimal=',', index=False)
         
-
-    
+        
+        
 cgd_agrega()
 
 

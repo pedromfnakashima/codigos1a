@@ -89,7 +89,7 @@ def caged_no_ano():
     pd.core.arrays.datetimelike.DatetimeLikeArrayMixin._validate_frequency = _validate_frequency
     df_somas.index.freq = 'MS'
     '''
-
+    
     
     return df_somas
 
