@@ -1,106 +1,46 @@
 # -*- coding: utf-8 -*-
 """
-Created on Thu Dec  3 10:28:09 2020
+Created on Wed Dec  2 12:37:23 2020
 
 @author: pedro-salj
 """
 
-#############################
-##### CONFIGURAÇÃO GERAL ####
-#############################
+
+
 globals().clear()
 """ Mudar diretório """
 import os
 from pathlib import Path
 import getpass
 if getpass.getuser() == "pedro":
-    print('\nLogado de casa')
     caminho_base = Path(r'D:\Códigos, Dados, Documentação e Cheat Sheets')
 elif getpass.getuser() == "pedro-salj":
-    print('\nLogado da salj-alems')
     caminho_base = Path(r'C:\Users\pedro-salj\Desktop\Pedro Nakashima\Códigos, Dados, Documentação e Cheat Sheets')
 
 """ Mudar diretório para dados Siconfi"""
-caminho_wd = caminho_base / 'Dados' / 'trabalho' / 'caged_vinculos' / 'microdados' / 'csv'
-#caminho_wd = caminho_base / 'Dados' / 'trabalho' / 'caged_vinculos_2002-2009'# / 'temp1'
-print('\nDiretório anterior:\n', os.getcwd())
+caminho_wd = caminho_base / 'Dados'
 os.chdir(caminho_wd)
-print('\nDiretório atual:\n', os.getcwd())
-import numpy as np
 import pandas as pd
 
+
 ##########################################################################################################
+############ Exportações do Estado segundo as principais indústrias ######################################
 ##########################################################################################################
-##########################################################################################################
-
-def g_nome_arq(início, final, prefixo, sufixo):
-    li_arqs_nomes = []
-    início_com_dia = início + '-01'
-    final_com_dia = final + '-01'
-    datas = pd.to_datetime(np.arange(início_com_dia,final_com_dia, 1, dtype='datetime64[M]')).to_frame().reset_index()
-    datas['index'] = datas['index'].astype('str')
-    datas['index'] = (datas['index'].str.slice(0,4) + datas['index'].str.slice(4,7)).str.replace('-','')
-    for index, row in datas.iterrows():
-        arq_nome = prefixo + row['index'] + sufixo
-        li_arqs_nomes.append(arq_nome)
-    return li_arqs_nomes
-
-li_arquivos = g_nome_arq(início='2020-04', final='2020-08', prefixo='CAGEDMOV', sufixo='.csv')
-
-pasta = caminho_base / 'Dados'
-df_municipios = pd.read_excel(pasta/'municipios.xlsx', sheet_name='municipios')
-df_municipios = df_municipios[['mun_cod_ibge6','uf_sigla']]
 
 
-arq_nome = 'CAGEDMOV202009.csv'
-import pandas as pd
-pasta = caminho_base / 'Dados' / 'trabalho' / 'caged_vinculos' / 'microdados' / 'csv_processados'
-df = pd.read_csv(pasta / arq_nome,
-                 delimiter = ';',
-                 decimal=',')
-
-
-df = df.merge(df_municipios,how='left',left_on='município',right_on='mun_cod_ibge6')
-
-
-
-
-
-cgd_01a(uf='MS', início='2020-04', final='2020-08'):
-
-
-
-def cgd_01a(uf, início, final):
-    
-    pasta = caminho_base / 'Dados'
-    df_municipios = pd.read_excel(pasta/'municipios.xlsx', sheet_name='municipios')
-    df_municipios = df_municipios[['mun_cod_ibge6','uf_sigla']]
-    
-    def g_nome_arq(início, final, prefixo, sufixo):
-        li_arqs_nomes = []
-        início_com_dia = início + '-01'
-        final_com_dia = final + '-01'
-        datas = pd.to_datetime(np.arange(início_com_dia,final_com_dia, 1, dtype='datetime64[M]')).to_frame().reset_index()
-        datas['index'] = datas['index'].astype('str')
-        datas['index'] = (datas['index'].str.slice(0,4) + datas['index'].str.slice(4,7)).str.replace('-','')
-        for index, row in datas.iterrows():
-            arq_nome = prefixo + row['index'] + sufixo
-            li_arqs_nomes.append(arq_nome)
-        return li_arqs_nomes
-    
-    li_arquivos = g_nome_arq(início='2020-04', final='2020-08', prefixo='CAGEDMOV', sufixo='.csv')
-    
-    for index_arq, arq_nome in enumerate(li_arquivos):
+def mdic_01c(tipo, uf, anos):
+    for index_ano, ano in enumerate(anos):
+        arq_nome = tipo + '_' + str(ano) + '.csv'
         
-        pasta = caminho_base / 'Dados' / 'trabalho' / 'caged_vinculos' / 'microdados' / 'csv_processados'
+        pasta = caminho_base / 'Dados' / 'mdic' / 'anos'
         df = pd.read_csv(pasta / arq_nome,
-                         delimiter = ';',
-                         decimal=',')
+                         encoding = 'latin',
+                         delimiter = ';')
         
         if uf != 'BR':
             cond1 = df['SG_UF_NCM'] == uf
             df = df.loc[cond1, :]
-        
+            
         df.rename(columns={'CO_ANO':'year','CO_MES':'month'},inplace=True)
         df['day'] = 1
         df['dt'] = pd.to_datetime(df[['year', 'month', 'day']])
@@ -123,7 +63,7 @@ def cgd_01a(uf, início, final):
     return df_bruto
 #######################################################################################################
 
-def cgd_01b(tipo, uf, anos, milhoes, categoria):
+def mdic_01d(tipo, uf, anos, milhoes, categoria):
     
     dicionário1 = {}
     #milhoes = True
@@ -404,94 +344,30 @@ def cgd_01b(tipo, uf, anos, milhoes, categoria):
 
 dic1, dic2 = mdic_01d(tipo='EXP', uf='RJ', anos=[2018,2019,2020], milhoes=True, categoria='NO_ISIC_DIVISAO')
 
+dic3, dic4 = mdic_01d(tipo='EXP', uf='RJ', anos=[2018,2019,2020], milhoes=True, categoria='CO_NCM')
+
+teste = dic4['Mensal - Valor - Maiores setores (curto)']
+teste['CO_NCM'] = pd.to_numeric(teste.index,errors='coerce')
+
+
+pasta = caminho_base / 'Dados' / 'mdic' / 'Tabelas - classificações'
+cod_ncm = pd.read_csv(pasta / 'NCM.csv',
+                 encoding = 'latin',
+                 delimiter = ';')
+
+cod_ncm = cod_ncm[['CO_NCM','NO_NCM_POR']]
+print(teste['CO_NCM'].dtype)
+
+teste = teste.merge(cod_ncm,how='left',left_index=True,right_on='CO_NCM')
 
 
 
+_, dic4_MS = mdic_01d(tipo='EXP', uf='MS', anos=[2018,2019,2020], milhoes=True, categoria='CO_NCM')
+teste = dic4_MS['Mensal - Valor - Maiores setores (curto)']
+teste['CO_NCM'] = pd.to_numeric(teste.index,errors='coerce')
+teste = teste.merge(cod_ncm,how='left',left_index=True,right_on='CO_NCM')
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-##########################################################################################################
-##########################################################################################################
-##########################################################################################################
-
-
-arq_nome = 'CAGEDMOV200701.csv'
-arq_nome = 'CAGEDMOV201912.csv'
-arq_nome = 'CAGEDMOV202001.csv'
-
-import pandas as pd
-pasta = caminho_base / 'Dados' / 'trabalho' / 'caged_vinculos' / 'microdados' / 'csv_processados'
-df = pd.read_csv(pasta / arq_nome,
-                 delimiter = ';',
-                 decimal=',')
-
-import glob
-import pandas as pd
-from pathlib import Path
-
-os.chdir(pasta)
-
-pasta = caminho_base / 'Dados' / 'trabalho' / 'caged_vinculos' / 'microdados' / 'csv_processados'
-os.chdir(pasta)
-
-for arq_num, arq_nome in enumerate(glob.glob('*.csv')):
-    print(arq_nome)
-    
-    df = pd.read_csv(pasta / arq_nome,
-                 delimiter = ';',
-                 decimal=',')
-    
-    try:
-        df.drop(['classe.1'],axis=1,inplace=True)
-        df.to_csv(arq_nome, sep=';', decimal=',', index=False)
-    except KeyError:
-        print('coluna "classe.1" não encontrada')
-    else:
-        print('coluna "classe.1" deletada')
-
-
-
-
-
-
-
-    
 
 
 
