@@ -33,62 +33,30 @@ import pandas as pd
 ##########################################################################################################
 ##########################################################################################################
 
-def g_nome_arq(início, final, prefixo, sufixo):
-    
-    #início = '2020-04'
-    #final = '2020-08'
-    #prefixo = 'CAGEDMOV'
-    #sufixo ='.csv'
-    
-    li_arqs_nomes = []
-    início_com_dia = início + '-01'
-    final_com_dia = final + '-01'
-    df_datas = pd.to_datetime(np.arange(início_com_dia, final_com_dia, 1, dtype='datetime64[M]')).to_frame()#.reset_index()
-    df_datas.rename(mapper={0:'col_data'},axis=1,inplace=True)
-    
-    nova_linha = pd.DataFrame({'col_data': pd.date_range(start=df_datas['col_data'].iloc[-1], periods=2, freq='MS', closed='right')})
-    df_datas = df_datas.append(nova_linha)
-    
-    df_datas['col_data'] = df_datas['col_data'].astype('str')
-    df_datas['col_data'] = (df_datas['col_data'].str.slice(0,4) + df_datas['col_data'].str.slice(4,7)).str.replace('-','')
-    for index, row in df_datas.iterrows():
-        arq_nome = prefixo + row['col_data'] + sufixo
-        li_arqs_nomes.append(arq_nome)
-    return li_arqs_nomes
 
-li_arquivos = g_nome_arq(início='2018-01', final='2020-09', prefixo='CAGEDMOV', sufixo='.csv')
-
-pasta = caminho_base / 'Dados'
-df_municipios = pd.read_excel(pasta/'municipios.xlsx', sheet_name='municipios')
-df_municipios = df_municipios[['mun_cod6_ibge','uf_sigla']]
-
-dtype = {'subclasse':'str','classe':'str', 'competência':'str'}
-
-arq_nome = 'CAGEDMOV202009.csv'
-import pandas as pd
-pasta = caminho_base / 'Dados' / 'trabalho' / 'caged_vinculos' / 'microdados' / 'csv_processados'
-df = pd.read_csv(pasta / arq_nome,
-                 delimiter = ';',
-                 decimal=',',
-                 dtype=dtype)
-print(df.dtypes)
-df = df.merge(df_municipios,how='left',left_on='mun_cod6_ibge',right_on='mun_cod6_ibge')
-
-df['year'] = df['competência'].str.slice(0,4)
-df['month'] = df['competência'].str.slice(4,6)
-df['day'] = 1
-df['dt'] = pd.to_datetime(df[['year', 'month', 'day']])
-df.drop(['year','month','day','competência'],axis=1,inplace=True)
 
 #######################################################################################################
 
-def cgd_01a(uf, início, final):
+def cgd_01a(uf, início, final, agregação):
     
-    dtype = {'subclasse':'str','classe':'str', 'competência':'str'}
+    uf = 'MS'
+    início='2018-01'
+    final='2020-09'
     
+    dtype = {'cnae2_subclasse_cod7':'str','cnae2_classe_cod5':'str', 'competência':'str'}
+    # ----------------------------------------------------------------------------------------
     pasta = caminho_base / 'Dados'
     df_municipios = pd.read_excel(pasta/'municipios.xlsx', sheet_name='municipios')
     df_municipios = df_municipios[['mun_cod6_ibge','uf_sigla']]
+    # ----------------------------------------------------------------------------------------
+    pasta = caminho_base / 'Dados' / 'cnae e ncm'
+    arq_nome = 'cnae20_subclasse_corresp.csv'
+    dtype_corresp = {'cnae2_subclasse_cod7':'str','cnae2_classe_cod5':'str','cnae2_grupo_cod3':'str','cnae2_divisão_cod2':'str','cnae2_seção_cod1':'str'}
+    df_cnae_corresp = pd.read_csv(pasta / arq_nome,
+                                  delimiter = ';',
+                                  decimal=',',
+                                  dtype=dtype_corresp)
+    # ----------------------------------------------------------------------------------------
     
     def g_nome_arq(início, final, prefixo, sufixo):
         li_arqs_nomes = []
@@ -111,6 +79,9 @@ def cgd_01a(uf, início, final):
     
     for index_arq, arq_nome in enumerate(li_arquivos):
         print(arq_nome)
+        
+        arq_nome = 'CAGEDMOV202009.csv'
+        
         pasta = caminho_base / 'Dados' / 'trabalho' / 'caged_vinculos' / 'microdados' / 'csv_processados'
         df = pd.read_csv(pasta / arq_nome,
                          delimiter = ';',
@@ -127,7 +98,9 @@ def cgd_01a(uf, início, final):
         df['day'] = 1
         df['dt'] = pd.to_datetime(df[['year', 'month', 'day']])
         df.drop(['year','month','day','competência'],axis=1,inplace=True)
-
+        
+        df = df.merge(df_cnae_corresp,how='left',left_on='cnae2_subclasse_cod7',right_on='cnae2_subclasse_cod7')
+        
         df = df.groupby(['dt','cnae2_subclasse_cod7'])['saldomovimentação'].sum().to_frame().reset_index()
         
         if index_arq == 0:
@@ -142,7 +115,7 @@ def cgd_01a(uf, início, final):
 
 df = cgd_01a(uf='MS', início='2018-01', final='2020-09')
 
-print(df1.dtypes)
+#print(df1.dtypes)
 
 #######################################################################################################
 #######################################################################################################
@@ -189,6 +162,7 @@ dicionário1['Acumulado no Ano - Valor'] = df_acumAno
 ######################################################################################################
 ########## Acumulado em 12 meses - Valor #############################################################
 ######################################################################################################
+
 df_acum12m = dicionário1['Mensal - Valor'].copy()
 colunas = list(df_acum12m.columns)
 for coluna in colunas:
@@ -321,6 +295,9 @@ for l_variavel, novo_nome in zip(l_variaveis, novos_nomes):
 ############################## Função que retorna duas listas com as variáveis mais e menos importantes ##############
 ######################################################################################################################
 
+#df = dicionário1['Acumulado em 12 meses - Valor'].copy()
+
+
 def mais_relevantes(df):
     # Copia o data frame
     df_cp = df.copy()
@@ -339,22 +316,26 @@ def mais_relevantes(df):
     # Ordena pela coluna do último mês
     df_longo.sort_values(by=[ultimo],ascending=[False],inplace=True)
     # Seleciona os setores MAIS e MENOS importantes
-    df_importantesMais = df_longo.iloc[0:10,:]
-    df_importantesMenos = df_longo.iloc[10:,:]
+    df_crescimento10Mais = df_longo.iloc[0:10,:]
+    df_crescimentoMenos = df_longo.iloc[10:,:]
+    df_crescimento10Menos = df_longo.iloc[-10:,:]
+    df_crescimentoMais = df_longo.iloc[0:-10,:]
     # Coloca na lista as variáveis dos setores MAIS e MENOS importantes (usado nos loopings do próximo bloco)
-    li_importantesMais_variaveis = list(df_importantesMais.copy().reset_index()['index'])
-    li_importantesMenos_variaveis = list(df_importantesMenos.copy().reset_index()['index'])
+    li_crescimento10Mais_variaveis = list(df_crescimento10Mais.copy().reset_index()['index'])
+    li_crescimentoMenos_variaveis = list(df_crescimentoMenos.copy().reset_index()['index'])
+    li_crescimento10Menos_variaveis = list(df_crescimento10Menos.copy().reset_index()['index'])
+    li_crescimentoMais_variaveis = list(df_crescimentoMais.copy().reset_index()['index'])
     
-    return li_importantesMais_variaveis, li_importantesMenos_variaveis, ultimo
+    return li_crescimento10Mais_variaveis, li_crescimentoMenos_variaveis, li_crescimento10Menos_variaveis, li_crescimentoMais_variaveis, ultimo
 
-li_importantesMais_variaveis, li_importantesMenos_variaveis, ultimo = mais_relevantes(dicionário1['Acumulado em 12 meses - Valor'])
+li_12m_crescimento10Mais_variaveis, li_12m_crescimentoMenos_variaveis, li_12m_crescimento10Menos_variaveis, li_12m_crescimentoMais_variaveis, ultimo = mais_relevantes(dicionário1['Acumulado em 12 meses - Valor'])
+li_1m_crescimento10Mais_variaveis, li_1m_crescimentoMenos_variaveis, li_1m_crescimento10Menos_variaveis, li_1m_crescimentoMais_variaveis, ultimo = mais_relevantes(dicionário1['Mensal - Valor'])
 
 
 ########################################################################################################
 ########### Top: Mensal, Acumulado no ano, acumulado em 12 meses, e média móvel de 12 meses ############
 ########################################################################################################
 
-dicionário2 = {}
 
 # Coloca na lista as variáveis dos setores MAIS e MENOS importantes
 
@@ -362,8 +343,34 @@ li_variaveis = pd.Series(['Mensal - Valor','Acumulado no Ano - Valor','Acumulado
 
 # ------------------------------------------------------------------------------------------------------
 
+parametro = '1m'
+
+if parametro == '12m':
+    li_crescimento10Mais_variaveis = li_12m_crescimento10Mais_variaveis
+    li_crescimentoMenos_variaveis = li_12m_crescimentoMenos_variaveis
+    li_crescimento10Menos_variaveis = li_12m_crescimento10Menos_variaveis
+    li_crescimentoMais_variaveis = li_12m_crescimentoMais_variaveis
+elif parametro == '1m':
+    li_crescimento10Mais_variaveis = li_1m_crescimento10Mais_variaveis
+    li_crescimentoMenos_variaveis = li_1m_crescimentoMenos_variaveis
+    li_crescimento10Menos_variaveis = li_1m_crescimento10Menos_variaveis
+    li_crescimentoMais_variaveis = li_1m_crescimentoMais_variaveis
+
+dtype = {}
+pasta = caminho_base / 'Dados' / 'cnae e ncm'
+arq_nome = 'cnae20_subclasse_desc.csv'
+df_subclasse_desc = pd.read_csv(pasta / arq_nome,
+                 delimiter = ';',
+                 decimal=',',
+                 dtype=dtype)
+
+df_subclasse_desc.set_index('subclasse',inplace=True)
+
+dicionário2 = {}
+
 for vl_variavel in li_variaveis:
     
+    #vl_variavel = 'Acumulado em 12 meses - Valor'
     #vl_variavel = 'Mensal - Valor'
     
     # Copia o df
@@ -382,44 +389,75 @@ for vl_variavel in li_variaveis:
     df_longo.sort_values(by=[ultimo],ascending=[False],inplace=True)
     
     # Seleciona os setores MAIS e MENOS importantes
-    df_importantesMais = df_longo.loc[li_importantesMais_variaveis,:]
-    df_importantesMenos = df_longo.loc[li_importantesMenos_variaveis,:]
+        # Maiores crescimentos
+    df_crescimento10Mais = df_longo.copy().loc[li_crescimento10Mais_variaveis,:]
+    df_crescimentoMenos = df_longo.copy().loc[li_crescimentoMenos_variaveis,:]
+        # Menores crescimentos
+    df_crescimento10Menos = df_longo.copy().loc[li_crescimento10Menos_variaveis,:]
+    df_crescimentoMais = df_longo.copy().loc[li_crescimentoMais_variaveis,:]
     
     # Ordena o df curto pelos mais importantes
-    df_importantesMais.sort_values(by=[ultimo],ascending=[False],inplace=True)
+    df_crescimento10Mais.sort_values(by=[ultimo],ascending=[False],inplace=True)
+    df_crescimento10Menos.sort_values(by=[ultimo],ascending=[True],inplace=True)
     
     # Soma (ao longo das linhas), para cada mês (nas colunas), o valor dos setores menos importantes
-    df_importantesMenos_soma = df_importantesMenos.sum(axis=0).to_frame().T
+    df_crescimentoMenos_soma = df_crescimentoMenos.sum(axis=0).to_frame().T
+    df_crescimentoMais_soma = df_crescimentoMais.sum(axis=0).to_frame().T
     
     # Renomeia a linha da soma para 'Outros'
-    df_importantesMenos_soma.rename(mapper={0:'Outros'},axis=0,inplace=True)
+    df_crescimentoMenos_soma.rename(mapper={0:'Outros'},axis=0,inplace=True)
+    df_crescimentoMais_soma.rename(mapper={0:'Outros'},axis=0,inplace=True)
+    
     
     # Junta a soma dos valores menos importantes aos setores mais importantes
-    df_importantesMais = df_importantesMais.append(df_importantesMenos_soma)
+    df_crescimento10Mais = df_crescimento10Mais.append(df_crescimentoMenos_soma)
+    df_crescimento10Menos = df_crescimento10Menos.append(df_crescimentoMais_soma)
     
     # Cria linha com total geral
-    df_importantesMais.loc['Total Geral',:] = df_importantesMais.sum(axis=0)
+    df_crescimento10Mais.loc['Total Geral',:] = df_crescimento10Mais.sum(axis=0)
+    df_crescimento10Menos.loc['Total Geral',:] = df_crescimento10Menos.sum(axis=0)
     
-    nome_longo = vl_variavel + ' - Maiores setores (longo)'
-    nome_curto = vl_variavel + ' - Maiores setores (curto)'
+    # Coloca nomes descrição
+    df_crescimento10Mais = df_crescimento10Mais.merge(df_subclasse_desc,how='left',left_index=True,right_index=True)
+    df_crescimento10Mais.loc['Outros','descrição'] = 'Outros'
+    df_crescimento10Mais.loc['Total Geral','descrição'] = 'Total Geral'
+    # ------------
+    df_crescimento10Menos = df_crescimento10Menos.merge(df_subclasse_desc,how='left',left_index=True,right_index=True)
+    df_crescimento10Menos.loc['Outros','descrição'] = 'Outros'
+    df_crescimento10Menos.loc['Total Geral','descrição'] = 'Total Geral'
+    
+    # Coloca na primeira coluna
+    df_meses = df_crescimento10Mais.filter(regex='^2',axis=1)
+    df_crescimento10Mais = df_crescimento10Mais['descrição'].to_frame()
+    df_crescimento10Mais = df_crescimento10Mais.merge(df_meses,how='left',left_index=True,right_index=True)
+    # ------------
+    df_meses = df_crescimento10Menos.filter(regex='^2',axis=1)
+    df_crescimento10Menos = df_crescimento10Menos['descrição'].to_frame()
+    df_crescimento10Menos = df_crescimento10Menos.merge(df_meses,how='left',left_index=True,right_index=True)
+    
+    # Define novos nomes
+    nome_longo_maioresCrescimentos = vl_variavel + ' - Maiores crescimentos (longo)'
+    nome_curto_maioresCrescimentos = vl_variavel + ' - Maiores crescimentos (curto)'
+    nome_curto_menoresCrescimentos = vl_variavel + ' - Menores crescimentos (curto)'
     
     # Adiciona a dicionário2
-    dicionário2[nome_longo] = df_longo.copy()
-    dicionário2[nome_curto] = df_importantesMais.copy()
+    dicionário2[nome_longo_maioresCrescimentos] = df_longo.copy()
+    dicionário2[nome_curto_maioresCrescimentos] = df_crescimento10Mais.copy()
+    dicionário2[nome_curto_menoresCrescimentos] = df_crescimento10Menos.copy()
 
 ####################################################################################################
 
-dtype = {'subclasse':'str','classe':'str', 'competência':'str'}
-
-arq_nome = 'cnae20_subclasse_desc.csv'
-import pandas as pd
-pasta = caminho_base / 'Dados' / 'cnae e ncm'
-df_subclasse_desc = pd.read_csv(pasta / arq_nome,
-                 delimiter = ';',
-                 decimal=',')
 
 
-df2 = dicionário2['Mensal - Valor - Maiores setores (curto)'].merge(df_subclasse_desc,how='left',left_index=True,right_on='subclasse')
+
+
+
+
+
+
+
+
+
 
 
 
@@ -751,7 +789,52 @@ teste = teste.merge(cod_ncm,how='left',left_index=True,right_on='CO_NCM')
 
 
 
+def g_nome_arq(início, final, prefixo, sufixo):
+    
+    #início = '2020-04'
+    #final = '2020-08'
+    #prefixo = 'CAGEDMOV'
+    #sufixo ='.csv'
+    
+    li_arqs_nomes = []
+    início_com_dia = início + '-01'
+    final_com_dia = final + '-01'
+    df_datas = pd.to_datetime(np.arange(início_com_dia, final_com_dia, 1, dtype='datetime64[M]')).to_frame()#.reset_index()
+    df_datas.rename(mapper={0:'col_data'},axis=1,inplace=True)
+    
+    nova_linha = pd.DataFrame({'col_data': pd.date_range(start=df_datas['col_data'].iloc[-1], periods=2, freq='MS', closed='right')})
+    df_datas = df_datas.append(nova_linha)
+    
+    df_datas['col_data'] = df_datas['col_data'].astype('str')
+    df_datas['col_data'] = (df_datas['col_data'].str.slice(0,4) + df_datas['col_data'].str.slice(4,7)).str.replace('-','')
+    for index, row in df_datas.iterrows():
+        arq_nome = prefixo + row['col_data'] + sufixo
+        li_arqs_nomes.append(arq_nome)
+    return li_arqs_nomes
 
+li_arquivos = g_nome_arq(início='2018-01', final='2020-09', prefixo='CAGEDMOV', sufixo='.csv')
+
+pasta = caminho_base / 'Dados'
+df_municipios = pd.read_excel(pasta/'municipios.xlsx', sheet_name='municipios')
+df_municipios = df_municipios[['mun_cod6_ibge','uf_sigla']]
+
+dtype = {'subclasse':'str','classe':'str', 'competência':'str'}
+
+arq_nome = 'CAGEDMOV202009.csv'
+import pandas as pd
+pasta = caminho_base / 'Dados' / 'trabalho' / 'caged_vinculos' / 'microdados' / 'csv_processados'
+df = pd.read_csv(pasta / arq_nome,
+                 delimiter = ';',
+                 decimal=',',
+                 dtype=dtype)
+print(df.dtypes)
+df = df.merge(df_municipios,how='left',left_on='mun_cod6_ibge',right_on='mun_cod6_ibge')
+
+df['year'] = df['competência'].str.slice(0,4)
+df['month'] = df['competência'].str.slice(4,6)
+df['day'] = 1
+df['dt'] = pd.to_datetime(df[['year', 'month', 'day']])
+df.drop(['year','month','day','competência'],axis=1,inplace=True)
 
 
 

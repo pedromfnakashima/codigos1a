@@ -26,7 +26,114 @@ print('\nDiretório anterior:\n', os.getcwd())
 os.chdir(caminho_wd)
 print('\nDiretório atual:\n', os.getcwd())
 
+######################################################################################
+# CNAE 2.3 ###########################################################################
+######################################################################################
 
+import pandas as pd
+dtype = {'Seção':'str','Divisão':'str','Grupo':'str','Classe':'str','subclasse':'str'}
+cnae23 = pd.read_excel('CNAE_Subclasses_2_3_Estrutura_Detalhada.xlsx',
+                       sheet_name='Estrutura Det. CNAE Subclass2.3',
+                       skiprows=3,
+                       dtype=dtype)
+
+
+
+cnae23.rename(mapper={'Unnamed: 5':'Descrição'},axis=1,inplace=True)
+
+# Renomeia colunas
+cnae23.rename(mapper={'Subclasse':'cnae23_Subclasse_cod7'},axis=1,inplace=True)
+cnae23.rename(mapper={'Classe':'cnae23_Classe_cod5'},axis=1,inplace=True)
+cnae23.rename(mapper={'Grupo':'cnae23_Grupo_cod3'},axis=1,inplace=True)
+cnae23.rename(mapper={'Divisão':'cnae23_Divisão_cod2'},axis=1,inplace=True)
+cnae23.rename(mapper={'Seção':'cnae23_Seção_cod1'},axis=1,inplace=True)
+
+cnae23['cnae23_Seção_cod1'].fillna(method='ffill', inplace=True)
+cnae23['cnae23_Divisão_cod2'].fillna(method='ffill', inplace=True)
+cnae23['cnae23_Grupo_cod3'].fillna(method='ffill', inplace=True)
+cnae23['cnae23_Classe_cod5'].fillna(method='ffill', inplace=True)
+cnae23['cnae23_Subclasse_cod7'].fillna(method='ffill', inplace=True)
+cnae23['cnae23_Subclasse_cod7'] = cnae23['cnae23_Subclasse_cod7'].str.replace('-','').str.replace('/','')
+cnae23['cnae23_Classe_cod5'] = cnae23['cnae23_Classe_cod5'].str.replace('.','').str.replace('-','')
+cnae23['cnae23_Grupo_cod3'] = cnae23['cnae23_Grupo_cod3'].str.replace('.','')
+
+cnae23_Seção = cnae23[['cnae23_Seção_cod1', 'Descrição']]
+cnae23_Divisão = cnae23[['cnae23_Divisão_cod2', 'Descrição']]
+cnae23_Grupo = cnae23[['cnae23_Grupo_cod3', 'Descrição']]
+cnae23_Classe = cnae23[['cnae23_Classe_cod5', 'Descrição']]
+cnae23_Subclasse = cnae23[['cnae23_Subclasse_cod7', 'Descrição']]
+
+# Renomeia colunas
+cnae23_Subclasse.rename(mapper={'Descrição':'cnae23_Subclasse_desc'},axis=1,inplace=True)
+cnae23_Classe.rename(mapper={'Descrição':'cnae23_Classe_desc'},axis=1,inplace=True)
+cnae23_Grupo.rename(mapper={'Descrição':'cnae23_Grupo_desc'},axis=1,inplace=True)
+cnae23_Divisão.rename(mapper={'Descrição':'cnae23_Divisão_desc'},axis=1,inplace=True)
+cnae23_Seção.rename(mapper={'Descrição':'cnae23_Seção_desc'},axis=1,inplace=True)
+
+
+cnae23_Seção = cnae23_Seção.groupby('cnae23_Seção_cod1').first()
+cnae23_Divisão = cnae23_Divisão.dropna()
+cnae23_Divisão = cnae23_Divisão.groupby('cnae23_Divisão_cod2').first()
+cnae23_Grupo = cnae23_Grupo.dropna()
+cnae23_Grupo = cnae23_Grupo.groupby('cnae23_Grupo_cod3').first()
+cnae23_Classe = cnae23_Classe.dropna()
+cnae23_Classe = cnae23_Classe.groupby('cnae23_Classe_cod5').first()
+cnae23_Subclasse = cnae23_Subclasse.dropna()
+cnae23_Subclasse = cnae23_Subclasse.groupby('cnae23_Subclasse_cod7').first()
+
+cnae23_Seção.reset_index(inplace=True)
+cnae23_Divisão.reset_index(inplace=True)
+cnae23_Grupo.reset_index(inplace=True)
+cnae23_Classe.reset_index(inplace=True)
+cnae23_Subclasse.reset_index(inplace=True)
+
+
+# Exporta para csv
+cnae23_Seção.to_csv('cnae23_Seção_desc.csv', sep=';', decimal=',', index=False)
+cnae23_Divisão.to_csv('cnae23_Divisão_desc.csv', sep=';', decimal=',', index=False)
+cnae23_Grupo.to_csv('cnae23_Grupo_desc.csv', sep=';', decimal=',', index=False)
+cnae23_Classe.to_csv('cnae23_Classe_desc.csv', sep=';', decimal=',', index=False)
+cnae23_Subclasse.to_csv('cnae23_Subclasse_desc.csv', sep=';', decimal=',', index=False)
+del cnae23_Seção, cnae23_Divisão, cnae23_Grupo, cnae23_Classe, cnae23_Subclasse
+
+
+cnae23_subclasses = cnae23[['cnae23_Subclasse_cod7', 'cnae23_Classe_cod5', 'cnae23_Grupo_cod3', 'cnae23_Divisão_cod2', 'cnae23_Seção_cod1']]
+
+
+cnae23_subclasses.dropna(inplace=True)
+cnae23_subclasses = cnae23_subclasses.groupby('cnae23_Subclasse_cod7').first()
+cnae23_subclasses.reset_index(inplace=True)
+cnae23_subclasses.sort_values(by='cnae23_Subclasse_cod7', inplace=True)
+
+cnae23_classes = cnae23[['cnae23_Classe_cod5', 'cnae23_Grupo_cod3', 'cnae23_Divisão_cod2', 'cnae23_Seção_cod1']]
+cnae23_classes.dropna(inplace=True)
+cnae23_classes = cnae23_classes.groupby('cnae23_Classe_cod5').first()
+cnae23_classes.reset_index(inplace=True)
+cnae23_classes.sort_values(by='cnae23_Classe_cod5', inplace=True)
+
+
+cnae23_grupos = cnae23[['cnae23_Grupo_cod3', 'cnae23_Divisão_cod2', 'cnae23_Seção_cod1']]
+cnae23_grupos.dropna(inplace=True)
+cnae23_grupos = cnae23_grupos.groupby('cnae23_Grupo_cod3').first()
+cnae23_grupos.reset_index(inplace=True)
+cnae23_grupos.sort_values(by='cnae23_Grupo_cod3', inplace=True)
+
+cnae23_divisões = cnae23[['cnae23_Divisão_cod2', 'cnae23_Seção_cod1']]
+cnae23_divisões.dropna(inplace=True)
+cnae23_divisões = cnae23_divisões.groupby('cnae23_Divisão_cod2').first()
+cnae23_divisões.reset_index(inplace=True)
+cnae23_divisões.sort_values(by='cnae23_Divisão_cod2', inplace=True)
+
+cnae23_subclasses.to_csv('cnae23_Subclasse_corresp.csv', sep=';', decimal=',', index=False)
+cnae23_classes.to_csv('cnae23_Classe_corresp.csv', sep=';', decimal=',', index=False)
+cnae23_grupos.to_csv('cnae23_Grupo_corresp.csv', sep=';', decimal=',', index=False)
+cnae23_divisões.to_csv('cnae23_Divisão_corresp.csv', sep=';', decimal=',', index=False)
+
+
+
+######################################################################################
+# CNAE 2.0 ###########################################################################
+######################################################################################
 
 import pandas as pd
 cnae20 = pd.read_excel('CNAE20_Subclasses_EstruturaDetalhada.xlsx', sheet_name='Est. Detalhada CNAE 2.0 - subcl')
@@ -106,11 +213,24 @@ cnae20_grupo.reset_index(inplace=True)
 cnae20_classe.reset_index(inplace=True)
 cnae20_subclasse.reset_index(inplace=True)
 
+# Renomeia colunas
+cnae20_subclasse.rename(mapper={'subclasse':'cnae2_subclasse_cod7','descrição':'cnae2_subclasse_desc'},axis=1,inplace=True)
+cnae20_classe.rename(mapper={'classe':'cnae2_classe_cod5','descrição':'cnae2_classe_desc'},axis=1,inplace=True)
+cnae20_grupo.rename(mapper={'grupo':'cnae2_grupo_cod3','descrição':'cnae2_grupo_desc'},axis=1,inplace=True)
+cnae20_divisão.rename(mapper={'divisão':'cnae2_divisão_cod2','descrição':'cnae2_divisão_desc'},axis=1,inplace=True)
+cnae20_seção.rename(mapper={'seção':'cnae2_seção_cod1','descrição':'cnae2_seção_desc'},axis=1,inplace=True)
+
+
+# Exporta para csv
 cnae20_seção.to_csv('cnae20_seção_desc.csv', sep=';', decimal=',', index=False)
 cnae20_divisão.to_csv('cnae20_divisão_desc.csv', sep=';', decimal=',', index=False)
 cnae20_grupo.to_csv('cnae20_grupo_desc.csv', sep=';', decimal=',', index=False)
 cnae20_classe.to_csv('cnae20_classe_desc.csv', sep=';', decimal=',', index=False)
 cnae20_subclasse.to_csv('cnae20_subclasse_desc.csv', sep=';', decimal=',', index=False)
+
+
+
+
 
 del cnae20_seção, cnae20_divisão, cnae20_grupo, cnae20_classe, cnae20_subclasse
 
