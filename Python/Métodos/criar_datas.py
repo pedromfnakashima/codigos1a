@@ -44,14 +44,31 @@ print(np.arange('2018-01-01','2020-12-01', 1, dtype='datetime64[M]'))
 import numpy as np
 import pandas as pd
 np_datas = np.arange('2018-01-01','2021-01-01', 1, dtype='datetime64[M]')
-meses = pd.to_datetime(np_datas).to_frame()
-meses.rename(columns={0:'mês'}, inplace=True)
-meses.set_index('mês',inplace=True)
+pd_datas = pd.to_datetime(np_datas)
+df_1 = pd.DataFrame(pd_datas)
+df_1.rename(mapper={0:'novo_nome'},axis=1,inplace=True)
+
+# Adiciona uma nova linha
+nova_linha = pd.DataFrame({'novo_nome': pd.date_range(start=df_1['novo_nome'].iloc[-1], periods=2, freq='MS', closed='right')})
+df_1 = df_1.append(nova_linha)
 
 
 
 
 
+df_1.loc[df_1.index[-1],'novo_nome'] = 5
+
+df_1.loc[df_1.index[-1],'novo_nome'] = df_1['novo_nome'] - pd.DateOffset(months=1)
+
+
+
+
+# Como adicionar um mês???
+
+print(pd_datas.columns)
+
+
+df['data_inicio_periodo'] - pd.DateOffset(months=num)
 
 
 

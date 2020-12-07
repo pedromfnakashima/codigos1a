@@ -321,6 +321,9 @@ def mdic_01d(tipo, uf, anos, milhoes, categoria):
         df_importantesMais = df_longo.loc[li_importantesMais_variaveis,:]
         df_importantesMenos = df_longo.loc[li_importantesMenos_variaveis,:]
         
+        # Ordena o df curto pelos mais importantes
+        df_importantesMais.sort_values(by=[ultimo],ascending=[False],inplace=True)
+        
         # Soma (ao longo das linhas), para cada mês (nas colunas), o valor dos setores menos importantes
         df_importantesMenos_soma = df_importantesMenos.sum(axis=0).to_frame().T
         
