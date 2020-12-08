@@ -43,15 +43,15 @@ def cgd_01a(uf, início, final, agregação):
     início='2018-01'
     final='2020-09'
     
-    dtype = {'cnae2_subclasse_cod7':'str','cnae2_classe_cod5':'str', 'competência':'str'}
+    
     # ----------------------------------------------------------------------------------------
     pasta = caminho_base / 'Dados'
     df_municipios = pd.read_excel(pasta/'municipios.xlsx', sheet_name='municipios')
     df_municipios = df_municipios[['mun_cod6_ibge','uf_sigla']]
     # ----------------------------------------------------------------------------------------
     pasta = caminho_base / 'Dados' / 'cnae e ncm'
-    arq_nome = 'cnae20_subclasse_corresp.csv'
-    dtype_corresp = {'cnae2_subclasse_cod7':'str','cnae2_classe_cod5':'str','cnae2_grupo_cod3':'str','cnae2_divisão_cod2':'str','cnae2_seção_cod1':'str'}
+    arq_nome = 'cnae23_Subclasse_corresp.csv'
+    dtype_corresp = {'cnae23_Subclasse_cod7':'str','cnae23_Classe_cod5':'str','cnae23_Grupo_cod3':'str','cnae23_Divisão_cod2':'str','cnae23_Seção_cod1':'str'}
     df_cnae_corresp = pd.read_csv(pasta / arq_nome,
                                   delimiter = ';',
                                   decimal=',',
@@ -83,10 +83,14 @@ def cgd_01a(uf, início, final, agregação):
         arq_nome = 'CAGEDMOV202009.csv'
         
         pasta = caminho_base / 'Dados' / 'trabalho' / 'caged_vinculos' / 'microdados' / 'csv_processados'
+        
+        dtype = {'cnae2_subclasse_cod7':'str','cnae2_classe_cod5':'str', 'competência':'str'}
+        
         df = pd.read_csv(pasta / arq_nome,
                          delimiter = ';',
                          decimal=',',
                          dtype=dtype)
+        
         df = df.merge(df_municipios,how='left',left_on='mun_cod6_ibge',right_on='mun_cod6_ibge')
         
         if uf != 'BR':
@@ -99,7 +103,7 @@ def cgd_01a(uf, início, final, agregação):
         df['dt'] = pd.to_datetime(df[['year', 'month', 'day']])
         df.drop(['year','month','day','competência'],axis=1,inplace=True)
         
-        df = df.merge(df_cnae_corresp,how='left',left_on='cnae2_subclasse_cod7',right_on='cnae2_subclasse_cod7')
+        df = df.merge(df_cnae_corresp,how='left',left_on='cnae2_subclasse_cod7',right_on='cnae23_Subclasse_cod7')
         
         df = df.groupby(['dt','cnae2_subclasse_cod7'])['saldomovimentação'].sum().to_frame().reset_index()
         
@@ -112,6 +116,10 @@ def cgd_01a(uf, início, final, agregação):
     
     return df_bruto
 #######################################################################################################
+
+cond1 = df['cnae23_Subclasse_cod7'].isnull()
+filtro = df.loc[cond1,:]
+
 
 df = cgd_01a(uf='MS', início='2018-01', final='2020-09')
 
