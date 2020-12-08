@@ -30,65 +30,65 @@ def g_tabelões_cnaes():
     
     import pandas as pd
     dtype = {'Seção':'str','Divisão':'str','Grupo':'str','Classe':'str','subclasse':'str'}
-    cnae2 = pd.read_excel('CNAE23_Subclasses_EstruturaDetalhada.xlsx',
+    cnae = pd.read_excel('CNAE23_Subclasses_EstruturaDetalhada.xlsx',
                            sheet_name='estrutura',
                            skiprows=3,
                            dtype='str')
     
-    cnae2.rename(mapper={'Unnamed: 5':'Descrição'},axis=1,inplace=True)
+    cnae.rename(mapper={'Unnamed: 5':'Descrição'},axis=1,inplace=True)
     
     # Cria coluna com a versão
-    cnae2['Versão'] = '2.3'
+    cnae['Versão'] = '2.3'
     
     # Preenche para baixo
-    cnae2['Seção'].fillna(method='ffill', inplace=True)
-    cnae2['Divisão'].fillna(method='ffill', inplace=True)
-    cnae2['Grupo'].fillna(method='ffill', inplace=True)
-    cnae2['Classe'].fillna(method='ffill', inplace=True)
-    cnae2['Subclasse'].fillna(method='ffill', inplace=True)
+    cnae['Seção'].fillna(method='ffill', inplace=True)
+    cnae['Divisão'].fillna(method='ffill', inplace=True)
+    cnae['Grupo'].fillna(method='ffill', inplace=True)
+    cnae['Classe'].fillna(method='ffill', inplace=True)
+    cnae['Subclasse'].fillna(method='ffill', inplace=True)
     
     # Tira pontuação dos códigos
-    cnae2['Subclasse'] = cnae2['Subclasse'].str.replace('-','').str.replace('/','')
-    cnae2['Classe'] = cnae2['Classe'].str.replace('.','').str.replace('-','')
-    cnae2['Grupo'] = cnae2['Grupo'].str.replace('.','')
+    cnae['Subclasse'] = cnae['Subclasse'].str.replace('-','').str.replace('/','')
+    cnae['Classe'] = cnae['Classe'].str.replace('.','').str.replace('-','')
+    cnae['Grupo'] = cnae['Grupo'].str.replace('.','')
     
     # Seleciona colunas
-    cnae2_Seção = cnae2[['Versão', 'Seção', 'Descrição']]
-    cnae2_Divisão = cnae2[['Versão', 'Divisão', 'Descrição']]
-    cnae2_Grupo = cnae2[['Versão', 'Grupo', 'Descrição']]
-    cnae2_Classe = cnae2[['Versão', 'Classe', 'Descrição']]
-    cnae2_Subclasse = cnae2[['Versão', 'Subclasse', 'Descrição']]
+    cnae_Seção = cnae[['Versão', 'Seção', 'Descrição']]
+    cnae_Divisão = cnae[['Versão', 'Divisão', 'Descrição']]
+    cnae_Grupo = cnae[['Versão', 'Grupo', 'Descrição']]
+    cnae_Classe = cnae[['Versão', 'Classe', 'Descrição']]
+    cnae_Subclasse = cnae[['Versão', 'Subclasse', 'Descrição']]
     
     # Pega o primeiro
-    cnae2_Seção = cnae2_Seção.groupby('Seção').first()
-    cnae2_Divisão = cnae2_Divisão.dropna()
-    cnae2_Divisão = cnae2_Divisão.groupby('Divisão').first()
-    cnae2_Grupo = cnae2_Grupo.dropna()
-    cnae2_Grupo = cnae2_Grupo.groupby('Grupo').first()
-    cnae2_Classe = cnae2_Classe.dropna()
-    cnae2_Classe = cnae2_Classe.groupby('Classe').first()
-    cnae2_Subclasse = cnae2_Subclasse.dropna()
-    cnae2_Subclasse = cnae2_Subclasse.groupby('Subclasse').first()
+    cnae_Seção = cnae_Seção.groupby('Seção').first()
+    cnae_Divisão = cnae_Divisão.dropna()
+    cnae_Divisão = cnae_Divisão.groupby('Divisão').first()
+    cnae_Grupo = cnae_Grupo.dropna()
+    cnae_Grupo = cnae_Grupo.groupby('Grupo').first()
+    cnae_Classe = cnae_Classe.dropna()
+    cnae_Classe = cnae_Classe.groupby('Classe').first()
+    cnae_Subclasse = cnae_Subclasse.dropna()
+    cnae_Subclasse = cnae_Subclasse.groupby('Subclasse').first()
     
     # Reseta index
-    cnae2_Seção.reset_index(inplace=True)
-    cnae2_Divisão.reset_index(inplace=True)
-    cnae2_Grupo.reset_index(inplace=True)
-    cnae2_Classe.reset_index(inplace=True)
-    cnae2_Subclasse.reset_index(inplace=True)
+    cnae_Seção.reset_index(inplace=True)
+    cnae_Divisão.reset_index(inplace=True)
+    cnae_Grupo.reset_index(inplace=True)
+    cnae_Classe.reset_index(inplace=True)
+    cnae_Subclasse.reset_index(inplace=True)
     
     # Pega a correspondência: Divisão -> Seção (passo somente na versão 2.3)
-    cnae2_seção_corresp= cnae2[['Subclasse', 'Classe', 'Grupo', 'Divisão', 'Seção']]
-    cnae2_seção_corresp.dropna(inplace=True)
-    cnae2_seção_corresp = cnae2_seção_corresp.groupby('Divisão').head(1)
-    cnae2_seção_corresp = cnae2_seção_corresp[['Divisão','Seção']]
+    cnae_seção_corresp= cnae[['Subclasse', 'Classe', 'Grupo', 'Divisão', 'Seção']]
+    cnae_seção_corresp.dropna(inplace=True)
+    cnae_seção_corresp = cnae_seção_corresp.groupby('Divisão').head(1)
+    cnae_seção_corresp = cnae_seção_corresp[['Divisão','Seção']]
     
     # Cria o DF maior
-    todas_Seção = cnae2_Seção.copy()
-    todas_Divisão = cnae2_Divisão.copy()
-    todas_Grupo = cnae2_Grupo.copy()
-    todas_Classe = cnae2_Classe.copy()
-    todas_Subclasse = cnae2_Subclasse.copy()
+    todas_Seção = cnae_Seção.copy()
+    todas_Divisão = cnae_Divisão.copy()
+    todas_Grupo = cnae_Grupo.copy()
+    todas_Classe = cnae_Classe.copy()
+    todas_Subclasse = cnae_Subclasse.copy()
     
     ######################################################################################
     # CNAE 2.2 ###########################################################################
@@ -96,75 +96,75 @@ def g_tabelões_cnaes():
     
     import pandas as pd
     dtype = {'Seção':'str','Divisão':'str','Grupo':'str','Classe':'str','subclasse':'str'}
-    cnae2 = pd.read_excel('CNAE22_Subclasses_EstruturaDetalhada.xlsx',
+    cnae = pd.read_excel('CNAE22_Subclasses_EstruturaDetalhada.xlsx',
                            sheet_name='estrutura',
                            skiprows=3,
                            dtype='str')
     
-    #print(cnae2.dtypes)
-    cnae2.drop(['Unnamed: 0'],axis=1,inplace=True)
-    cnae2.rename(mapper={'Unnamed: 1':'Seção','Unnamed: 2':'Divisão','Unnamed: 3':'Grupo','Unnamed: 4':'Classe','Unnamed: 5':'Subclasse','Denominação':'Descrição'},axis=1,inplace=True)
-    cnae2.drop([0],axis=0,inplace=True)
+    #print(cnae.dtypes)
+    cnae.drop(['Unnamed: 0'],axis=1,inplace=True)
+    cnae.rename(mapper={'Unnamed: 1':'Seção','Unnamed: 2':'Divisão','Unnamed: 3':'Grupo','Unnamed: 4':'Classe','Unnamed: 5':'Subclasse','Denominação':'Descrição'},axis=1,inplace=True)
+    cnae.drop([0],axis=0,inplace=True)
     
     # Deleta linhas lixo
-    cond1 = ~ cnae2['Seção'].str.contains('continuação', regex=False, na=False)
-    cnae2 = cnae2.loc[cond1,:]
-    cond1 = ~ cnae2['Seção'].str.contains('2.2', regex=False, na=False)
-    cnae2 = cnae2.loc[cond1,:]
-    cond1 = ~ cnae2['Seção'].str.contains('2.0', regex=False, na=False)
-    cnae2 = cnae2.loc[cond1,:]
-    cond1 = ~ cnae2['Seção'].str.contains('Seção', regex=False, na=False)
-    cnae2 = cnae2.loc[cond1,:]
-    cond1 = ~ cnae2['Seção'].str.contains('conclusão', regex=False, na=False)
-    cnae2 = cnae2.loc[cond1,:]
-    cnae2 = cnae2.iloc[:-2] # deleta últimas duas linhas
+    cond1 = ~ cnae['Seção'].str.contains('continuação', regex=False, na=False)
+    cnae = cnae.loc[cond1,:]
+    cond1 = ~ cnae['Seção'].str.contains('2.2', regex=False, na=False)
+    cnae = cnae.loc[cond1,:]
+    cond1 = ~ cnae['Seção'].str.contains('2.0', regex=False, na=False)
+    cnae = cnae.loc[cond1,:]
+    cond1 = ~ cnae['Seção'].str.contains('Seção', regex=False, na=False)
+    cnae = cnae.loc[cond1,:]
+    cond1 = ~ cnae['Seção'].str.contains('conclusão', regex=False, na=False)
+    cnae = cnae.loc[cond1,:]
+    cnae = cnae.iloc[:-2] # deleta últimas duas linhas
     
     # Cria coluna com a versão
-    cnae2['Versão'] = '2.2'
+    cnae['Versão'] = '2.2'
     
     # Preenche para baixo
-    cnae2['Seção'].fillna(method='ffill', inplace=True)
-    cnae2['Divisão'].fillna(method='ffill', inplace=True)
-    cnae2['Grupo'].fillna(method='ffill', inplace=True)
-    cnae2['Classe'].fillna(method='ffill', inplace=True)
-    cnae2['Subclasse'].fillna(method='ffill', inplace=True)
+    cnae['Seção'].fillna(method='ffill', inplace=True)
+    cnae['Divisão'].fillna(method='ffill', inplace=True)
+    cnae['Grupo'].fillna(method='ffill', inplace=True)
+    cnae['Classe'].fillna(method='ffill', inplace=True)
+    cnae['Subclasse'].fillna(method='ffill', inplace=True)
     
     # Tira pontuação dos códigos
-    cnae2['Subclasse'] = cnae2['Subclasse'].str.replace('-','').str.replace('/','')
-    cnae2['Classe'] = cnae2['Classe'].str.replace('.','').str.replace('-','')
-    cnae2['Grupo'] = cnae2['Grupo'].str.replace('.','')
+    cnae['Subclasse'] = cnae['Subclasse'].str.replace('-','').str.replace('/','')
+    cnae['Classe'] = cnae['Classe'].str.replace('.','').str.replace('-','')
+    cnae['Grupo'] = cnae['Grupo'].str.replace('.','')
     
     # Seleciona colunas
-    cnae2_Seção = cnae2[['Versão', 'Seção', 'Descrição']]
-    cnae2_Divisão = cnae2[['Versão', 'Divisão', 'Descrição']]
-    cnae2_Grupo = cnae2[['Versão', 'Grupo', 'Descrição']]
-    cnae2_Classe = cnae2[['Versão', 'Classe', 'Descrição']]
-    cnae2_Subclasse = cnae2[['Versão', 'Subclasse', 'Descrição']]
+    cnae_Seção = cnae[['Versão', 'Seção', 'Descrição']]
+    cnae_Divisão = cnae[['Versão', 'Divisão', 'Descrição']]
+    cnae_Grupo = cnae[['Versão', 'Grupo', 'Descrição']]
+    cnae_Classe = cnae[['Versão', 'Classe', 'Descrição']]
+    cnae_Subclasse = cnae[['Versão', 'Subclasse', 'Descrição']]
     
     # Pega o primeiro
-    cnae2_Seção = cnae2_Seção.groupby('Seção').first()
-    cnae2_Divisão = cnae2_Divisão.dropna()
-    cnae2_Divisão = cnae2_Divisão.groupby('Divisão').first()
-    cnae2_Grupo = cnae2_Grupo.dropna()
-    cnae2_Grupo = cnae2_Grupo.groupby('Grupo').first()
-    cnae2_Classe = cnae2_Classe.dropna()
-    cnae2_Classe = cnae2_Classe.groupby('Classe').first()
-    cnae2_Subclasse = cnae2_Subclasse.dropna()
-    cnae2_Subclasse = cnae2_Subclasse.groupby('Subclasse').first()
+    cnae_Seção = cnae_Seção.groupby('Seção').first()
+    cnae_Divisão = cnae_Divisão.dropna()
+    cnae_Divisão = cnae_Divisão.groupby('Divisão').first()
+    cnae_Grupo = cnae_Grupo.dropna()
+    cnae_Grupo = cnae_Grupo.groupby('Grupo').first()
+    cnae_Classe = cnae_Classe.dropna()
+    cnae_Classe = cnae_Classe.groupby('Classe').first()
+    cnae_Subclasse = cnae_Subclasse.dropna()
+    cnae_Subclasse = cnae_Subclasse.groupby('Subclasse').first()
     
     # Reseta index
-    cnae2_Seção.reset_index(inplace=True)
-    cnae2_Divisão.reset_index(inplace=True)
-    cnae2_Grupo.reset_index(inplace=True)
-    cnae2_Classe.reset_index(inplace=True)
-    cnae2_Subclasse.reset_index(inplace=True)
+    cnae_Seção.reset_index(inplace=True)
+    cnae_Divisão.reset_index(inplace=True)
+    cnae_Grupo.reset_index(inplace=True)
+    cnae_Classe.reset_index(inplace=True)
+    cnae_Subclasse.reset_index(inplace=True)
     
     # Adiciona ao DF maior
-    todas_Seção = todas_Seção.append(cnae2_Seção)
-    todas_Divisão = todas_Divisão.append(cnae2_Divisão)
-    todas_Grupo = todas_Grupo.append(cnae2_Grupo)
-    todas_Classe = todas_Classe.append(cnae2_Classe)
-    todas_Subclasse = todas_Subclasse.append(cnae2_Subclasse)
+    todas_Seção = todas_Seção.append(cnae_Seção)
+    todas_Divisão = todas_Divisão.append(cnae_Divisão)
+    todas_Grupo = todas_Grupo.append(cnae_Grupo)
+    todas_Classe = todas_Classe.append(cnae_Classe)
+    todas_Subclasse = todas_Subclasse.append(cnae_Subclasse)
     
     ######################################################################################
     # CNAE 2.1 ###########################################################################
@@ -172,75 +172,75 @@ def g_tabelões_cnaes():
     
     import pandas as pd
     dtype = {'Seção':'str','Divisão':'str','Grupo':'str','Classe':'str','subclasse':'str'}
-    cnae2 = pd.read_excel('CNAE21_Subclasses_EstruturaDetalhada.xlsx',
+    cnae = pd.read_excel('CNAE21_Subclasses_EstruturaDetalhada.xlsx',
                            sheet_name='estrutura',
                            skiprows=3,
                            dtype='str')
     
-    #print(cnae2.dtypes)
-    cnae2.drop(['Unnamed: 0'],axis=1,inplace=True)
-    cnae2.rename(mapper={'código CNAE 2.0':'Seção','Unnamed: 2':'Divisão','Unnamed: 3':'Grupo','Unnamed: 4':'Classe','Unnamed: 5':'Subclasse','Denominação':'Descrição'},axis=1,inplace=True)
-    cnae2.drop([0],axis=0,inplace=True)
+    #print(cnae.dtypes)
+    cnae.drop(['Unnamed: 0'],axis=1,inplace=True)
+    cnae.rename(mapper={'código CNAE 2.0':'Seção','Unnamed: 2':'Divisão','Unnamed: 3':'Grupo','Unnamed: 4':'Classe','Unnamed: 5':'Subclasse','Denominação':'Descrição'},axis=1,inplace=True)
+    cnae.drop([0],axis=0,inplace=True)
     
     # Deleta linhas lixo
-    cond1 = ~ cnae2['Seção'].str.contains('continuação', regex=False, na=False)
-    cnae2 = cnae2.loc[cond1,:]
-    cond1 = ~ cnae2['Seção'].str.contains('2.2', regex=False, na=False)
-    cnae2 = cnae2.loc[cond1,:]
-    cond1 = ~ cnae2['Seção'].str.contains('2.0', regex=False, na=False)
-    cnae2 = cnae2.loc[cond1,:]
-    cond1 = ~ cnae2['Seção'].str.contains('Seção', regex=False, na=False)
-    cnae2 = cnae2.loc[cond1,:]
-    cond1 = ~ cnae2['Seção'].str.contains('conclusão', regex=False, na=False)
-    cnae2 = cnae2.loc[cond1,:]
-    cnae2 = cnae2.iloc[:-2] # deleta últimas duas linhas
+    cond1 = ~ cnae['Seção'].str.contains('continuação', regex=False, na=False)
+    cnae = cnae.loc[cond1,:]
+    cond1 = ~ cnae['Seção'].str.contains('2.2', regex=False, na=False)
+    cnae = cnae.loc[cond1,:]
+    cond1 = ~ cnae['Seção'].str.contains('2.0', regex=False, na=False)
+    cnae = cnae.loc[cond1,:]
+    cond1 = ~ cnae['Seção'].str.contains('Seção', regex=False, na=False)
+    cnae = cnae.loc[cond1,:]
+    cond1 = ~ cnae['Seção'].str.contains('conclusão', regex=False, na=False)
+    cnae = cnae.loc[cond1,:]
+    cnae = cnae.iloc[:-2] # deleta últimas duas linhas
     
     # Cria coluna com a versão
-    cnae2['Versão'] = '2.1'
+    cnae['Versão'] = '2.1'
     
     # Preenche para baixo
-    cnae2['Seção'].fillna(method='ffill', inplace=True)
-    cnae2['Divisão'].fillna(method='ffill', inplace=True)
-    cnae2['Grupo'].fillna(method='ffill', inplace=True)
-    cnae2['Classe'].fillna(method='ffill', inplace=True)
-    cnae2['Subclasse'].fillna(method='ffill', inplace=True)
+    cnae['Seção'].fillna(method='ffill', inplace=True)
+    cnae['Divisão'].fillna(method='ffill', inplace=True)
+    cnae['Grupo'].fillna(method='ffill', inplace=True)
+    cnae['Classe'].fillna(method='ffill', inplace=True)
+    cnae['Subclasse'].fillna(method='ffill', inplace=True)
     
     # Tira pontuação dos códigos
-    cnae2['Subclasse'] = cnae2['Subclasse'].str.replace('-','').str.replace('/','')
-    cnae2['Classe'] = cnae2['Classe'].str.replace('.','').str.replace('-','')
-    cnae2['Grupo'] = cnae2['Grupo'].str.replace('.','')
+    cnae['Subclasse'] = cnae['Subclasse'].str.replace('-','').str.replace('/','')
+    cnae['Classe'] = cnae['Classe'].str.replace('.','').str.replace('-','')
+    cnae['Grupo'] = cnae['Grupo'].str.replace('.','')
     
     # Seleciona colunas
-    cnae2_Seção = cnae2[['Versão', 'Seção', 'Descrição']]
-    cnae2_Divisão = cnae2[['Versão', 'Divisão', 'Descrição']]
-    cnae2_Grupo = cnae2[['Versão', 'Grupo', 'Descrição']]
-    cnae2_Classe = cnae2[['Versão', 'Classe', 'Descrição']]
-    cnae2_Subclasse = cnae2[['Versão', 'Subclasse', 'Descrição']]
+    cnae_Seção = cnae[['Versão', 'Seção', 'Descrição']]
+    cnae_Divisão = cnae[['Versão', 'Divisão', 'Descrição']]
+    cnae_Grupo = cnae[['Versão', 'Grupo', 'Descrição']]
+    cnae_Classe = cnae[['Versão', 'Classe', 'Descrição']]
+    cnae_Subclasse = cnae[['Versão', 'Subclasse', 'Descrição']]
     
     # Pega o primeiro
-    cnae2_Seção = cnae2_Seção.groupby('Seção').first()
-    cnae2_Divisão = cnae2_Divisão.dropna()
-    cnae2_Divisão = cnae2_Divisão.groupby('Divisão').first()
-    cnae2_Grupo = cnae2_Grupo.dropna()
-    cnae2_Grupo = cnae2_Grupo.groupby('Grupo').first()
-    cnae2_Classe = cnae2_Classe.dropna()
-    cnae2_Classe = cnae2_Classe.groupby('Classe').first()
-    cnae2_Subclasse = cnae2_Subclasse.dropna()
-    cnae2_Subclasse = cnae2_Subclasse.groupby('Subclasse').first()
+    cnae_Seção = cnae_Seção.groupby('Seção').first()
+    cnae_Divisão = cnae_Divisão.dropna()
+    cnae_Divisão = cnae_Divisão.groupby('Divisão').first()
+    cnae_Grupo = cnae_Grupo.dropna()
+    cnae_Grupo = cnae_Grupo.groupby('Grupo').first()
+    cnae_Classe = cnae_Classe.dropna()
+    cnae_Classe = cnae_Classe.groupby('Classe').first()
+    cnae_Subclasse = cnae_Subclasse.dropna()
+    cnae_Subclasse = cnae_Subclasse.groupby('Subclasse').first()
     
     # Reseta index
-    cnae2_Seção.reset_index(inplace=True)
-    cnae2_Divisão.reset_index(inplace=True)
-    cnae2_Grupo.reset_index(inplace=True)
-    cnae2_Classe.reset_index(inplace=True)
-    cnae2_Subclasse.reset_index(inplace=True)
+    cnae_Seção.reset_index(inplace=True)
+    cnae_Divisão.reset_index(inplace=True)
+    cnae_Grupo.reset_index(inplace=True)
+    cnae_Classe.reset_index(inplace=True)
+    cnae_Subclasse.reset_index(inplace=True)
     
     # Adiciona ao DF maior
-    todas_Seção = todas_Seção.append(cnae2_Seção)
-    todas_Divisão = todas_Divisão.append(cnae2_Divisão)
-    todas_Grupo = todas_Grupo.append(cnae2_Grupo)
-    todas_Classe = todas_Classe.append(cnae2_Classe)
-    todas_Subclasse = todas_Subclasse.append(cnae2_Subclasse)
+    todas_Seção = todas_Seção.append(cnae_Seção)
+    todas_Divisão = todas_Divisão.append(cnae_Divisão)
+    todas_Grupo = todas_Grupo.append(cnae_Grupo)
+    todas_Classe = todas_Classe.append(cnae_Classe)
+    todas_Subclasse = todas_Subclasse.append(cnae_Subclasse)
     
     ######################################################################################
     # CNAE 2.0 ###########################################################################
@@ -248,75 +248,75 @@ def g_tabelões_cnaes():
     
     import pandas as pd
     dtype = {'Seção':'str','Divisão':'str','Grupo':'str','Classe':'str','subclasse':'str'}
-    cnae2 = pd.read_excel('CNAE20_Subclasses_EstruturaDetalhada.xlsx',
+    cnae = pd.read_excel('CNAE20_Subclasses_EstruturaDetalhada.xlsx',
                            sheet_name='estrutura',
                            skiprows=3,
                            dtype='str')
     
-    #print(cnae2.dtypes)
-    cnae2.drop(['Unnamed: 0'],axis=1,inplace=True)
-    cnae2.rename(mapper={'código CNAE 2.0':'Seção','Unnamed: 2':'Divisão','Unnamed: 3':'Grupo','Unnamed: 4':'Classe','Unnamed: 5':'Subclasse','Denominação':'Descrição'},axis=1,inplace=True)
-    cnae2.drop([0],axis=0,inplace=True)
+    #print(cnae.dtypes)
+    cnae.drop(['Unnamed: 0'],axis=1,inplace=True)
+    cnae.rename(mapper={'código CNAE 2.0':'Seção','Unnamed: 2':'Divisão','Unnamed: 3':'Grupo','Unnamed: 4':'Classe','Unnamed: 5':'Subclasse','Denominação':'Descrição'},axis=1,inplace=True)
+    cnae.drop([0],axis=0,inplace=True)
     
     # Deleta linhas lixo
-    cond1 = ~ cnae2['Seção'].str.contains('continuação', regex=False, na=False)
-    cnae2 = cnae2.loc[cond1,:]
-    cond1 = ~ cnae2['Seção'].str.contains('2.2', regex=False, na=False)
-    cnae2 = cnae2.loc[cond1,:]
-    cond1 = ~ cnae2['Seção'].str.contains('2.0', regex=False, na=False)
-    cnae2 = cnae2.loc[cond1,:]
-    cond1 = ~ cnae2['Seção'].str.contains('Seção', regex=False, na=False)
-    cnae2 = cnae2.loc[cond1,:]
-    cond1 = ~ cnae2['Seção'].str.contains('conclusão', regex=False, na=False)
-    cnae2 = cnae2.loc[cond1,:]
-    cnae2 = cnae2.iloc[:-2] # deleta últimas duas linhas
+    cond1 = ~ cnae['Seção'].str.contains('continuação', regex=False, na=False)
+    cnae = cnae.loc[cond1,:]
+    cond1 = ~ cnae['Seção'].str.contains('2.2', regex=False, na=False)
+    cnae = cnae.loc[cond1,:]
+    cond1 = ~ cnae['Seção'].str.contains('2.0', regex=False, na=False)
+    cnae = cnae.loc[cond1,:]
+    cond1 = ~ cnae['Seção'].str.contains('Seção', regex=False, na=False)
+    cnae = cnae.loc[cond1,:]
+    cond1 = ~ cnae['Seção'].str.contains('conclusão', regex=False, na=False)
+    cnae = cnae.loc[cond1,:]
+    cnae = cnae.iloc[:-2] # deleta últimas duas linhas
     
     # Cria coluna com a versão
-    cnae2['Versão'] = '2.0'
+    cnae['Versão'] = '2.0'
     
     # Preenche para baixo
-    cnae2['Seção'].fillna(method='ffill', inplace=True)
-    cnae2['Divisão'].fillna(method='ffill', inplace=True)
-    cnae2['Grupo'].fillna(method='ffill', inplace=True)
-    cnae2['Classe'].fillna(method='ffill', inplace=True)
-    cnae2['Subclasse'].fillna(method='ffill', inplace=True)
+    cnae['Seção'].fillna(method='ffill', inplace=True)
+    cnae['Divisão'].fillna(method='ffill', inplace=True)
+    cnae['Grupo'].fillna(method='ffill', inplace=True)
+    cnae['Classe'].fillna(method='ffill', inplace=True)
+    cnae['Subclasse'].fillna(method='ffill', inplace=True)
     
     # Tira pontuação dos códigos
-    cnae2['Subclasse'] = cnae2['Subclasse'].str.replace('-','').str.replace('/','')
-    cnae2['Classe'] = cnae2['Classe'].str.replace('.','').str.replace('-','')
-    cnae2['Grupo'] = cnae2['Grupo'].str.replace('.','')
+    cnae['Subclasse'] = cnae['Subclasse'].str.replace('-','').str.replace('/','')
+    cnae['Classe'] = cnae['Classe'].str.replace('.','').str.replace('-','')
+    cnae['Grupo'] = cnae['Grupo'].str.replace('.','')
     
     # Seleciona colunas
-    cnae2_Seção = cnae2[['Versão', 'Seção', 'Descrição']]
-    cnae2_Divisão = cnae2[['Versão', 'Divisão', 'Descrição']]
-    cnae2_Grupo = cnae2[['Versão', 'Grupo', 'Descrição']]
-    cnae2_Classe = cnae2[['Versão', 'Classe', 'Descrição']]
-    cnae2_Subclasse = cnae2[['Versão', 'Subclasse', 'Descrição']]
+    cnae_Seção = cnae[['Versão', 'Seção', 'Descrição']]
+    cnae_Divisão = cnae[['Versão', 'Divisão', 'Descrição']]
+    cnae_Grupo = cnae[['Versão', 'Grupo', 'Descrição']]
+    cnae_Classe = cnae[['Versão', 'Classe', 'Descrição']]
+    cnae_Subclasse = cnae[['Versão', 'Subclasse', 'Descrição']]
     
     # Pega o primeiro
-    cnae2_Seção = cnae2_Seção.groupby('Seção').first()
-    cnae2_Divisão = cnae2_Divisão.dropna()
-    cnae2_Divisão = cnae2_Divisão.groupby('Divisão').first()
-    cnae2_Grupo = cnae2_Grupo.dropna()
-    cnae2_Grupo = cnae2_Grupo.groupby('Grupo').first()
-    cnae2_Classe = cnae2_Classe.dropna()
-    cnae2_Classe = cnae2_Classe.groupby('Classe').first()
-    cnae2_Subclasse = cnae2_Subclasse.dropna()
-    cnae2_Subclasse = cnae2_Subclasse.groupby('Subclasse').first()
+    cnae_Seção = cnae_Seção.groupby('Seção').first()
+    cnae_Divisão = cnae_Divisão.dropna()
+    cnae_Divisão = cnae_Divisão.groupby('Divisão').first()
+    cnae_Grupo = cnae_Grupo.dropna()
+    cnae_Grupo = cnae_Grupo.groupby('Grupo').first()
+    cnae_Classe = cnae_Classe.dropna()
+    cnae_Classe = cnae_Classe.groupby('Classe').first()
+    cnae_Subclasse = cnae_Subclasse.dropna()
+    cnae_Subclasse = cnae_Subclasse.groupby('Subclasse').first()
     
     # Reseta index
-    cnae2_Seção.reset_index(inplace=True)
-    cnae2_Divisão.reset_index(inplace=True)
-    cnae2_Grupo.reset_index(inplace=True)
-    cnae2_Classe.reset_index(inplace=True)
-    cnae2_Subclasse.reset_index(inplace=True)
+    cnae_Seção.reset_index(inplace=True)
+    cnae_Divisão.reset_index(inplace=True)
+    cnae_Grupo.reset_index(inplace=True)
+    cnae_Classe.reset_index(inplace=True)
+    cnae_Subclasse.reset_index(inplace=True)
     
     # Adiciona ao DF maior
-    todas_Seção = todas_Seção.append(cnae2_Seção)
-    todas_Divisão = todas_Divisão.append(cnae2_Divisão)
-    todas_Grupo = todas_Grupo.append(cnae2_Grupo)
-    todas_Classe = todas_Classe.append(cnae2_Classe)
-    todas_Subclasse = todas_Subclasse.append(cnae2_Subclasse)
+    todas_Seção = todas_Seção.append(cnae_Seção)
+    todas_Divisão = todas_Divisão.append(cnae_Divisão)
+    todas_Grupo = todas_Grupo.append(cnae_Grupo)
+    todas_Classe = todas_Classe.append(cnae_Classe)
+    todas_Subclasse = todas_Subclasse.append(cnae_Subclasse)
     
     # Pega a útlima versão
     todas_Seção.sort_values(by=['Seção','Versão'],ascending=[True,False],inplace=True)
@@ -335,20 +335,20 @@ def g_tabelões_cnaes():
     todas_Subclasse = todas_Subclasse.groupby(['Subclasse']).head(1)
     
     # Renomeia colunas
-    todas_Seção.rename(mapper={'Seção':'cnae2_seção_cod1','Descrição':'cnae2_seção_desc'},axis=1,inplace=True)
-    todas_Divisão.rename(mapper={'Divisão':'cnae2_divisão_cod2','Descrição':'cnae2_divisão_desc'},axis=1,inplace=True)
-    todas_Grupo.rename(mapper={'Grupo':'cnae2_grupo_cod3','Descrição':'cnae2_grupo_desc'},axis=1,inplace=True)
-    todas_Classe.rename(mapper={'Classe':'cnae2_classe_cod5','Descrição':'cnae2_classe_desc'},axis=1,inplace=True)
-    todas_Subclasse.rename(mapper={'Subclasse':'cnae2_subclasse_cod7','Descrição':'cnae2_subclasse_desc'},axis=1,inplace=True)
+    todas_Seção.rename(mapper={'Seção':'cnae_seção_cod','Descrição':'cnae_seção_desc'},axis=1,inplace=True)
+    todas_Divisão.rename(mapper={'Divisão':'cnae_divisão_cod','Descrição':'cnae_divisão_desc'},axis=1,inplace=True)
+    todas_Grupo.rename(mapper={'Grupo':'cnae_grupo_cod','Descrição':'cnae_grupo_desc'},axis=1,inplace=True)
+    todas_Classe.rename(mapper={'Classe':'cnae_classe_cod','Descrição':'cnae_classe_desc'},axis=1,inplace=True)
+    todas_Subclasse.rename(mapper={'Subclasse':'cnae_subclasse_cod','Descrição':'cnae_subclasse_desc'},axis=1,inplace=True)
     
     # Gera DF de correspondências
     df_corresp = todas_Subclasse.copy()
-    df_corresp.drop(['Versão','cnae2_subclasse_desc'],axis=1,inplace=True)
-    df_corresp['cnae2_classe_cod5'] = df_corresp['cnae2_subclasse_cod7'].str.slice(0,5)
-    df_corresp['cnae2_grupo_cod3'] = df_corresp['cnae2_subclasse_cod7'].str.slice(0,3)
-    df_corresp['cnae2_divisão_cod2'] = df_corresp['cnae2_subclasse_cod7'].str.slice(0,2)
-    df_corresp = df_corresp.merge(cnae2_seção_corresp,how='left',left_on='cnae2_divisão_cod2',right_on='Divisão')
-    df_corresp.rename(mapper={'Divisão':'cnae2_divisão_cod2','Seção':'cnae2_seção_cod1'},axis=1,inplace=True)
+    df_corresp.drop(['Versão','cnae_subclasse_desc'],axis=1,inplace=True)
+    df_corresp['cnae_classe_cod'] = df_corresp['cnae_subclasse_cod'].str.slice(0,5)
+    df_corresp['cnae_grupo_cod'] = df_corresp['cnae_subclasse_cod'].str.slice(0,3)
+    df_corresp['cnae_divisão_cod'] = df_corresp['cnae_subclasse_cod'].str.slice(0,2)
+    df_corresp = df_corresp.merge(cnae_seção_corresp,how='left',left_on='cnae_divisão_cod',right_on='Divisão')
+    df_corresp.rename(mapper={'Divisão':'cnae_divisão_cod','Seção':'cnae_seção_cod'},axis=1,inplace=True)
     
     # Retorna DFs
     return df_corresp, todas_Seção, todas_Divisão, todas_Grupo, todas_Classe, todas_Subclasse
@@ -369,6 +369,14 @@ print(df_Seção['Versão'].value_counts())
 ######################################################################################
 ######################################################################################
 ######################################################################################
+
+# Exporta para csv
+df_corresp.to_csv('cnae_corresp.csv', sep=';', decimal=',', index=False)
+df_Seção.to_csv('cnae_seção_desc.csv', sep=';', decimal=',', index=False)
+df_Divisão.to_csv('cnae_divisão_desc.csv', sep=';', decimal=',', index=False)
+df_Grupo.to_csv('cnae_grupo_desc.csv', sep=';', decimal=',', index=False)
+df_Classe.to_csv('cnae_classe_desc.csv', sep=';', decimal=',', index=False)
+df_Subclasse.to_csv('cnae_subclasse_desc.csv', sep=';', decimal=',', index=False)
 
 
 

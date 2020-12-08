@@ -14,18 +14,14 @@ import os
 from pathlib import Path
 import getpass
 if getpass.getuser() == "pedro":
-    print('\nLogado de casa')
     caminho_base = Path(r'D:\Códigos, Dados, Documentação e Cheat Sheets')
 elif getpass.getuser() == "pedro-salj":
-    print('\nLogado da salj-alems')
     caminho_base = Path(r'C:\Users\pedro-salj\Desktop\Pedro Nakashima\Códigos, Dados, Documentação e Cheat Sheets')
 
 """ Mudar diretório para dados Siconfi"""
 caminho_wd = caminho_base / 'Dados' / 'trabalho' / 'caged_vinculos' / 'microdados' / 'csv'
 #caminho_wd = caminho_base / 'Dados' / 'trabalho' / 'caged_vinculos_2002-2009'# / 'temp1'
-print('\nDiretório anterior:\n', os.getcwd())
 os.chdir(caminho_wd)
-print('\nDiretório atual:\n', os.getcwd())
 import numpy as np
 import pandas as pd
 
@@ -39,23 +35,23 @@ import pandas as pd
 
 def cgd_01a(uf, início, final, agregação):
     
-    uf = 'MS'
-    início='2018-01'
-    final='2020-09'
-    
+    #uf = 'MS'
+    #início='2018-01'
+    #final='2020-09'
+    #agregação='cnae2_grupo_cod3'
     
     # ----------------------------------------------------------------------------------------
     pasta = caminho_base / 'Dados'
     df_municipios = pd.read_excel(pasta/'municipios.xlsx', sheet_name='municipios')
-    df_municipios = df_municipios[['mun_cod6_ibge','uf_sigla']]
+    df_municipios = df_municipios[['mun_cod_ibge','uf_sigla']]
     # ----------------------------------------------------------------------------------------
     pasta = caminho_base / 'Dados' / 'cnae e ncm'
-    arq_nome = 'cnae23_Subclasse_corresp.csv'
-    dtype_corresp = {'cnae23_Subclasse_cod7':'str','cnae23_Classe_cod5':'str','cnae23_Grupo_cod3':'str','cnae23_Divisão_cod2':'str','cnae23_Seção_cod1':'str'}
+    arq_nome = 'cnae_corresp.csv'
+    #dtype_corresp = {'cnae23_Subclasse_cod7':'str','cnae23_Classe_cod5':'str','cnae23_Grupo_cod3':'str','cnae23_Divisão_cod2':'str','cnae23_Seção_cod1':'str'}
     df_cnae_corresp = pd.read_csv(pasta / arq_nome,
                                   delimiter = ';',
                                   decimal=',',
-                                  dtype=dtype_corresp)
+                                  dtype='str')
     # ----------------------------------------------------------------------------------------
     
     def g_nome_arq(início, final, prefixo, sufixo):
@@ -80,18 +76,18 @@ def cgd_01a(uf, início, final, agregação):
     for index_arq, arq_nome in enumerate(li_arquivos):
         print(arq_nome)
         
-        arq_nome = 'CAGEDMOV202009.csv'
+        #arq_nome = 'CAGEDMOV202009.csv'
         
         pasta = caminho_base / 'Dados' / 'trabalho' / 'caged_vinculos' / 'microdados' / 'csv_processados'
         
-        dtype = {'cnae2_subclasse_cod7':'str','cnae2_classe_cod5':'str', 'competência':'str'}
+        dtype = {'cnae_subclasse_cod':'str','cnae_classe_cod':'str', 'competência':'str'}
         
         df = pd.read_csv(pasta / arq_nome,
                          delimiter = ';',
                          decimal=',',
                          dtype=dtype)
         
-        df = df.merge(df_municipios,how='left',left_on='mun_cod6_ibge',right_on='mun_cod6_ibge')
+        df = df.merge(df_municipios,how='left',left_on='mun_cod_ibge',right_on='mun_cod_ibge')
         
         if uf != 'BR':
             cond1 = df['uf_sigla'] == uf
@@ -103,9 +99,9 @@ def cgd_01a(uf, início, final, agregação):
         df['dt'] = pd.to_datetime(df[['year', 'month', 'day']])
         df.drop(['year','month','day','competência'],axis=1,inplace=True)
         
-        df = df.merge(df_cnae_corresp,how='left',left_on='cnae2_subclasse_cod7',right_on='cnae23_Subclasse_cod7')
+        df = df.merge(df_cnae_corresp,how='left',left_on='cnae_subclasse_cod',right_on='cnae_subclasse_cod')
         
-        df = df.groupby(['dt','cnae2_subclasse_cod7'])['saldomovimentação'].sum().to_frame().reset_index()
+        df = df.groupby(['dt',agregação])['saldomovimentação'].sum().to_frame().reset_index()
         
         if index_arq == 0:
             df_bruto = df.copy()
@@ -117,11 +113,11 @@ def cgd_01a(uf, início, final, agregação):
     return df_bruto
 #######################################################################################################
 
-cond1 = df['cnae23_Subclasse_cod7'].isnull()
-filtro = df.loc[cond1,:]
+#cond1 = df['cnae23_Subclasse_cod7'].isnull()
+#filtro = df.loc[cond1,:]
 
 
-df = cgd_01a(uf='MS', início='2018-01', final='2020-09')
+df = cgd_01a(uf='MS', início='2018-01', final='2020-09', agregação='cnae_grupo_cod')
 
 #print(df1.dtypes)
 
@@ -130,6 +126,8 @@ df = cgd_01a(uf='MS', início='2018-01', final='2020-09')
 #######################################################################################################
 #######################################################################################################
 #######################################################################################################
+agregação='cnae_grupo_cod'
+
 dicionário1 = {}
 df_cp = df.copy()
 print(df_cp.dtypes)
@@ -141,18 +139,35 @@ print(df_cp.dtypes)
 tot_mensal = df_cp.groupby(['dt'])['saldomovimentação'].sum().to_frame()
 tot_mensal.rename(mapper={'saldomovimentação':'total'},axis=1,inplace=True)
 tot_mensal.index.freq = 'MS'
-dicionário1['Mensal - Valor'] = tot_mensal
-
-
-unicos = list(df_cp['cnae2_subclasse_cod7'].unique())
+#dicionário1['Mensal - Valor'] = tot_mensal
+unicos = list(df_cp[agregação].unique())
 for index_unico, unico in enumerate(unicos):
-    cond1 = df_cp['cnae2_subclasse_cod7'] == unico
+    cond1 = df_cp[agregação] == unico
     filtro = df_cp.loc[cond1,['dt','saldomovimentação']]
     filtro.rename(mapper={'saldomovimentação':unico},axis=1,inplace=True)
     filtro.set_index('dt',inplace=True)
-    dicionário1['Mensal - Valor'] = dicionário1['Mensal - Valor'].merge(filtro,how='left',left_index=True,right_index=True)
+    tot_mensal = tot_mensal.merge(filtro,how='left',left_index=True,right_index=True)
+tot_mensal.fillna(0,inplace=True)
 
-dicionário1['Mensal - Valor'].fillna(0,inplace=True)
+# Adiciona ao dicionário
+dicionário1['Mensal - Valor'] = tot_mensal.copy()
+
+'''
+# Gera mês em string
+tot_mensal['dt_ano_mes'] = tot_mensal.index.year.astype('str') + '_' + tot_mensal.index.month.astype('str')
+# Pega o últim mês, em string, para a ordenação do df transposto com base no último mês
+ultimo = dicionário1['Mensal - Valor'].iloc[-1,-1]
+# Ordena o df em ordem decrescente
+tot_mensal.sort_index(ascending=False, inplace=True)
+# Coloca no index a variável de mês str
+tot_mensal.set_index(['dt_ano_mes'], inplace=True)
+# Transpõe DF
+df_longo = tot_mensal.T
+# Deleta a linha de total
+df_longo.drop(['total'],axis=0,inplace=True)
+# Ordena valores com base no último mês
+df_longo.sort_values(by=[ultimo],ascending=[False],inplace=True)
+'''
 
 ######################################################################################################
 ########## Acumulado no Ano - Valor ##################################################################
@@ -215,9 +230,6 @@ for l_variavel, novo_nome in zip(l_variaveis, novos_nomes):
     df_part['total'] = 100
     #     --->>>> Coloca no dicionário1 <<<<< ---   #
     dicionário1[novo_nome] = df_part
-
-
-
 
 # /\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
 # /\/\/\/\/\/\/\/\/ Variação Bruta com relação ao ano anterior /\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
@@ -364,15 +376,27 @@ elif parametro == '1m':
     li_crescimento10Menos_variaveis = li_1m_crescimento10Menos_variaveis
     li_crescimentoMais_variaveis = li_1m_crescimentoMais_variaveis
 
-dtype = {}
+
+print(agregação) # cnae_grupo_cod
+
+import re
+arq_nome = re.sub(r'_cod', "_desc.csv", agregação)
+print(arq_nome)
+
 pasta = caminho_base / 'Dados' / 'cnae e ncm'
-arq_nome = 'cnae20_subclasse_desc.csv'
-df_subclasse_desc = pd.read_csv(pasta / arq_nome,
+
+#arq_nome = 'cnae2_grupo_desc.csv'
+
+df_desc = pd.read_csv(pasta / arq_nome,
                  delimiter = ';',
                  decimal=',',
-                 dtype=dtype)
+                 dtype='str')
 
-df_subclasse_desc.set_index('subclasse',inplace=True)
+desc_agregação = re.sub(r'_cod', "_desc", agregação)
+print(desc_agregação)
+
+
+df_desc.set_index(agregação,inplace=True)
 
 dicionário2 = {}
 
@@ -415,8 +439,7 @@ for vl_variavel in li_variaveis:
     # Renomeia a linha da soma para 'Outros'
     df_crescimentoMenos_soma.rename(mapper={0:'Outros'},axis=0,inplace=True)
     df_crescimentoMais_soma.rename(mapper={0:'Outros'},axis=0,inplace=True)
-    
-    
+        
     # Junta a soma dos valores menos importantes aos setores mais importantes
     df_crescimento10Mais = df_crescimento10Mais.append(df_crescimentoMenos_soma)
     df_crescimento10Menos = df_crescimento10Menos.append(df_crescimentoMais_soma)
@@ -426,21 +449,21 @@ for vl_variavel in li_variaveis:
     df_crescimento10Menos.loc['Total Geral',:] = df_crescimento10Menos.sum(axis=0)
     
     # Coloca nomes descrição
-    df_crescimento10Mais = df_crescimento10Mais.merge(df_subclasse_desc,how='left',left_index=True,right_index=True)
-    df_crescimento10Mais.loc['Outros','descrição'] = 'Outros'
-    df_crescimento10Mais.loc['Total Geral','descrição'] = 'Total Geral'
+    df_crescimento10Mais = df_crescimento10Mais.merge(df_desc,how='left',left_index=True,right_index=True)
+    df_crescimento10Mais.loc['Outros',desc_agregação] = 'Outros'
+    df_crescimento10Mais.loc['Total Geral',desc_agregação] = 'Total Geral'
     # ------------
-    df_crescimento10Menos = df_crescimento10Menos.merge(df_subclasse_desc,how='left',left_index=True,right_index=True)
-    df_crescimento10Menos.loc['Outros','descrição'] = 'Outros'
-    df_crescimento10Menos.loc['Total Geral','descrição'] = 'Total Geral'
+    df_crescimento10Menos = df_crescimento10Menos.merge(df_desc,how='left',left_index=True,right_index=True)
+    df_crescimento10Menos.loc['Outros',desc_agregação] = 'Outros'
+    df_crescimento10Menos.loc['Total Geral',desc_agregação] = 'Total Geral'
     
     # Coloca na primeira coluna
     df_meses = df_crescimento10Mais.filter(regex='^2',axis=1)
-    df_crescimento10Mais = df_crescimento10Mais['descrição'].to_frame()
+    df_crescimento10Mais = df_crescimento10Mais[desc_agregação].to_frame()
     df_crescimento10Mais = df_crescimento10Mais.merge(df_meses,how='left',left_index=True,right_index=True)
     # ------------
     df_meses = df_crescimento10Menos.filter(regex='^2',axis=1)
-    df_crescimento10Menos = df_crescimento10Menos['descrição'].to_frame()
+    df_crescimento10Menos = df_crescimento10Menos[desc_agregação].to_frame()
     df_crescimento10Menos = df_crescimento10Menos.merge(df_meses,how='left',left_index=True,right_index=True)
     
     # Define novos nomes
@@ -454,9 +477,6 @@ for vl_variavel in li_variaveis:
     dicionário2[nome_curto_menoresCrescimentos] = df_crescimento10Menos.copy()
 
 ####################################################################################################
-
-
-
 
 
 
