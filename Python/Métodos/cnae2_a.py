@@ -404,8 +404,40 @@ df_corresp, df_Seção, df_Divisão, df_Grupo, df_Classe, df_Subclasse = g_tabel
 ######################################################################################
 ######################################################################################
 ######################################################################################
-df_corresp_2 = df_corresp.groupby(['cnae_subclasse_cod']).head(1)
-df_corresp_2 = df_corresp_2.merge(df_Subclasse,how='left',left_on='cnae_subclasse_cod',right_on='cnae_subclasse_cod')
+
+df_Subclasse.sort_values(by=['Versão'],ascending=[True],inplace=True)
+
+df_corresp = df_corresp.groupby(['cnae_subclasse_cod']).head(1)
+df_corresp = df_corresp.merge(df_Subclasse,how='left',left_on='cnae_subclasse_cod',right_on='cnae_subclasse_cod')
+df_corresp = df_corresp.merge(df_Classe,how='left',left_on='cnae_classe_cod',right_on='cnae_classe_cod')
+
+cond1 = df_corresp['Versão_x'] != df_corresp['Versão_y']
+filtro = df_corresp.loc[cond1,:]
+
+linhas_problemáticas = filtro.copy()
+
+
+
+
+
+
+
+
+
+
+
+
+df_corresp.sort_values(by=['Versão'],ascending=[True],inplace=True)
+
+
+
+
+
+
+
+
+
+
 print(df_corresp_2['Versão'].value_counts())
 
 

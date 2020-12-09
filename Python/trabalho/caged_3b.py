@@ -114,6 +114,9 @@ def cgd_01a(uf, início, final, agregação):
         print(df_agregado['saldomovimentação'].sum())
         # A diferença abaixo deveria dar ZERO!!!!
         print(df_agregado['saldomovimentação'].sum() - df['saldomovimentação'].sum())
+        
+        
+        
         df_agregado.rename(mapper={'saldomovimentação':'soma_errada'},axis=1,inplace=True)
         df2 = df.merge(df_agregado,how='outer',left_on='cnae_classe_cod',right_on='cnae_classe_cod')
         
