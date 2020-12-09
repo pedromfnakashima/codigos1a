@@ -21,8 +21,8 @@ elif getpass.getuser() == "pedro-salj":
 
 """ Mudar diretório para dados Siconfi"""
 caminho_wd = caminho_base / 'Dados' / 'trabalho' / 'caged_vinculos' / 'microdados' / 'csv_processados'
-
 os.chdir(caminho_wd)
+
 import numpy as np
 import pandas as pd
 
@@ -66,9 +66,67 @@ for arq_nome in glob.glob('*.csv'):
     df.to_csv(arq_nome, sep=';', decimal=',', index=False)
 
 
+##########################################################################################################
+##########################################################################################################
+##########################################################################################################
 
+import glob
+import re
 
+for arq_nome in glob.glob('*.csv'):
+    print(arq_nome)
+    
+    #arq_nome = 'CAGEDMOV200701.csv'
+    #arq_nome = 'CAGEDMOV202009.csv'
+    
+    dtype = {'cbo_ocupação_cod':'str','cnae_subclasse_cod':'str','cnae_classe_cod':'str'}
+    pasta = caminho_base / 'Dados' / 'trabalho' / 'caged_vinculos' / 'microdados' / 'csv_processados'
+    df = pd.read_csv(pasta / arq_nome,
+                                  delimiter = ';',
+                                  decimal=',',
+                                  dtype=dtype)
+    df['len'] = df['cnae_subclasse_cod'].str.len()
+    #print(df['len'].value_counts())
+    
+    cond1 = df['len'] == 6
+    print(f'Linhas com subclasses de 6 dígitos: {cond1.sum()}')
+    #df.loc[cond1, 'cnae_subclasse_cod'] = '0' + df['len']
+    
+    #print(df['len'].value_counts())
+    
+    #df.to_csv(arq_nome, sep=';', decimal=',', index=False)
 
+##########################################################################################################
+##########################################################################################################
+##########################################################################################################
+caminho_wd = caminho_base / 'Dados' / 'trabalho' / 'caged_vinculos' / 'microdados' / 'csv'
+os.chdir(caminho_wd)
+
+import glob
+import re
+
+for arq_nome in glob.glob('*.txt'):
+    print(arq_nome)
+    
+    #arq_nome = 'CAGEDMOV200701.csv'
+    #arq_nome = 'CAGEDMOV202009.csv'
+    
+    #dtype = {'cbo_ocupação_cod':'str','cnae_subclasse_cod':'str','cnae_classe_cod':'str'}
+    pasta = caminho_base / 'Dados' / 'trabalho' / 'caged_vinculos' / 'microdados' / 'csv'
+    df = pd.read_csv(pasta / arq_nome,
+                                  delimiter = ';',
+                                  decimal=',',
+                                  dtype={'subclasse':'str'})
+    df['len'] = df['subclasse'].str.len()
+    #print(df['len'].value_counts())
+    
+    cond1 = df['len'] == 6
+    print(f'Linhas com subclasses de 6 dígitos: {cond1.sum()}')
+    #df.loc[cond1, 'cnae_subclasse_cod'] = '0' + df['len']
+    
+    #print(df['len'].value_counts())
+    
+    #df.to_csv(arq_nome, sep=';', decimal=',', index=False)
 
 
 

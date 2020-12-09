@@ -20,7 +20,6 @@ elif getpass.getuser() == "pedro-salj":
 
 """ Mudar diretório para dados Siconfi"""
 caminho_wd = caminho_base / 'Dados' / 'trabalho' / 'caged_vinculos' / 'microdados' / 'csv'
-#caminho_wd = caminho_base / 'Dados' / 'trabalho' / 'caged_vinculos_2002-2009'# / 'temp1'
 os.chdir(caminho_wd)
 import numpy as np
 import pandas as pd
@@ -35,10 +34,12 @@ import pandas as pd
 
 def cgd_01a(uf, início, final, agregação):
     
-    #uf = 'MS'
-    #início='2018-01'
-    #final='2020-09'
-    #agregação='cnae2_grupo_cod3'
+    uf = 'BR'
+    início='2020-10'
+    final='2020-10'
+    agregação='cnae_grupo_cod'
+    agregação='cnae_classe_cod'
+    #agregação='cnae_subclasse_cod'
     
     # ----------------------------------------------------------------------------------------
     pasta = caminho_base / 'Dados'
@@ -49,26 +50,32 @@ def cgd_01a(uf, início, final, agregação):
     arq_nome = 'cnae_corresp.csv'
     #dtype_corresp = {'cnae23_Subclasse_cod7':'str','cnae23_Classe_cod5':'str','cnae23_Grupo_cod3':'str','cnae23_Divisão_cod2':'str','cnae23_Seção_cod1':'str'}
     df_cnae_corresp = pd.read_csv(pasta / arq_nome,
-                                  delimiter = ';',
+                                  delimiter = '|',
                                   decimal=',',
                                   dtype='str')
     # ----------------------------------------------------------------------------------------
     
     def g_nome_arq(início, final, prefixo, sufixo):
-        li_arqs_nomes = []
-        início_com_dia = início + '-01'
-        final_com_dia = final + '-01'
-        df_datas = pd.to_datetime(np.arange(início_com_dia, final_com_dia, 1, dtype='datetime64[M]')).to_frame()#.reset_index()
-        df_datas.rename(mapper={0:'col_data'},axis=1,inplace=True)
-        
-        nova_linha = pd.DataFrame({'col_data': pd.date_range(start=df_datas['col_data'].iloc[-1], periods=2, freq='MS', closed='right')})
-        df_datas = df_datas.append(nova_linha)
-        
-        df_datas['col_data'] = df_datas['col_data'].astype('str')
-        df_datas['col_data'] = (df_datas['col_data'].str.slice(0,4) + df_datas['col_data'].str.slice(4,7)).str.replace('-','')
-        for index, row in df_datas.iterrows():
-            arq_nome = prefixo + row['col_data'] + sufixo
-            li_arqs_nomes.append(arq_nome)
+        if início == final:
+            arq_nome = prefixo + início.replace('-','') + sufixo
+            li_arqs_nomes = [arq_nome]
+        else:
+            li_arqs_nomes = []
+            início_com_dia = início + '-01'
+            final_com_dia = final + '-01'
+            df_datas = pd.to_datetime(np.arange(início_com_dia, final_com_dia, 1, dtype='datetime64[M]')).to_frame()#.reset_index()
+            df_datas.rename(mapper={0:'col_data'},axis=1,inplace=True)
+            
+            nova_linha = pd.DataFrame({'col_data': pd.date_range(start=df_datas['col_data'].iloc[-1], periods=2, freq='MS', closed='right')})
+            df_datas = df_datas.append(nova_linha)
+            
+            df_datas['col_data'] = df_datas['col_data'].astype('str')
+            df_datas['col_data'] = (df_datas['col_data'].str.slice(0,4) + df_datas['col_data'].str.slice(4,7)).str.replace('-','')
+            for index, row in df_datas.iterrows():
+                arq_nome = prefixo + row['col_data'] + sufixo
+                li_arqs_nomes.append(arq_nome)
+        ## Retorna ##
+        #print(li_arqs_nomes)
         return li_arqs_nomes
     
     li_arquivos = g_nome_arq(início=início, final=final, prefixo='CAGEDMOV', sufixo='.csv')
@@ -100,23 +107,43 @@ def cgd_01a(uf, início, final, agregação):
         df.drop(['year','month','day','competência'],axis=1,inplace=True)
         
         df = df.merge(df_cnae_corresp,how='left',left_on='cnae_subclasse_cod',right_on='cnae_subclasse_cod')
+        print(f'{agregação}')
+        print(df['saldomovimentação'].sum())
+        # ATENÇÃO!!! AQUI (df_agregado) A SOMA TOTAL NÃO ESTÁ BATENDO!!!!!!!!!!!!!!!!!!!!!!
+        df_agregado = df.groupby(['dt',agregação])['saldomovimentação'].sum().to_frame().reset_index()
+        print(df_agregado['saldomovimentação'].sum())
+        # A diferença abaixo deveria dar ZERO!!!!
+        print(df_agregado['saldomovimentação'].sum() - df['saldomovimentação'].sum())
+        df_agregado.rename(mapper={'saldomovimentação':'soma_errada'},axis=1,inplace=True)
+        df2 = df.merge(df_agregado,how='outer',left_on='cnae_classe_cod',right_on='cnae_classe_cod')
         
-        df = df.groupby(['dt',agregação])['saldomovimentação'].sum().to_frame().reset_index()
+        df2 = df2.groupby(['cnae_classe_cod'])
         
         if index_arq == 0:
-            df_bruto = df.copy()
+            df_bruto = df_agregado.copy()
         else:
-            df_bruto = df_bruto.append(df)
+            df_bruto = df_bruto.append(df_agregado)
     
     df_bruto.index = range(len(df_bruto))
     
     return df_bruto
 #######################################################################################################
 
+df = cgd_01a(uf='BR', início='2020-10', final='2020-10', agregação='cnae_grupo_cod')
+
+cond1 = df['dt'].dt.year == 2020
+filtro = df.loc[cond1,:]
+print(filtro['saldomovimentação'].sum())
+
+
+
+
 #cond1 = df['cnae23_Subclasse_cod7'].isnull()
 #filtro = df.loc[cond1,:]
 
 def cgd_01b(uf, início, final, agregação):
+    
+    #df = cgd_01a(uf='BR', início='2020-09', final='2020-10', agregação='cnae_grupo_cod')
     
     df = cgd_01a(uf=uf, início=início, final=final, agregação=agregação)
     
@@ -131,7 +158,7 @@ def cgd_01b(uf, início, final, agregação):
     
     dicionário1 = {}
     df_cp = df.copy()
-    print(df_cp.dtypes)
+    #print(df_cp.dtypes)
     
     ######################################################################################################
     ########## Mensal - Valor ############################################################################
@@ -483,8 +510,9 @@ def cgd_01b(uf, início, final, agregação):
 
 
 
-dic1, dic2 = cgd_01b(uf='MS', início='2018-01', final='2020-09', agregação='cnae_grupo_cod')
+#dic1_MS, dic2_MS = cgd_01b(uf='MS', início='2018-01', final='2020-10', agregação='cnae_grupo_cod')
 
+dic1_BR, dic2_BR = cgd_01b(uf='BR', início='2018-01', final='2020-10', agregação='cnae_grupo_cod')
 
 
 

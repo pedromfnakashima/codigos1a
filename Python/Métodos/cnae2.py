@@ -51,6 +51,14 @@ def g_tabelões_cnaes():
     cnae['Subclasse'] = cnae['Subclasse'].str.replace('-','').str.replace('/','')
     cnae['Classe'] = cnae['Classe'].str.replace('.','').str.replace('-','')
     cnae['Grupo'] = cnae['Grupo'].str.replace('.','')
+    cnae['Descrição'] = cnae['Descrição'].str.replace('\n',' ')
+    
+    # Tira os espaços antes e depois dos códigos
+    cnae['Seção'] = cnae['Seção'].str.strip()
+    cnae['Divisão'] = cnae['Divisão'].str.strip()
+    cnae['Grupo'] = cnae['Grupo'].str.strip()
+    cnae['Classe'] = cnae['Classe'].str.strip()
+    cnae['Subclasse'] = cnae['Subclasse'].str.strip()
     
     # Seleciona colunas
     cnae_Seção = cnae[['Versão', 'Seção', 'Descrição']]
@@ -133,6 +141,14 @@ def g_tabelões_cnaes():
     cnae['Subclasse'] = cnae['Subclasse'].str.replace('-','').str.replace('/','')
     cnae['Classe'] = cnae['Classe'].str.replace('.','').str.replace('-','')
     cnae['Grupo'] = cnae['Grupo'].str.replace('.','')
+    cnae['Descrição'] = cnae['Descrição'].str.replace('\n',' ')
+    
+    # Tira os espaços antes e depois dos códigos
+    cnae['Seção'] = cnae['Seção'].str.strip()
+    cnae['Divisão'] = cnae['Divisão'].str.strip()
+    cnae['Grupo'] = cnae['Grupo'].str.strip()
+    cnae['Classe'] = cnae['Classe'].str.strip()
+    cnae['Subclasse'] = cnae['Subclasse'].str.strip()
     
     # Seleciona colunas
     cnae_Seção = cnae[['Versão', 'Seção', 'Descrição']]
@@ -158,6 +174,9 @@ def g_tabelões_cnaes():
     cnae_Grupo.reset_index(inplace=True)
     cnae_Classe.reset_index(inplace=True)
     cnae_Subclasse.reset_index(inplace=True)
+    
+    #cnae_Subclasse['len'] = cnae_Subclasse['Subclasse'].str.len()
+    #print(cnae_Subclasse['len'].value_counts())
     
     # Adiciona ao DF maior
     todas_Seção = todas_Seção.append(cnae_Seção)
@@ -209,6 +228,14 @@ def g_tabelões_cnaes():
     cnae['Subclasse'] = cnae['Subclasse'].str.replace('-','').str.replace('/','')
     cnae['Classe'] = cnae['Classe'].str.replace('.','').str.replace('-','')
     cnae['Grupo'] = cnae['Grupo'].str.replace('.','')
+    cnae['Descrição'] = cnae['Descrição'].str.replace('\n',' ')
+    
+    # Tira os espaços antes e depois dos códigos
+    cnae['Seção'] = cnae['Seção'].str.strip()
+    cnae['Divisão'] = cnae['Divisão'].str.strip()
+    cnae['Grupo'] = cnae['Grupo'].str.strip()
+    cnae['Classe'] = cnae['Classe'].str.strip()
+    cnae['Subclasse'] = cnae['Subclasse'].str.strip()
     
     # Seleciona colunas
     cnae_Seção = cnae[['Versão', 'Seção', 'Descrição']]
@@ -285,6 +312,17 @@ def g_tabelões_cnaes():
     cnae['Subclasse'] = cnae['Subclasse'].str.replace('-','').str.replace('/','')
     cnae['Classe'] = cnae['Classe'].str.replace('.','').str.replace('-','')
     cnae['Grupo'] = cnae['Grupo'].str.replace('.','')
+    cnae['Descrição'] = cnae['Descrição'].str.replace('\n',' ')
+    
+    # Tira os espaços antes e depois dos códigos
+    cnae['Seção'] = cnae['Seção'].str.strip()
+    cnae['Divisão'] = cnae['Divisão'].str.strip()
+    cnae['Grupo'] = cnae['Grupo'].str.strip()
+    cnae['Classe'] = cnae['Classe'].str.strip()
+    cnae['Subclasse'] = cnae['Subclasse'].str.strip()
+    
+       #cnae['len'] = cnae['Subclasse'].str.len()
+       #print(cnae['len'].value_counts())
     
     # Seleciona colunas
     cnae_Seção = cnae[['Versão', 'Seção', 'Descrição']]
@@ -311,12 +349,19 @@ def g_tabelões_cnaes():
     cnae_Classe.reset_index(inplace=True)
     cnae_Subclasse.reset_index(inplace=True)
     
+    #cnae_Subclasse['len'] = cnae_Subclasse['Subclasse'].str.len()
+    #print(cnae_Subclasse['len'].value_counts())
+    
     # Adiciona ao DF maior
     todas_Seção = todas_Seção.append(cnae_Seção)
     todas_Divisão = todas_Divisão.append(cnae_Divisão)
     todas_Grupo = todas_Grupo.append(cnae_Grupo)
     todas_Classe = todas_Classe.append(cnae_Classe)
     todas_Subclasse = todas_Subclasse.append(cnae_Subclasse)
+    
+    #todas_Subclasse['len'] = todas_Subclasse['Subclasse'].str.len()
+    #print(todas_Subclasse['len'].value_counts())
+    
     
     # Pega a útlima versão
     todas_Seção.sort_values(by=['Seção','Versão'],ascending=[True,False],inplace=True)
@@ -348,7 +393,8 @@ def g_tabelões_cnaes():
     df_corresp['cnae_grupo_cod'] = df_corresp['cnae_subclasse_cod'].str.slice(0,3)
     df_corresp['cnae_divisão_cod'] = df_corresp['cnae_subclasse_cod'].str.slice(0,2)
     df_corresp = df_corresp.merge(cnae_seção_corresp,how='left',left_on='cnae_divisão_cod',right_on='Divisão')
-    df_corresp.rename(mapper={'Divisão':'cnae_divisão_cod','Seção':'cnae_seção_cod'},axis=1,inplace=True)
+    df_corresp.drop(['Divisão'],axis=1,inplace=True)
+    df_corresp.rename(mapper={'Seção':'cnae_seção_cod'},axis=1,inplace=True)
     
     # Retorna DFs
     return df_corresp, todas_Seção, todas_Divisão, todas_Grupo, todas_Classe, todas_Subclasse
@@ -358,6 +404,10 @@ df_corresp, df_Seção, df_Divisão, df_Grupo, df_Classe, df_Subclasse = g_tabel
 ######################################################################################
 ######################################################################################
 ######################################################################################
+df_corresp_2 = df_corresp.groupby(['cnae_subclasse_cod']).head(1)
+df_corresp_2 = df_corresp_2.merge(df_Subclasse,how='left',left_on='cnae_subclasse_cod',right_on='cnae_subclasse_cod')
+print(df_corresp_2['Versão'].value_counts())
+
 
 print(df_Subclasse['Versão'].value_counts())
 print(df_Classe['Versão'].value_counts())
@@ -365,27 +415,34 @@ print(df_Grupo['Versão'].value_counts())
 print(df_Divisão['Versão'].value_counts())
 print(df_Seção['Versão'].value_counts())
 
-
+print(df_Grupo['cnae_grupo_cod'].nunique())
 ######################################################################################
 ######################################################################################
 ######################################################################################
 
 # Exporta para csv
-df_corresp.to_csv('cnae_corresp.csv', sep=';', decimal=',', index=False)
-df_Seção.to_csv('cnae_seção_desc.csv', sep=';', decimal=',', index=False)
-df_Divisão.to_csv('cnae_divisão_desc.csv', sep=';', decimal=',', index=False)
-df_Grupo.to_csv('cnae_grupo_desc.csv', sep=';', decimal=',', index=False)
-df_Classe.to_csv('cnae_classe_desc.csv', sep=';', decimal=',', index=False)
-df_Subclasse.to_csv('cnae_subclasse_desc.csv', sep=';', decimal=',', index=False)
+df_corresp.to_csv('cnae_corresp.csv', sep='|', decimal=',', index=False)
+df_Seção.to_csv('cnae_seção_desc.csv', sep='|', decimal=',', index=False)
+df_Divisão.to_csv('cnae_divisão_desc.csv', sep='|', decimal=',', index=False)
+df_Grupo.to_csv('cnae_grupo_desc.csv', sep='|', decimal=',', index=False)
+df_Classe.to_csv('cnae_classe_desc.csv', sep='|', decimal=',', index=False)
+df_Subclasse.to_csv('cnae_subclasse_desc.csv', sep='|', decimal=',', index=False)
 
 
+import pandas as pd
+pasta = caminho_base / 'Dados' / 'cnae e ncm'
+arq_nome = 'cnae_corresp.csv'
+#dtype_corresp = {'cnae23_Subclasse_cod7':'str','cnae23_Classe_cod5':'str','cnae23_Grupo_cod3':'str','cnae23_Divisão_cod2':'str','cnae23_Seção_cod1':'str'}
+df_cnae_corresp = pd.read_csv(pasta / arq_nome,
+                              delimiter = '|',
+                              decimal=',')
 
+df_cnae_corresp2 = df_cnae_corresp.groupby(['cnae_subclasse_cod']).first().reset_index()
 
+print(df_cnae_corresp.dtypes)
 
-
-
-
-
+print(df_cnae_corresp['cnae_subclasse_cod'].nunique())
+print(df_cnae_corresp['cnae_classe_cod'].nunique())
 
 
 
