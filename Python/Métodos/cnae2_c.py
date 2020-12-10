@@ -324,6 +324,40 @@ cnae_Subclasse20 = cnae_Subclasse20.groupby('Subclasse').first()
 ## --------------------------------------------------------------- ##
 ## --------------------------------------------------------------- ##
 ## --------------------------------------------------------------- ##
+mapper = {'Seção':'cnae_seção_cod','Divisão':'cnae_divisão_cod','Grupo':'cnae_grupo_cod','Classe':'cnae_classe_cod', 'Subclasse':'cnae_subclasse_cod'}
+
+
+cnae_corresp = cnae_corresp23.copy()
+#cnae_corresp = cnae_corresp.append(cnae_corresp22)
+#cnae_corresp = cnae_corresp.append(cnae_corresp21)
+#cnae_corresp = cnae_corresp.append(cnae_corresp20)
+cnae_corresp.reset_index(inplace=True)
+cnae_corresp = cnae_corresp.groupby(['Subclasse']).head(1)
+
+cnae_corresp.rename(mapper=mapper,axis=1,inplace=True)
+# Exporta para csv
+cnae_corresp.to_csv('cnae_corresp_curto.csv', sep=';', decimal=',', index=False)
+
+## --------------------------------------------------------------- ##
+## --------------------------------------------------------------- ##
+## --------------------------------------------------------------- ##
+
+cnae_corresp = cnae_corresp23.copy()
+cnae_corresp = cnae_corresp.append(cnae_corresp22)
+cnae_corresp = cnae_corresp.append(cnae_corresp21)
+cnae_corresp = cnae_corresp.append(cnae_corresp20)
+cnae_corresp.reset_index(inplace=True)
+cnae_corresp = cnae_corresp.groupby(['Subclasse']).head(1)
+
+cnae_corresp.rename(mapper=mapper,axis=1,inplace=True)
+# Exporta para csv
+cnae_corresp.to_csv('cnae_corresp_longo.csv', sep=';', decimal=',', index=False)
+
+
+
+## --------------------------------------------------------------- ##
+## --------------------------------------------------------------- ##
+## --------------------------------------------------------------- ##
 
 cnae_corresp20_cp = cnae_corresp20.copy()
 cnae_corresp21_cp = cnae_corresp21.copy()
@@ -334,8 +368,6 @@ cnae_corresp = cnae_corresp20_cp.copy()
 cnae_corresp.update(cnae_corresp21_cp)
 cnae_corresp.update(cnae_corresp22_cp)
 cnae_corresp.update(cnae_corresp23_cp)
-
-
 
 
 

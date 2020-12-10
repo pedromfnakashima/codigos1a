@@ -32,83 +32,134 @@ import pandas as pd
 
 #######################################################################################################
 
-def cgd_01a(uf, início, final, agregação):
+#def cgd_01a(uf, início, final, agregação):
+
+uf = 'BR'
+início='2020-10'
+final='2020-10'
+agregação = 'cnae_seção_cod'
+#agregação = 'cnae_divisão_cod'
+#agregação='cnae_grupo_cod'
+#agregação='cnae_classe_cod'
+#agregação='cnae_subclasse_cod'
+
+# ----------------------------------------------------------------------------------------
+pasta = caminho_base / 'Dados'
+df_municipios = pd.read_excel(pasta/'municipios.xlsx', sheet_name='municipios')
+df_municipios = df_municipios[['mun_cod_ibge','uf_sigla']]
+# ----------------------------------------------------------------------------------------
+pasta = caminho_base / 'Dados' / 'cnae e ncm'
+arq_nome = 'cnae_corresp_curto.csv'
+cnae_corresp_curto = pd.read_csv(pasta / arq_nome,
+                              delimiter = ';',
+                              decimal=',',
+                              dtype='str')
+arq_nome = 'cnae_corresp_longo.csv'
+cnae_corresp_longo = pd.read_csv(pasta / arq_nome,
+                              delimiter = ';',
+                              decimal=',',
+                              dtype='str')
+# ----------------------------------------------------------------------------------------
+
+def g_nome_arq(início, final, prefixo, sufixo):
+    if início == final:
+        arq_nome = prefixo + início.replace('-','') + sufixo
+        li_arqs_nomes = [arq_nome]
+    else:
+        li_arqs_nomes = []
+        início_com_dia = início + '-01'
+        final_com_dia = final + '-01'
+        df_datas = pd.to_datetime(np.arange(início_com_dia, final_com_dia, 1, dtype='datetime64[M]')).to_frame()#.reset_index()
+        df_datas.rename(mapper={0:'col_data'},axis=1,inplace=True)
+        
+        nova_linha = pd.DataFrame({'col_data': pd.date_range(start=df_datas['col_data'].iloc[-1], periods=2, freq='MS', closed='right')})
+        df_datas = df_datas.append(nova_linha)
+        
+        df_datas['col_data'] = df_datas['col_data'].astype('str')
+        df_datas['col_data'] = (df_datas['col_data'].str.slice(0,4) + df_datas['col_data'].str.slice(4,7)).str.replace('-','')
+        for index, row in df_datas.iterrows():
+            arq_nome = prefixo + row['col_data'] + sufixo
+            li_arqs_nomes.append(arq_nome)
+    ## Retorna ##
+    #print(li_arqs_nomes)
+    return li_arqs_nomes
+
+li_arquivos = g_nome_arq(início=início, final=final, prefixo='CAGEDMOV', sufixo='.csv')
+
+for index_arq, arq_nome in enumerate(li_arquivos):
+    print(arq_nome)
     
-    uf = 'BR'
-    início='2020-10'
-    final='2020-10'
-    agregação='cnae_grupo_cod'
-    agregação='cnae_classe_cod'
-    #agregação='cnae_subclasse_cod'
+    #arq_nome = 'CAGEDMOV202009.csv'
     
-    # ----------------------------------------------------------------------------------------
-    pasta = caminho_base / 'Dados'
-    df_municipios = pd.read_excel(pasta/'municipios.xlsx', sheet_name='municipios')
-    df_municipios = df_municipios[['mun_cod_ibge','uf_sigla']]
-    # ----------------------------------------------------------------------------------------
-    pasta = caminho_base / 'Dados' / 'cnae e ncm'
-    arq_nome = 'cnae_corresp.csv'
-    #dtype_corresp = {'cnae23_Subclasse_cod7':'str','cnae23_Classe_cod5':'str','cnae23_Grupo_cod3':'str','cnae23_Divisão_cod2':'str','cnae23_Seção_cod1':'str'}
-    df_cnae_corresp = pd.read_csv(pasta / arq_nome,
-                                  delimiter = '|',
-                                  decimal=',',
-                                  dtype='str')
-    # ----------------------------------------------------------------------------------------
+    pasta = caminho_base / 'Dados' / 'trabalho' / 'caged_vinculos' / 'microdados' / 'csv_processados'
     
-    def g_nome_arq(início, final, prefixo, sufixo):
-        if início == final:
-            arq_nome = prefixo + início.replace('-','') + sufixo
-            li_arqs_nomes = [arq_nome]
-        else:
-            li_arqs_nomes = []
-            início_com_dia = início + '-01'
-            final_com_dia = final + '-01'
-            df_datas = pd.to_datetime(np.arange(início_com_dia, final_com_dia, 1, dtype='datetime64[M]')).to_frame()#.reset_index()
-            df_datas.rename(mapper={0:'col_data'},axis=1,inplace=True)
-            
-            nova_linha = pd.DataFrame({'col_data': pd.date_range(start=df_datas['col_data'].iloc[-1], periods=2, freq='MS', closed='right')})
-            df_datas = df_datas.append(nova_linha)
-            
-            df_datas['col_data'] = df_datas['col_data'].astype('str')
-            df_datas['col_data'] = (df_datas['col_data'].str.slice(0,4) + df_datas['col_data'].str.slice(4,7)).str.replace('-','')
-            for index, row in df_datas.iterrows():
-                arq_nome = prefixo + row['col_data'] + sufixo
-                li_arqs_nomes.append(arq_nome)
-        ## Retorna ##
-        #print(li_arqs_nomes)
-        return li_arqs_nomes
     
-    li_arquivos = g_nome_arq(início=início, final=final, prefixo='CAGEDMOV', sufixo='.csv')
+    dtype = {'cnae_subclasse_cod':'str','cnae_classe_cod':'str', 'competência':'str'}
+    df = pd.read_csv(pasta / arq_nome,
+                     delimiter = ';',
+                     decimal=',',
+                     dtype=dtype)
     
-    for index_arq, arq_nome in enumerate(li_arquivos):
-        print(arq_nome)
-        
-        #arq_nome = 'CAGEDMOV202009.csv'
-        
-        pasta = caminho_base / 'Dados' / 'trabalho' / 'caged_vinculos' / 'microdados' / 'csv_processados'
-        
-        dtype = {'cnae_subclasse_cod':'str','cnae_classe_cod':'str', 'competência':'str'}
-        
-        df = pd.read_csv(pasta / arq_nome,
-                         delimiter = ';',
-                         decimal=',',
-                         dtype=dtype)
-        
-        df = df.merge(df_municipios,how='left',left_on='mun_cod_ibge',right_on='mun_cod_ibge')
-        
-        if uf != 'BR':
-            cond1 = df['uf_sigla'] == uf
-            df = df.loc[cond1, :]
-        
-        df['year'] = df['competência'].str.slice(0,4)
-        df['month'] = df['competência'].str.slice(4,6)
-        df['day'] = 1
-        df['dt'] = pd.to_datetime(df[['year', 'month', 'day']])
-        df.drop(['year','month','day','competência'],axis=1,inplace=True)
-        
-        df = df.merge(df_cnae_corresp,how='left',left_on='cnae_subclasse_cod',right_on='cnae_subclasse_cod')
-        print(f'{agregação}')
-        print(df['saldomovimentação'].sum())
+    df = df.merge(df_municipios,how='left',left_on='mun_cod_ibge',right_on='mun_cod_ibge')
+    
+    if uf != 'BR':
+        cond1 = df['uf_sigla'] == uf
+        df = df.loc[cond1, :]
+    
+    df['year'] = df['competência'].str.slice(0,4)
+    df['month'] = df['competência'].str.slice(4,6)
+    df['day'] = 1
+    df['dt'] = pd.to_datetime(df[['year', 'month', 'day']])
+    df.drop(['year','month','day','competência'],axis=1,inplace=True)
+    
+    df_cnae_corresp_curto = df.merge(cnae_corresp_curto, how='left',left_on='cnae_subclasse_cod',right_on='cnae_subclasse_cod')
+    df_cnae_corresp_longo = df.merge(cnae_corresp_longo, how='left',left_on='cnae_subclasse_cod',right_on='cnae_subclasse_cod')
+    
+    df_agregado_cnae_corresp_curto = df_cnae_corresp_curto.groupby(['dt',agregação])['saldomovimentação'].sum().to_frame().reset_index()
+    df_agregado_cnae_corresp_longo = df_cnae_corresp_longo.groupby(['dt',agregação])['saldomovimentação'].sum().to_frame().reset_index()
+    
+    soma_df = df['saldomovimentação'].sum()
+    soma_sm_cnae_corresp_curto = df_agregado_cnae_corresp_curto['saldomovimentação'].sum()
+    soma_sm_cnae_corresp_longo = df_agregado_cnae_corresp_longo['saldomovimentação'].sum()
+    
+    print('\nSoma de saldomovimentação')
+    print(f' - df: {soma_df}')
+    print(f'\nSoma de saldomovimentação (Agreg: {agregação})')
+    print(f' - df_cnae_corresp_curto: {soma_sm_cnae_corresp_curto}')
+    print(f' - df_cnae_corresp_longo: {soma_sm_cnae_corresp_longo}\n')
+    
+    df_agregado_comparação = df_agregado_cnae_corresp_longo.copy()
+    df_agregado_comparação = df_agregado_comparação.merge(df_agregado_cnae_corresp_curto, how='left', left_on=['dt',agregação], right_on=['dt',agregação])
+    
+    df_agregado_comparação['diferença'] = df_agregado_comparação['saldomovimentação_x'] - df_agregado_comparação['saldomovimentação_y']
+    
+    print(df_agregado_comparação['saldomovimentação_x'].sum())
+    print(df_agregado_comparação['saldomovimentação_y'].sum())
+
+    cond1 = df_agregado_comparação['diferença'] != 0
+    df_agregado_comparação = df_agregado_comparação.loc[cond1,:]
+
+    print(df_agregado_comparação['saldomovimentação_x'].sum())
+    print(df_agregado_comparação['saldomovimentação_y'].sum())
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         # ATENÇÃO!!! AQUI (df_agregado) A SOMA TOTAL NÃO ESTÁ BATENDO!!!!!!!!!!!!!!!!!!!!!!
         df_agregado = df.groupby(['dt',agregação])['saldomovimentação'].sum().to_frame().reset_index()
         print(df_agregado['saldomovimentação'].sum())

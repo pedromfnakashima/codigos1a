@@ -61,6 +61,9 @@ def transf_arqs(início, final, salva=False):
         ## Retorna ##
         #print(li_arqs_nomes)
         return li_arqs_nomes
+    
+    #início = '2019-12'
+    #final = '2019-12'
     #início = '2020-01'
     #final = '2020-01'
     li_arquivos_txt = g_nome_arq(início=início, final=final, prefixo='CAGEDMOV', sufixo='.txt')
@@ -72,12 +75,33 @@ def transf_arqs(início, final, salva=False):
     for arq_nome_txt, arq_nome_csv in zip(li_arquivos_txt, li_arquivos_csv):
         print(f'Lendo {arq_nome_txt}')
         na_values = ['{ñ', '{ñ c','00000-1', '0000-1', '000-1', '{с class}']
-        dtype = {'competência':'str','município':'str','subclasse':'str','horascontratuais':'float64','saldomovimentação':pd.Int64Dtype(),'cbo2002ocupação':'str','graudeinstrução':pd.Int64Dtype(),'idade':pd.Int64Dtype(),'salário':'float64'}
-        df = pd.read_csv(pasta_origem / arq_nome_txt, header=0, sep=';', decimal='.', quotechar='"', skiprows=0, dtype=dtype, na_values=na_values)
-        mapper = {'município':'mun_cod_ibge','cbo2002ocupação':'cbo_ocupação_cod','subclasse':'cnae_subclasse_cod'}
+        
+        try:  
+            # A partir de janeiro de 2020
+            dtype = {'competência':'str','município':'str','subclasse':'str','horascontratuais':'float64','saldomovimentação':pd.Int64Dtype(),'cbo2002ocupação':'str','graudeinstrução':pd.Int64Dtype(),'idade':pd.Int64Dtype(),'salário':'float64'}
+            df = pd.read_csv(pasta_origem / arq_nome_txt, header=0, sep=';', decimal='.', quotechar='"', skiprows=0, dtype=dtype, na_values=na_values)
+            mapper = {'município':'mun_cod_ibge','cbo2002ocupação':'cbo_ocupação_cod','subclasse':'cnae_subclasse_cod','seção':'cnae_seção_cod'}
+            colunas = ['competência','mun_cod_ibge','cbo_ocupação_cod','cnae_subclasse_cod','cnae_seção_cod','horascontratuais','graudeinstrução','idade','salário','saldomovimentação']
+
+        except UnicodeDecodeError:  
+            # Até dezembro de 2019
+            dtype = {'Competência Declarada':'str','Município':'str','CNAE 2.0 Subclas':'str','Qtd Hora Contrat':'float64','Saldo Mov':pd.Int64Dtype(),'CBO 2002 Ocupação':'str','Grau Instrução':pd.Int64Dtype(),'Idade':pd.Int64Dtype(),'CNAE 2.0 Classe':'str'}
+            df = pd.read_csv(pasta_origem / arq_nome_txt, encoding = 'latin', header=0, sep=';', decimal='.', quotechar='"', skiprows=0, dtype=dtype, na_values=na_values)
+            df['Salário Mensal'] = df['Salário Mensal'].str.replace(',','.').astype(np.float64)
+            mapper = {'Competência Declarada':'competência','Município':'mun_cod_ibge','CNAE 2.0 Subclas':'cnae_subclasse_cod','Qtd Hora Contrat':'horascontratuais','Saldo Mov':'saldomovimentação','CBO 2002 Ocupação':'cbo_ocupação_cod','Grau Instrução':'graudeinstrução','Idade':'idade','Salário Mensal':'salário','CNAE 2.0 Classe':'cnae_classe_cod'}
+            colunas = ['competência','mun_cod_ibge','cbo_ocupação_cod','cnae_subclasse_cod','cnae_classe_cod','horascontratuais','graudeinstrução','idade','salário','saldomovimentação']
+        else:  
+            # Sem exceções
+            pass
+        finally:
+            # sempre fazer isso
+            pass
+            print(df.dtypes)
+        
         df.rename(mapper=mapper,axis=1,inplace=True)
-        colunas = ['competência','mun_cod_ibge','cbo_ocupação_cod','cnae_subclasse_cod','horascontratuais','graudeinstrução','idade','salário','saldomovimentação']
-        df = df[colunas]
+        df = df.loc[:, colunas]
+        print(df.dtypes)
+        
         # Coloca um 0 na frente da coluna cnae_subclasse_cod quando ela tiver 6 dígitos
         df['len'] = df['cnae_subclasse_cod'].str.len()
         cond1 = df['len'] == 6
@@ -91,10 +115,17 @@ def transf_arqs(início, final, salva=False):
     print('Tarefa completada')
 
 
-df = transf_arqs(início='2020-01', final='2020-10', salva=True)
+df = transf_arqs(início='2020-10', final='2020-10', salva=True)
 
 del df
 
+
+
+
+
+
+
+df = pd.read_csv(pasta_origem / arq_nome_txt, header=0, sep=';', decimal='.', quotechar='"', skiprows=0, dtype=dtype, na_values=na_values)
 
 
 
