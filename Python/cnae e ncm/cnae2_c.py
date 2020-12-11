@@ -66,31 +66,62 @@ cnae['Grupo'] = cnae['Grupo'].str.strip()
 cnae['Classe'] = cnae['Classe'].str.strip()
 cnae['Subclasse'] = cnae['Subclasse'].str.strip()
 
-# Correspondência
-cnae_corresp23 = cnae.copy()
-cond1 = ~ cnae_corresp23['Subclasse'].isnull()
-cnae_corresp23 = cnae_corresp23.loc[cond1,:]
-cnae_corresp23.drop(['Descrição'],axis=1,inplace=True)
-cnae_corresp23.set_index('Subclasse',inplace=True)
+# CORRESPONDÊNCIA
+cnae_corresp = cnae.copy()
+cond1 = ~ cnae_corresp['Subclasse'].isnull()
+cnae_corresp = cnae_corresp.loc[cond1,:]
+# Adiciona linha: Subclasse 9999999 - "Não identificado"
+dic_novalinha = {'Seção': ['Z'], 'Divisão': ['99'], 'Grupo':['999'], 'Classe':['99999'], 'Subclasse':['9999999'], 'Descrição':['Não Identificado']}
+nova_linha = pd.DataFrame.from_dict(dic_novalinha)
+cnae_corresp = cnae_corresp.append(nova_linha)
 
-# Seleciona colunas
-cnae_Seção = cnae[['Versão', 'Seção', 'Descrição']]
-cnae_Divisão = cnae[['Versão', 'Divisão', 'Descrição']]
-cnae_Grupo = cnae[['Versão', 'Grupo', 'Descrição']]
-cnae_Classe = cnae[['Versão', 'Classe', 'Descrição']]
-cnae_Subclasse = cnae[['Versão', 'Subclasse', 'Descrição']]
+# SUBCLASSE - DESCRIÇÃO
+cnae_Subclasse = cnae_corresp.copy()
+cnae_corresp.drop(['Descrição'],axis=1,inplace=True)
+cnae_Subclasse = cnae_Subclasse.loc[:,['Subclasse','Descrição','Versão']]
 
-# Pega o primeiro
-cnae_Seção23 = cnae_Seção.groupby('Seção').first()
-cnae_Divisão23 = cnae_Divisão.dropna()
-cnae_Divisão23 = cnae_Divisão23.groupby('Divisão').first()
-cnae_Grupo23 = cnae_Grupo.dropna()
-cnae_Grupo23 = cnae_Grupo23.groupby('Grupo').first()
-cnae_Classe23 = cnae_Classe.dropna()
-cnae_Classe23 = cnae_Classe23.groupby('Classe').first()
-cnae_Subclasse23 = cnae_Subclasse.dropna()
-cnae_Subclasse23 = cnae_Subclasse23.groupby('Subclasse').first()
+# CLASSE - DESCRIÇÃO
+cnae_Classe = cnae[['Classe', 'Descrição', 'Versão']]
+cnae_Classe = cnae_Classe.dropna()
+cnae_Classe = cnae_Classe.groupby('Classe').head(1)
+# Adiciona linha: Subclasse 9999999 - "Não identificado"
+dic_novalinha = {'Classe': ['99999'], 'Descrição': ['Não Identificado']}
+nova_linha = pd.DataFrame.from_dict(dic_novalinha)
+cnae_Classe = cnae_Classe.append(nova_linha)
 
+# GRUPO - DESCRIÇÃO
+cnae_Grupo = cnae[['Grupo', 'Descrição', 'Versão']]
+cnae_Grupo = cnae_Grupo.dropna()
+cnae_Grupo = cnae_Grupo.groupby('Grupo').head(1)
+# Adiciona linha: Subclasse 9999999 - "Não identificado"
+dic_novalinha = {'Grupo': ['999'], 'Descrição': ['Não Identificado']}
+nova_linha = pd.DataFrame.from_dict(dic_novalinha)
+cnae_Grupo = cnae_Grupo.append(nova_linha)
+
+# DIVISÃO - DESCRIÇÃO
+cnae_Divisão = cnae[['Divisão', 'Descrição', 'Versão']]
+cnae_Divisão = cnae_Divisão.dropna()
+cnae_Divisão = cnae_Divisão.groupby('Divisão').head(1)
+# Adiciona linha: Subclasse 9999999 - "Não identificado"
+dic_novalinha = {'Divisão': ['99'], 'Descrição': ['NÃO IDENTIFICADO']}
+nova_linha = pd.DataFrame.from_dict(dic_novalinha)
+cnae_Divisão = cnae_Divisão.append(nova_linha)
+
+# SEÇÃO - DESCRIÇÃO
+cnae_Seção = cnae[['Seção', 'Descrição', 'Versão']]
+cnae_Seção = cnae_Seção.groupby('Seção').head(1)
+# Adiciona linha: Subclasse 9999999 - "Não identificado"
+dic_novalinha = {'Seção': ['Z'], 'Descrição': ['NÃO IDENTIFICADO']}
+nova_linha = pd.DataFrame.from_dict(dic_novalinha)
+cnae_Seção = cnae_Seção.append(nova_linha)
+
+# Coloca nos DFs completos
+cnae_corresp_completo = cnae_corresp.copy()
+cnae_Subclasse_completo = cnae_Subclasse.copy()
+cnae_Classe_completo = cnae_Classe.copy()
+cnae_Grupo_completo = cnae_Grupo.copy()
+cnae_Divisão_completo = cnae_Divisão.copy()
+cnae_Seção_completo = cnae_Seção.copy()
 
 ######################################################################################
 # CNAE 2.2 ###########################################################################
@@ -143,30 +174,42 @@ cnae['Grupo'] = cnae['Grupo'].str.strip()
 cnae['Classe'] = cnae['Classe'].str.strip()
 cnae['Subclasse'] = cnae['Subclasse'].str.strip()
 
-# Correspondência
-cnae_corresp22 = cnae.copy()
-cond1 = ~ cnae_corresp22['Subclasse'].isnull()
-cnae_corresp22 = cnae_corresp22.loc[cond1,:]
-cnae_corresp22.drop(['Descrição'],axis=1,inplace=True)
-cnae_corresp22.set_index('Subclasse',inplace=True)
+# CORRESPONDÊNCIA
+cnae_corresp = cnae.copy()
+cond1 = ~ cnae_corresp['Subclasse'].isnull()
+cnae_corresp = cnae_corresp.loc[cond1,:]
 
-# Seleciona colunas
-cnae_Seção = cnae[['Versão', 'Seção', 'Descrição']]
-cnae_Divisão = cnae[['Versão', 'Divisão', 'Descrição']]
-cnae_Grupo = cnae[['Versão', 'Grupo', 'Descrição']]
-cnae_Classe = cnae[['Versão', 'Classe', 'Descrição']]
-cnae_Subclasse = cnae[['Versão', 'Subclasse', 'Descrição']]
+# SUBCLASSE - DESCRIÇÃO
+cnae_Subclasse = cnae_corresp.copy()
+cnae_corresp.drop(['Descrição'],axis=1,inplace=True)
+cnae_Subclasse = cnae_Subclasse.loc[:,['Subclasse','Descrição','Versão']]
 
-# Pega o primeiro
-cnae_Seção22 = cnae_Seção.groupby('Seção').first()
-cnae_Divisão22 = cnae_Divisão.dropna()
-cnae_Divisão22 = cnae_Divisão22.groupby('Divisão').first()
-cnae_Grupo22 = cnae_Grupo.dropna()
-cnae_Grupo22 = cnae_Grupo22.groupby('Grupo').first()
-cnae_Classe22 = cnae_Classe.dropna()
-cnae_Classe22 = cnae_Classe22.groupby('Classe').first()
-cnae_Subclasse22 = cnae_Subclasse.dropna()
-cnae_Subclasse22 = cnae_Subclasse22.groupby('Subclasse').first()
+# CLASSE - DESCRIÇÃO
+cnae_Classe = cnae[['Classe', 'Descrição', 'Versão']]
+cnae_Classe = cnae_Classe.dropna()
+cnae_Classe = cnae_Classe.groupby('Classe').head(1)
+
+# GRUPO - DESCRIÇÃO
+cnae_Grupo = cnae[['Grupo', 'Descrição', 'Versão']]
+cnae_Grupo = cnae_Grupo.dropna()
+cnae_Grupo = cnae_Grupo.groupby('Grupo').head(1)
+
+# DIVISÃO - DESCRIÇÃO
+cnae_Divisão = cnae[['Divisão', 'Descrição', 'Versão']]
+cnae_Divisão = cnae_Divisão.dropna()
+cnae_Divisão = cnae_Divisão.groupby('Divisão').head(1)
+
+# SEÇÃO - DESCRIÇÃO
+cnae_Seção = cnae[['Seção', 'Descrição', 'Versão']]
+cnae_Seção = cnae_Seção.groupby('Seção').head(1)
+
+# Coloca nos DFs completos
+cnae_corresp_completo = cnae_corresp_completo.append(cnae_corresp)
+cnae_Subclasse_completo = cnae_Subclasse_completo.append(cnae_Subclasse)
+cnae_Classe_completo = cnae_Classe_completo.append(cnae_Classe)
+cnae_Grupo_completo = cnae_Grupo_completo.append(cnae_Grupo)
+cnae_Divisão_completo = cnae_Divisão_completo.append(cnae_Divisão)
+cnae_Seção_completo = cnae_Seção_completo.append(cnae_Seção)
 
 
 ######################################################################################
@@ -220,30 +263,42 @@ cnae['Grupo'] = cnae['Grupo'].str.strip()
 cnae['Classe'] = cnae['Classe'].str.strip()
 cnae['Subclasse'] = cnae['Subclasse'].str.strip()
 
-# Correspondência
-cnae_corresp21 = cnae.copy()
-cond1 = ~ cnae_corresp21['Subclasse'].isnull()
-cnae_corresp21 = cnae_corresp21.loc[cond1,:]
-cnae_corresp21.drop(['Descrição'],axis=1,inplace=True)
-cnae_corresp21.set_index('Subclasse',inplace=True)
+# CORRESPONDÊNCIA
+cnae_corresp = cnae.copy()
+cond1 = ~ cnae_corresp['Subclasse'].isnull()
+cnae_corresp = cnae_corresp.loc[cond1,:]
 
-# Seleciona colunas
-cnae_Seção = cnae[['Versão', 'Seção', 'Descrição']]
-cnae_Divisão = cnae[['Versão', 'Divisão', 'Descrição']]
-cnae_Grupo = cnae[['Versão', 'Grupo', 'Descrição']]
-cnae_Classe = cnae[['Versão', 'Classe', 'Descrição']]
-cnae_Subclasse = cnae[['Versão', 'Subclasse', 'Descrição']]
+# SUBCLASSE - DESCRIÇÃO
+cnae_Subclasse = cnae_corresp.copy()
+cnae_corresp.drop(['Descrição'],axis=1,inplace=True)
+cnae_Subclasse = cnae_Subclasse.loc[:,['Subclasse','Descrição','Versão']]
 
-# Pega o primeiro
-cnae_Seção21 = cnae_Seção.groupby('Seção').first()
-cnae_Divisão21 = cnae_Divisão.dropna()
-cnae_Divisão = cnae_Divisão21.groupby('Divisão').first()
-cnae_Grupo21 = cnae_Grupo.dropna()
-cnae_Grupo21 = cnae_Grupo21.groupby('Grupo').first()
-cnae_Classe21 = cnae_Classe.dropna()
-cnae_Classe21 = cnae_Classe21.groupby('Classe').first()
-cnae_Subclasse21 = cnae_Subclasse.dropna()
-cnae_Subclasse21 = cnae_Subclasse21.groupby('Subclasse').first()
+# CLASSE - DESCRIÇÃO
+cnae_Classe = cnae[['Classe', 'Descrição', 'Versão']]
+cnae_Classe = cnae_Classe.dropna()
+cnae_Classe = cnae_Classe.groupby('Classe').head(1)
+
+# GRUPO - DESCRIÇÃO
+cnae_Grupo = cnae[['Grupo', 'Descrição', 'Versão']]
+cnae_Grupo = cnae_Grupo.dropna()
+cnae_Grupo = cnae_Grupo.groupby('Grupo').head(1)
+
+# DIVISÃO - DESCRIÇÃO
+cnae_Divisão = cnae[['Divisão', 'Descrição', 'Versão']]
+cnae_Divisão = cnae_Divisão.dropna()
+cnae_Divisão = cnae_Divisão.groupby('Divisão').head(1)
+
+# SEÇÃO - DESCRIÇÃO
+cnae_Seção = cnae[['Seção', 'Descrição', 'Versão']]
+cnae_Seção = cnae_Seção.groupby('Seção').head(1)
+
+# Coloca nos DFs completos
+cnae_corresp_completo = cnae_corresp_completo.append(cnae_corresp)
+cnae_Subclasse_completo = cnae_Subclasse_completo.append(cnae_Subclasse)
+cnae_Classe_completo = cnae_Classe_completo.append(cnae_Classe)
+cnae_Grupo_completo = cnae_Grupo_completo.append(cnae_Grupo)
+cnae_Divisão_completo = cnae_Divisão_completo.append(cnae_Divisão)
+cnae_Seção_completo = cnae_Seção_completo.append(cnae_Seção)
 
 ######################################################################################
 # CNAE 2.0 ###########################################################################
@@ -296,34 +351,97 @@ cnae['Grupo'] = cnae['Grupo'].str.strip()
 cnae['Classe'] = cnae['Classe'].str.strip()
 cnae['Subclasse'] = cnae['Subclasse'].str.strip()
 
-# Correspondência
-cnae_corresp20 = cnae.copy()
-cond1 = ~ cnae_corresp20['Subclasse'].isnull()
-cnae_corresp20 = cnae_corresp20.loc[cond1,:]
-cnae_corresp20.drop(['Descrição'],axis=1,inplace=True)
-cnae_corresp20.set_index('Subclasse',inplace=True)
+# CORRESPONDÊNCIA
+cnae_corresp = cnae.copy()
+cond1 = ~ cnae_corresp['Subclasse'].isnull()
+cnae_corresp = cnae_corresp.loc[cond1,:]
 
-# Seleciona colunas
-cnae_Seção = cnae[['Versão', 'Seção', 'Descrição']]
-cnae_Divisão = cnae[['Versão', 'Divisão', 'Descrição']]
-cnae_Grupo = cnae[['Versão', 'Grupo', 'Descrição']]
-cnae_Classe = cnae[['Versão', 'Classe', 'Descrição']]
-cnae_Subclasse = cnae[['Versão', 'Subclasse', 'Descrição']]
+# SUBCLASSE - DESCRIÇÃO
+cnae_Subclasse = cnae_corresp.copy()
+cnae_corresp.drop(['Descrição'],axis=1,inplace=True)
+cnae_Subclasse = cnae_Subclasse.loc[:,['Subclasse','Descrição','Versão']]
 
-# Pega o primeiro
-cnae_Seção20 = cnae_Seção.groupby('Seção').first()
-cnae_Divisão20 = cnae_Divisão.dropna()
-cnae_Divisão20 = cnae_Divisão20.groupby('Divisão').first()
-cnae_Grupo20 = cnae_Grupo.dropna()
-cnae_Grupo20 = cnae_Grupo20.groupby('Grupo').first()
-cnae_Classe20 = cnae_Classe.dropna()
-cnae_Classe20 = cnae_Classe20.groupby('Classe').first()
-cnae_Subclasse20 = cnae_Subclasse.dropna()
-cnae_Subclasse20 = cnae_Subclasse20.groupby('Subclasse').first()
+# CLASSE - DESCRIÇÃO
+cnae_Classe = cnae[['Classe', 'Descrição', 'Versão']]
+cnae_Classe = cnae_Classe.dropna()
+cnae_Classe = cnae_Classe.groupby('Classe').head(1)
+
+# GRUPO - DESCRIÇÃO
+cnae_Grupo = cnae[['Grupo', 'Descrição', 'Versão']]
+cnae_Grupo = cnae_Grupo.dropna()
+cnae_Grupo = cnae_Grupo.groupby('Grupo').head(1)
+
+# DIVISÃO - DESCRIÇÃO
+cnae_Divisão = cnae[['Divisão', 'Descrição', 'Versão']]
+cnae_Divisão = cnae_Divisão.dropna()
+cnae_Divisão = cnae_Divisão.groupby('Divisão').head(1)
+
+# SEÇÃO - DESCRIÇÃO
+cnae_Seção = cnae[['Seção', 'Descrição', 'Versão']]
+cnae_Seção = cnae_Seção.groupby('Seção').head(1)
+
+# Coloca nos DFs completos
+cnae_corresp_completo = cnae_corresp_completo.append(cnae_corresp)
+cnae_Subclasse_completo = cnae_Subclasse_completo.append(cnae_Subclasse)
+cnae_Classe_completo = cnae_Classe_completo.append(cnae_Classe)
+cnae_Grupo_completo = cnae_Grupo_completo.append(cnae_Grupo)
+cnae_Divisão_completo = cnae_Divisão_completo.append(cnae_Divisão)
+cnae_Seção_completo = cnae_Seção_completo.append(cnae_Seção)
+
+## --------------------------------------------------------------- ##
+## ------------------ PEGA A PRIMEIRA SUBCLASSE ------------------ ##
+## --------------------------------------------------------------- ##
+
+cnae_corresp_completo = cnae_corresp_completo.groupby(['Subclasse']).head(1)
+cnae_Subclasse_completo = cnae_Subclasse_completo.groupby(['Subclasse']).head(1)
+cnae_Classe_completo = cnae_Classe_completo.groupby(['Classe']).head(1)
+cnae_Grupo_completo = cnae_Grupo_completo.groupby(['Grupo']).head(1)
+cnae_Divisão_completo = cnae_Divisão_completo.groupby(['Divisão']).head(1)
+cnae_Seção_completo = cnae_Seção_completo.groupby(['Seção']).head(1)
+
+## --------------------------------------------------------------- ##
+## -------------------------- RENOMEIA --------------------------- ##
+## --------------------------------------------------------------- ##
+mapper = {'Seção':'cnae_seção_cod','Divisão':'cnae_divisão_cod','Grupo':'cnae_grupo_cod','Classe':'cnae_classe_cod','Subclasse':'cnae_subclasse_cod'}
+cnae_corresp_completo.rename(mapper=mapper,axis=1,inplace=True)
+cnae_Subclasse_completo.rename(mapper=mapper,axis=1,inplace=True)
+cnae_Classe_completo.rename(mapper=mapper,axis=1,inplace=True)
+cnae_Grupo_completo.rename(mapper=mapper,axis=1,inplace=True)
+cnae_Divisão_completo.rename(mapper=mapper,axis=1,inplace=True)
+cnae_Seção_completo.rename(mapper=mapper,axis=1,inplace=True)
+
+mapperSubclasse = {'Descrição':'cnae_subclasse_desc'}
+mapperClasse = {'Descrição':'cnae_classe_desc'}
+mapperGrupo = {'Descrição':'cnae_grupo_desc'}
+mapperDivisão = {'Descrição':'cnae_divisão_desc'}
+mapperSeção = {'Descrição':'cnae_seção_desc'}
+cnae_Subclasse_completo.rename(mapper=mapperSubclasse,axis=1,inplace=True)
+cnae_Classe_completo.rename(mapper=mapperClasse,axis=1,inplace=True)
+cnae_Grupo_completo.rename(mapper=mapperGrupo,axis=1,inplace=True)
+cnae_Divisão_completo.rename(mapper=mapperDivisão,axis=1,inplace=True)
+cnae_Seção_completo.rename(mapper=mapperSeção,axis=1,inplace=True)
+
+## --------------------------------------------------------------- ##
+## --------------------- EXPORTA PARA CSV ------------------------ ##
+## --------------------------------------------------------------- ##
+
+cnae_corresp_completo.to_csv('cnae_corresp.csv', sep='|', decimal=',', index=False)
+cnae_Subclasse_completo.to_csv('cnae_subclasse_desc.csv', sep='|', decimal=',', index=False)
+cnae_Classe_completo.to_csv('cnae_classe_desc.csv', sep='|', decimal=',', index=False)
+cnae_Grupo_completo.to_csv('cnae_grupo_desc.csv', sep='|', decimal=',', index=False)
+cnae_Divisão_completo.to_csv('cnae_divisão_desc.csv', sep='|', decimal=',', index=False)
+cnae_Seção_completo.to_csv('cnae_seção_desc.csv', sep='|', decimal=',', index=False)
+
+
+
+
 
 ## --------------------------------------------------------------- ##
 ## --------------------------------------------------------------- ##
 ## --------------------------------------------------------------- ##
+
+
+
 mapper = {'Seção':'cnae_seção_cod','Divisão':'cnae_divisão_cod','Grupo':'cnae_grupo_cod','Classe':'cnae_classe_cod', 'Subclasse':'cnae_subclasse_cod'}
 
 

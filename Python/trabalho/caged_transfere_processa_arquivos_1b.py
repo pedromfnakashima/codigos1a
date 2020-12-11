@@ -107,6 +107,10 @@ def transf_arqs(início, final, salva=False):
         cond1 = df['len'] == 6
         df.loc[cond1, 'cnae_subclasse_cod'] = '0' + df['cnae_subclasse_cod']
         df.drop(['len'],axis=1,inplace=True)
+        # Muda códigos que não existem
+        cond1 = df['cnae_subclasse_cod'] == '8630505'
+        df.loc[cond1, 'cnae_subclasse_cod'] = '8630504'
+        # Salva se verdadeiro
         if salva == True:
             df.to_csv(pasta_destino / arq_nome_csv, sep=';', decimal=',', index=False)
             print(f'Salvo {arq_nome_csv}')
@@ -120,7 +124,7 @@ df = transf_arqs(início='2020-10', final='2020-10', salva=True)
 del df
 
 
-
+8630505
 
 
 
