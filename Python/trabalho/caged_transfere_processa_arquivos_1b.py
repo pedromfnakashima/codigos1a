@@ -96,11 +96,11 @@ def transf_arqs(início, final, salva=False):
         finally:
             # sempre fazer isso
             pass
-            print(df.dtypes)
+            #print(df.dtypes)
         
         df.rename(mapper=mapper,axis=1,inplace=True)
         df = df.loc[:, colunas]
-        print(df.dtypes)
+        #print(df.dtypes)
         
         # Coloca um 0 na frente da coluna cnae_subclasse_cod quando ela tiver 6 dígitos
         df['len'] = df['cnae_subclasse_cod'].str.len()
@@ -119,12 +119,12 @@ def transf_arqs(início, final, salva=False):
     print('Tarefa completada')
 
 
-df = transf_arqs(início='2020-10', final='2020-10', salva=True)
+df = transf_arqs(início='2020-01', final='2020-10', salva=True)
 
 del df
 
 
-8630505
+
 
 
 
