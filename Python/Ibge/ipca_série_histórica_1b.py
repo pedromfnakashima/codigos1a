@@ -205,10 +205,10 @@ def g_df_com_data_2(df, colCategorias, colMês, colVar):
     
     # colMês: o número da coluna que tem o mês no formato IBGE
     
-    # colCategorias = 0
-    # colMês = 1
-    # colVar = 2
-    #nomeVar='Índice'
+    # colCategorias = 1
+    # colMês = 2
+    # colVar = 3
+
     # -------------------------------------------------------------------------------
     # arq_nome = 'tabela6903_2.xlsx'
     # pasta = caminho_base / 'Dados' / 'Ibge' / 'Ipp'
@@ -228,7 +228,7 @@ def g_df_com_data_2(df, colCategorias, colMês, colVar):
     nome_antigo_categoria = colunas[colCategorias]
     
     
-    coluna_dt_str = df_cp.iloc[:,1]
+    coluna_dt_str = df_cp.iloc[:,colMês]
     df_cp['dt'] = g_col_data(coluna_dt_str)
 
     cond1 = ~ df_cp['dt'].isnull()
@@ -258,9 +258,11 @@ def g_df_com_data_2(df, colCategorias, colMês, colVar):
     
     for index_unico, categoria_str in enumerate(li_categorias):
         #print(index_unico, unico_str)
-    
-        #categoria_str = 'Indústria Geral'
-        cond1 = df_cp.iloc[:,0] == categoria_str
+        
+        # index_unico = 0
+        # categoria_str = 'Indústria Geral'
+        
+        cond1 = df_cp.iloc[:,colCategorias] == categoria_str
         filtro = df_cp.loc[cond1,:]
         
         filtro.rename(mapper={nome_antigo_valor:categoria_str},axis=1,inplace=True)
@@ -281,7 +283,7 @@ def g_df_com_data_2(df, colCategorias, colMês, colVar):
 # colMês = 1
 # colVar = 2
 
-ipp_categorias = g_df_com_data_2(df, colCategorias=0, colMês=1, colVar=2)
+ipp_categorias = g_df_com_data_2(df, colCategorias=1, colMês=2, colVar=3)
 
 
 
