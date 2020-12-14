@@ -41,6 +41,67 @@ import pandas as pd
 
 arq_nome = 'tabela3065.xlsx'
 pasta = caminho_base / 'Dados' / 'Ibge' / 'Ipca-15'
+df = pd.read_excel(pasta / arq_nome, sheet_name='Tabela', skiprows=0)
+coluna_dt_str = df.iloc[:,0]
+
+
+def g_col_data(coluna):
+    
+    month = np.zeros(len(coluna))
+    year = np.zeros(len(coluna))
+    day = np.ones(len(coluna))
+    
+    import re
+    li_meses = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro']
+    for index_mês, mês in enumerate(li_meses, start=1):
+        for index_col, col in enumerate(coluna):
+            matched = re.match(mês, col)
+            is_match = bool(matched)
+            #print(is_match)
+            if is_match == True:
+                month[index_col] = index_mês
+    
+    index_z1 = -1
+    for col_dt, ano in zip(coluna, month):
+        index_z1 += 1
+        encontrado = re.search(r'\d{4}', col_dt, re.IGNORECASE)
+        if encontrado != None:
+            ano = encontrado.group(0)
+            year[index_z1] = ano
+    
+    li_zerar = ['Variável','Mês', 'Fonte']
+    for index_li_zerar, zerar in enumerate(li_zerar, start=1):
+        for index_col, col in enumerate(coluna):
+            matched = re.match(zerar, col)
+            is_match = bool(matched)
+            #print(is_match)
+            if is_match == True:
+                month[index_col] = 0
+                year[index_col] = 0
+                day[index_col] = 0
+    
+    df_data = pd.DataFrame({'year':year,'month':month,'day':day})
+    
+    df_data['dt'] = pd.to_datetime(df_data[['year', 'month', 'day']],errors='coerce')
+    
+    df_data = df_data['dt']
+    
+    return df_data
+
+col_dt = g_col_data(coluna_dt_str)
+
+df['dt'] = g_col_data(coluna_dt_str)
+
+cond1 = ~ df['dt'].isnull()
+df = df.loc[cond1,:]
+
+##########################################################################################################
+##########################################################################################################
+##########################################################################################################
+
+
+arq_nome = 'tabela3065.xlsx'
+pasta = caminho_base / 'Dados' / 'Ibge' / 'Ipca-15'
 df_ipca15 = pd.read_excel(pasta / arq_nome, sheet_name='Tabela', skiprows=0)
 # -------------------------------------------------------------------------------
 arq_nome = 'tabela1737.xlsx'
@@ -64,7 +125,7 @@ df_ipp_grande = pd.read_excel(pasta / arq_nome, sheet_name='Tabela', skiprows=0)
 #coluna = coluna_dt_str.copy()
 
 
-def g_col_data(df, colMês, colVar, nomeVar):
+def g_col_data_2(df, colMês, colVar, nomeVar):
     
     # colMês: o número da coluna que tem o mês no formato IBGE
     
