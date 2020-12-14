@@ -41,25 +41,80 @@ import pandas as pd
 
 arq_nome = 'tabela3065.xlsx'
 pasta = caminho_base / 'Dados' / 'Ibge' / 'Ipca-15'
-df = pd.read_excel(pasta / arq_nome, sheet_name='Tabela', skiprows=0)
-coluna_dt_str = df.iloc[:,0]
+df_ipca15 = pd.read_excel(pasta / arq_nome, sheet_name='Tabela', skiprows=0)
+# -------------------------------------------------------------------------------
+arq_nome = 'tabela1737.xlsx'
+pasta = caminho_base / 'Dados' / 'Ibge' / 'Ipca'
+df_ipca = pd.read_excel(pasta / arq_nome, sheet_name='Tabela', skiprows=0)
+# -------------------------------------------------------------------------------
+arq_nome = 'tabela1736.xlsx'
+pasta = caminho_base / 'Dados' / 'Ibge' / 'Inpc'
+df_inpc = pd.read_excel(pasta / arq_nome, sheet_name='Tabela', skiprows=0)
+# -------------------------------------------------------------------------------
+arq_nome = 'tabela6903.xlsx'
+pasta = caminho_base / 'Dados' / 'Ibge' / 'Ipp'
+df_ipp = pd.read_excel(pasta / arq_nome, sheet_name='Tabela', skiprows=0)
+
+# -------------------------------------------------------------------------------
+arq_nome = 'tabela6903_2.xlsx'
+pasta = caminho_base / 'Dados' / 'Ibge' / 'Ipp'
+df_ipp_grande = pd.read_excel(pasta / arq_nome, sheet_name='Tabela', skiprows=0)
+
+#coluna_dt_str = df.iloc[:,0]
+#coluna = coluna_dt_str.copy()
 
 
-def g_col_data(coluna):
+def g_col_data(df, colMês, colVar, nomeVar):
+    
+    # colMês: o número da coluna que tem o mês no formato IBGE
+    
+    #colMês = 1
+    #colVar = 2
+    #nomeVar='Índice'
+    # -------------------------------------------------------------------------------
+    #pasta = caminho_base / 'Dados' / 'Ibge' / 'Ipca-15'
+    #arq_nome = 'tabela3065.xlsx'
+    #df = pd.read_excel(pasta / arq_nome, sheet_name='Tabela', skiprows=0)
+    # -------------------------------------------------------------------------------
+    #arq_nome = 'tabela1736.xlsx'
+    #pasta = caminho_base / 'Dados' / 'Ibge' / 'Inpc'
+    #df = pd.read_excel(pasta / arq_nome, sheet_name='Tabela', skiprows=0)
+    # -------------------------------------------------------------------------------
+    
+    import numpy as np
+    import pandas as pd
+    
+    df_cp = df.copy()
+    
+    li_colunas = df_cp.columns
+    nome_antigo_índice = li_colunas[colVar]
+    nome_antigo_mês = li_colunas[colMês]
+    
+    df_cp.rename(mapper={nome_antigo_índice:nomeVar},axis=1,inplace=True)
+    
+    coluna = df_cp.iloc[:,colMês]
+    cond1 = coluna.isnull()
+    coluna.loc[cond1] = ''
+    
     
     month = np.zeros(len(coluna))
     year = np.zeros(len(coluna))
     day = np.ones(len(coluna))
     
+    #str_mês_pt = 'janeiro'
+    #mês_e_ano = np.nan
+    
     import re
     li_meses = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro']
-    for index_mês, mês in enumerate(li_meses, start=1):
-        for index_col, col in enumerate(coluna):
-            matched = re.match(mês, col)
+    for index_mês, str_mês_pt in enumerate(li_meses, start=1):
+        #print(index_mês, str_mês_pt)
+        for index_mês_e_ano, mês_e_ano in enumerate(coluna):
+            #print(index_mês_e_ano, mês_e_ano)
+            matched = re.match(str_mês_pt, mês_e_ano)
             is_match = bool(matched)
             #print(is_match)
             if is_match == True:
-                month[index_col] = index_mês
+                month[index_mês_e_ano] = index_mês
     
     index_z1 = -1
     for col_dt, ano in zip(coluna, month):
@@ -74,26 +129,70 @@ def g_col_data(coluna):
         for index_col, col in enumerate(coluna):
             matched = re.match(zerar, col)
             is_match = bool(matched)
-            #print(is_match)
             if is_match == True:
                 month[index_col] = 0
                 year[index_col] = 0
                 day[index_col] = 0
     
-    df_data = pd.DataFrame({'year':year,'month':month,'day':day})
+    df_cp_data = pd.DataFrame({'year':year,'month':month,'day':day})
     
-    df_data['dt'] = pd.to_datetime(df_data[['year', 'month', 'day']],errors='coerce')
+    df_cp_data['dt'] = pd.to_datetime(df_cp_data[['year', 'month', 'day']],errors='coerce')
     
-    df_data = df_data['dt']
     
-    return df_data
+    df_cp[nome_antigo_mês] = df_cp_data['dt']
+    df_cp.rename(mapper={nome_antigo_mês:'dt'},axis=1,inplace=True)
+    
+    
+    cond1 = ~ df_cp['dt'].isnull()
+    df_cp = df_cp.loc[cond1,:]
+    
+    df_cp = df_cp.iloc[:, [colMês,colVar]]
+    df_cp.set_index('dt',inplace=True)
+    
+    df_cp[nomeVar] = pd.to_numeric(df_cp[nomeVar], errors='coerce')
+    
+    return df_cp
 
-col_dt = g_col_data(coluna_dt_str)
+#col_dt = g_col_data(coluna_dt_str)
 
-df['dt'] = g_col_data(coluna_dt_str)
+df_ipca15 = g_col_data(df_ipca15, colMês=0, colVar=2, nomeVar='IPCA15')
+df_ipca = g_col_data(df_ipca, colMês=0, colVar=1, nomeVar='IPCA')
+df_inpc = g_col_data(df_inpc, colMês=1, colVar=2, nomeVar='INPC')
+df_ipp = g_col_data(df_ipp, colMês=1, colVar=2, nomeVar='IPP')
 
-cond1 = ~ df['dt'].isnull()
-df = df.loc[cond1,:]
+
+df = df_ipca.merge(df_ipca15,how='outer',left_index=True,right_index=True)
+df = df.merge(df_inpc,how='outer',left_index=True,right_index=True)
+df = df.merge(df_ipp,how='outer',left_index=True,right_index=True)
+del df_ipca, df_ipca15, df_inpc, df_ipp
+
+##########################################################################################################
+##########################################################################################################
+##########################################################################################################
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ##########################################################################################################
 ##########################################################################################################
