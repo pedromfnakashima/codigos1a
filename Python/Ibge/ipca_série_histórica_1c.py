@@ -39,9 +39,27 @@ import pandas as pd
 ##########################################################################################################
 ##########################################################################################################
 
-arq_nome = 'tabela3065.xlsx'
-pasta = caminho_base / 'Dados' / 'Ibge' / 'Ipca-15'
-df = pd.read_excel(pasta / arq_nome, sheet_name='Tabela', skiprows=0)
+pip install -U sidrapy
+
+import sidrapy
+
+data = sidrapy.get_table(table_code="1419", territorial_level="1", ibge_territorial_code="all", period="last 12")
+
+data_7060 = sidrapy.get_table(table_code="7060", territorial_level="1", ibge_territorial_code="all", period="all")
+
+data_1737 = sidrapy.get_table(table_code="1737", territorial_level="1", ibge_territorial_code="all", period="all", variable='all')
+
+print(dir(sidrapy.get_table))
+
+help(sidrapy.get_table)
+
+# Tabela - tabela7060
+# Tabela - tabela1737
+
+
+# arq_nome = 'tabela3065.xlsx'
+# pasta = caminho_base / 'Dados' / 'Ibge' / 'Ipca-15'
+# df = pd.read_excel(pasta / arq_nome, sheet_name='Tabela', skiprows=0)
 
 
 
@@ -105,25 +123,25 @@ def g_col_data(coluna):
 ##########################################################################################################
 
 
-arq_nome = 'tabela3065.xlsx'
-pasta = caminho_base / 'Dados' / 'Ibge' / 'Ipca-15'
-df_ipca15 = pd.read_excel(pasta / arq_nome, sheet_name='Tabela', skiprows=0)
-# -------------------------------------------------------------------------------
-arq_nome = 'tabela1737.xlsx'
-pasta = caminho_base / 'Dados' / 'Ibge' / 'Ipca'
-df_ipca = pd.read_excel(pasta / arq_nome, sheet_name='Tabela', skiprows=0)
-# -------------------------------------------------------------------------------
-arq_nome = 'tabela1736.xlsx'
-pasta = caminho_base / 'Dados' / 'Ibge' / 'Inpc'
-df_inpc = pd.read_excel(pasta / arq_nome, sheet_name='Tabela', skiprows=0)
-# -------------------------------------------------------------------------------
-arq_nome = 'tabela6903.xlsx'
-pasta = caminho_base / 'Dados' / 'Ibge' / 'Ipp'
-df_ipp = pd.read_excel(pasta / arq_nome, sheet_name='Tabela', skiprows=0)
+# arq_nome = 'tabela3065.xlsx'
+# pasta = caminho_base / 'Dados' / 'Ibge' / 'Ipca-15'
+# df_ipca15 = pd.read_excel(pasta / arq_nome, sheet_name='Tabela', skiprows=0)
+# # -------------------------------------------------------------------------------
+# arq_nome = 'tabela1737.xlsx'
+# pasta = caminho_base / 'Dados' / 'Ibge' / 'Ipca'
+# df_ipca = pd.read_excel(pasta / arq_nome, sheet_name='Tabela', skiprows=0)
+# # -------------------------------------------------------------------------------
+# arq_nome = 'tabela1736.xlsx'
+# pasta = caminho_base / 'Dados' / 'Ibge' / 'Inpc'
+# df_inpc = pd.read_excel(pasta / arq_nome, sheet_name='Tabela', skiprows=0)
+# # -------------------------------------------------------------------------------
+# arq_nome = 'tabela6903.xlsx'
+# pasta = caminho_base / 'Dados' / 'Ibge' / 'Ipp'
+# df_ipp = pd.read_excel(pasta / arq_nome, sheet_name='Tabela', skiprows=0)
 
-# -------------------------------------------------------------------------------
-arq_nome = 'tabela6903_2.xlsx'
-pasta = caminho_base / 'Dados' / 'Ibge' / 'Ipp'
+# # -------------------------------------------------------------------------------
+# arq_nome = 'tabela6903_2.xlsx'
+# pasta = caminho_base / 'Dados' / 'Ibge' / 'Ipp'
 # df_ipp_grande = pd.read_excel(pasta / arq_nome, sheet_name='Tabela', skiprows=0)
 
 #coluna_dt_str = df.iloc[:,0]
@@ -178,25 +196,25 @@ def g_df_com_data(df, colMês, colVar, nomeVar):
 
 #col_dt = g_col_data(coluna_dt_str)
 
-df_ipca15 = g_df_com_data(df_ipca15, colMês=0, colVar=2, nomeVar='IPCA15')
-df_ipca = g_df_com_data(df_ipca, colMês=0, colVar=1, nomeVar='IPCA')
-df_inpc = g_df_com_data(df_inpc, colMês=1, colVar=2, nomeVar='INPC')
-df_ipp = g_df_com_data(df_ipp, colMês=1, colVar=2, nomeVar='IPP')
+# df_ipca15 = g_df_com_data(df_ipca15, colMês=0, colVar=2, nomeVar='IPCA15')
+# df_ipca = g_df_com_data(df_ipca, colMês=0, colVar=1, nomeVar='IPCA')
+# df_inpc = g_df_com_data(df_inpc, colMês=1, colVar=2, nomeVar='INPC')
+# df_ipp = g_df_com_data(df_ipp, colMês=1, colVar=2, nomeVar='IPP')
 
 
-df = df_ipca.merge(df_ipca15,how='outer',left_index=True,right_index=True)
-df = df.merge(df_inpc,how='outer',left_index=True,right_index=True)
-df = df.merge(df_ipp,how='outer',left_index=True,right_index=True)
-del df_ipca, df_ipca15, df_inpc, df_ipp
+# df = df_ipca.merge(df_ipca15,how='outer',left_index=True,right_index=True)
+# df = df.merge(df_inpc,how='outer',left_index=True,right_index=True)
+# df = df.merge(df_ipp,how='outer',left_index=True,right_index=True)
+# del df_ipca, df_ipca15, df_inpc, df_ipp
 
 ##########################################################################################################
 ##########################################################################################################
 ##########################################################################################################
 
 # -------------------------------------------------------------------------------
-arq_nome = 'tabela6903_2.xlsx'
-pasta = caminho_base / 'Dados' / 'Ibge' / 'Ipp'
-df = pd.read_excel(pasta / arq_nome, sheet_name='Tabela', skiprows=0)
+# arq_nome = 'tabela6903_2.xlsx'
+# pasta = caminho_base / 'Dados' / 'Ibge' / 'Ipp'
+# df = pd.read_excel(pasta / arq_nome, sheet_name='Tabela', skiprows=0)
 # coluna_dt_str = df_ipp_grande.iloc[:,1]
 # df_ipp_grande['dt'] = g_col_data(coluna_dt_str)
 # -------------------------------------------------------------------------------
@@ -283,7 +301,7 @@ def g_df_com_data_2(df, colCategorias, colMês, colVar):
 # colMês = 1
 # colVar = 2
 
-ipp_categorias = g_df_com_data_2(df, colCategorias=0, colMês=1, colVar=2)
+# ipp_categorias = g_df_com_data_2(df, colCategorias=0, colMês=1, colVar=2)
 
 
 
@@ -339,12 +357,6 @@ categoria_VmVp_str = 'IPCA - Variação mensal (%)'
 
 # Cria colunas com os códigos das categorias (usando regex)
 
-'''
-Desenvolver o código abaixo
-'''
-
-
-
 
 def retorna_código_e_desc(texto):
     import re
@@ -383,9 +395,9 @@ for index_linha, linha in df_cp.iterrows():
     df_cp.loc[index_linha,'código'] = código
     df_cp.loc[index_linha,'descrição'] = descrição
 
-
+# Classifica as entradas como Geral, Grupo, Subgrupo, Item, Subitem
 cond1 = df_cp['código'] == '0'
-cond = cond1 & cond2
+cond = cond1
 df_cp.loc[cond1,'categoria'] = 'Geral'
 
 cond1 = df_cp['código'].str.len() == 1
@@ -402,11 +414,23 @@ df_cp.loc[cond1,'categoria'] = 'Item'
 cond1 = df_cp['código'].str.len() == 7
 df_cp.loc[cond1,'categoria'] = 'Subitem'
 
-# Fazer tabela com as descrições e códigos
+# Tabelas com as descrições e códigos
 
+li_categorias = ['Grupo','Subgrupo','Item','Subitem']
 
+# GRUPOS
 
+dicionário2 = {}
 
+for categoria in li_categorias:
+    #categoria = 'Subgrupo'
+    
+    cond1 = df_cp['categoria'] == categoria
+    df_categoria = df_cp.loc[cond1,:]
+    
+    df_categoria = df_categoria.groupby(['código']).head(1)
+    
+    dicionário2[categoria] = df_categoria
 
 
 

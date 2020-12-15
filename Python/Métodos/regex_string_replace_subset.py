@@ -118,8 +118,45 @@ if é_índice == True:
 
 
 
+texto = '1.Alimentação e bebidas'
+texto = '1101.Cereais, leguminosas e oleaginosas'
+texto = 'Índice geral'
+texto = 'asfsdf'
+
+import re
+matches = re.search('^\d+', texto)
+é_índice = bool(re.match('índice', texto, re.IGNORECASE))
+if matches != None:
+    print(matches.group(0))
+elif é_índice == True:
+    print('é índice')
+else:
+    print('outra coisa')
 
 
+
+def retorna_código(texto):
+    import re
+    matches = re.search('^\d+', texto)
+    é_índice = bool(re.match('índice', texto, re.IGNORECASE))
+    if matches != None:
+        #print(matches.group(0))
+        return matches.group(0)
+    elif é_índice == True:
+        #print('é índice')
+        return '0'
+    else:
+        #print('outra coisa')
+        return ''
+
+txt = '1.Alimentação e bebidas'
+txt = '1101.Cereais, leguminosas e oleaginosas'
+txt = 'Índice geral'
+txt = 'asfsdf'
+
+txt_cod = retorna_código(txt)
+
+print(txt_cod)
 
 
 

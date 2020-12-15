@@ -80,8 +80,8 @@ df['dt'] = pd.to_datetime(df[['year', 'month', 'day']])
 
 
 
-
-
+df['dt'] = df['Data'].astype('datetime64[ns]')
+# https://stackoverflow.com/questions/17134716/convert-dataframe-column-type-from-string-to-datetime-dd-mm-yyyy-format#:~:text=If%20your%20date%20column%20is,to%20convert%20it%20to%20datetime.&text=You%20can%20try%20it%20with,but%20at%20least%20this%20works.&text=More%20details%20on%20format%20here,html%23strftime%2Dstrptime%2Dbehavior
 
 
 
