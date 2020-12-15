@@ -291,12 +291,119 @@ ipp_categorias = g_df_com_data_2(df, colCategorias=1, colMês=2, colVar=3)
 ##########################################################################################################
 ##########################################################################################################
 ##########################################################################################################
+# IPCA por categorias
+
+arq_nome = 'tabela7060.xlsx'
+pasta = caminho_base / 'Dados' / 'Ibge' / 'Ipca'
+df = pd.read_excel(pasta / arq_nome, sheet_name='Tabela', skiprows=0)
+
+colCategorias_VmVp = 1
+colCategorias_Grupo = 2
+colMês = 3
+colVar = 4
+
+
+import numpy as np
+import pandas as pd
+
+df_cp = df.copy()
+
+colunas = df_cp.columns
+
+nome_antigo_valor = colunas[colVar]
+nome_antigo_data = colunas[colMês]
+nome_antigo_categoria_VmVp = colunas[colCategorias_VmVp]
+nome_antigo_categoria_Grupo = colunas[colCategorias_Grupo]
+
+# Pega apenas colunas que têm a data
+coluna_dt_str = df_cp.loc[:,nome_antigo_data]
+df_cp['dt'] = g_col_data(coluna_dt_str)
+cond1 = ~ df_cp['dt'].isnull()
+df_cp = df_cp.loc[cond1,:]
+
+# Espalha para baixo os valores
+df_cp[nome_antigo_categoria_VmVp].fillna(method='ffill', inplace=True)
+df_cp[nome_antigo_categoria_Grupo].fillna(method='ffill', inplace=True)
+
+li_categorias_VmVp = df_cp[nome_antigo_categoria_VmVp].unique()
+li_categorias_Grupo = df_cp[nome_antigo_categoria_Grupo].unique()
+
+# Assegura que o valor é numérico
+df_cp[nome_antigo_valor] = pd.to_numeric(df_cp[nome_antigo_valor], errors='coerce')
+
+# Cria o dicionário
+dicionário1 = {}
+
+index_unico = 0
+categoria_VmVp_str = 'IPCA - Variação mensal (%)'
+
+# Cria colunas com os códigos das categorias (usando regex)
+
+'''
+Desenvolver o código abaixo
+'''
+
+import re
+texto = 'Índice geral'
+matches = re.search('^\d+', texto)
+é_índice = bool(re.match('índice', texto, re.IGNORECASE))
+#print(is_match)
+if é_índice == True:
+    print('É índice!!!!')
+
+
+import re
+texto = 'Índice geral'
+matches = re.search('^\d+', texto)
+if matches == None:
+    print(matches.group(0))
+texto = 'Índice geral'
+matches = re.search('^\d+', texto)
+if matches != None:
+    print(matches.group(0))
+
+
+
+df_cp['categoria_cod'] = df_cp[nome_antigo_categoria_Grupo].str.
+
+
+
+
+# Filtra por Variação Mensal ou Peso no Mês
+
+cond1 = df_cp.iloc[:,colCategorias_VmVp] == categoria_VmVp_str
+df_categoria_VmVp = df_cp.loc[cond1,:]
+
+# 
 
 
 
 
 
 
+
+
+
+# Muda o formato do DF
+for index_unico, categoria_VmVp_str in enumerate(li_categorias_VmVp):
+    print(index_unico, categoria_VmVp_str)
+    
+    # index_unico = 0
+    # categoria_str = 'Indústria Geral'
+
+
+
+
+
+
+
+
+
+
+
+##########################################################################################################
+##########################################################################################################
+##########################################################################################################
 
 
 

@@ -66,18 +66,54 @@ for match in matches:
     print(match.group(0))
 
 
-
+# STRING REPLACE
 
 # Sucesso da meta
 import re
 texto = 'cnae2_grupo_cod3'
 print(re.sub(r'_cod\d', "_desc", texto))
 
+# STRING SUBSET
 
+# Ok
+import re
+texto = '1101.Cereais, leguminosas e oleaginosas'
+matches = re.search('^\d+', texto)
+if matches != None:
+    print(matches.group(0))
 
+# Ok
+import re
+texto = 'Índice geral'
+matches = re.search('^\d+', texto)
+if matches != None:
+    print(matches.group(0))
 
+# retorna TRUE ou FALSE
 
+# Ok
+import re
+texto = '1101.Cereais, leguminosas e oleaginosas'
+matched = re.match('^\d+', texto)
+is_match = bool(matched)
+print(is_match)
 
+# Ok
+import re
+texto = 'Índice geral'
+matched = re.match('^\d+', texto)
+is_match = bool(matched)
+print(is_match)
+
+# case insensitive
+
+import re
+texto = 'Índice geral'
+matches = re.search('^\d+', texto)
+é_índice = bool(re.match('índice', texto, re.IGNORECASE))
+#print(is_match)
+if é_índice == True:
+    print('É índice!!!!')
 
 
 
