@@ -56,7 +56,11 @@ finally: # sempre fazer isso
     pass
 
 
+# pdf
 
+import tabula
+
+df = tabula.read_pdf(caminho_wd / 'LOA 2020.pdf', pages=[10])
 
 
 
