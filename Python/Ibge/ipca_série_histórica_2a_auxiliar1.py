@@ -110,6 +110,19 @@ for categoria in li_categorias:
     dic_categorias[categoria] = dic_categorias[categoria].loc[:,['código','descrição']]
 
 
+dic_categorias2 = dic_categorias.copy()
+dic_categorias2['Grupo']['código2'] = dic_categorias2['Grupo']['código'] + '000000'
+dic_categorias2['Subgrupo']['código2'] = dic_categorias2['Subgrupo']['código'] + '00000'
+dic_categorias2['Item']['código2'] = dic_categorias2['Item']['código'] + '000'
+dic_categorias2['Subitem']['código2'] = dic_categorias2['Subitem']['código']
+
+df_CódLongo = dic_categorias2['Grupo'].copy()
+df_CódLongo = df_CódLongo.append(dic_categorias2['Subgrupo'])
+df_CódLongo = df_CódLongo.append(dic_categorias2['Item'])
+df_CódLongo = df_CódLongo.append(dic_categorias2['Subitem'])
+
+df_CódLongo['código2'] = df_CódLongo['código2'].astype('str')
+
 # DF com correspondências
 
 arq_nome = 'IPCA - Divisão por Categorias.xlsx'
@@ -119,7 +132,15 @@ print(df.dtypes)
 df.rename(mapper={'Unnamed: 0':'CNCA','Unnamed: 1':'DNDS','Unnamed: 2':'Código'},axis=1,inplace=True)
 
 df = df.iloc[4:,0:3]
+df.dropna(thresh=2,inplace=True)
+df.rename(mapper={'Código':'código2'},axis=1,inplace=True)
 
+df['código2'] = df['código2'].astype('str')
+
+print(df.dtypes)
+print(df_CódLongo.dtypes)
+
+df_merge = df.merge(df_CódLongo,how='left',left_on='código2',right_on='código2')
 
 # Criar 4 DFs: Variação, Peso, Contribuição, Índice
 
