@@ -96,6 +96,23 @@ df['day'] = '01'
 df['dt'] = pd.to_datetime(df[['year', 'month', 'day']],errors='coerce')
 df.drop(['year','month','day'],axis=1,inplace=True)
 
+# Pegar o código e colocar em coluna própria, com split
+
+
+
+texto = '1101.Cereais, leguminosas e oleaginosas'
+x = texto.split(".")
+x1 = x[0]
+print(x1)
+
+for index_linha, linha in df1.iterrows():
+    df1.loc[index_linha,'código'] = linha['D4N'].split(".")[0]
+
+for index_linha, linha in df.iterrows():
+    df.loc[index_linha,'código'] = linha['D4N'].split(".")[0]
+
+
+
 def retorna_código_e_desc(texto):
     import re
     matches = re.search('^\d+', texto)

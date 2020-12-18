@@ -82,6 +82,14 @@ matches = re.search('^\d+', texto)
 if matches != None:
     print(matches.group(0))
 
+# Split string
+
+texto = '1101.Cereais, leguminosas e oleaginosas'
+x = texto.split(".")
+x1 = x[0]
+print(x1)
+
+
 # Ok
 import re
 texto = 'Índice geral'

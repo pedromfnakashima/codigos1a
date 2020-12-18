@@ -6,8 +6,13 @@ Created on Tue Dec  8 10:23:47 2020
 """
 
 
-
-
+# Lê csv
+pasta = caminho_base / 'Dados' / 'cnae e ncm'
+arq_nome = 'cnae_corresp.csv'
+cnae_corresp = pd.read_csv(pasta / arq_nome,
+                              delimiter = '|',
+                              decimal=',',
+                              dtype='str')
 
 # Exporta csv
 df.to_csv('cnae2_corresp.csv', sep=';', decimal=',', index=False)
