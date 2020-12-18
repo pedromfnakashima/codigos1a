@@ -44,10 +44,16 @@ df = pd.read_excel(pasta / arq_nome, sheet_name='Classificação', skiprows=0, d
 print(df.dtypes)
 
 df_class_jul2006_dez2011 = df.copy()
+df_class_jul2006_dez2011.set_index('código',inplace=True)
 
-cond1 = df_class_jul2006_dez2011['código'] =='1111004'
-filtro = df_class_jul2006_dez2011.loc[cond1,:]
+# cond1 = df_class_jul2006_dez2011['código'] =='1111004'
+# filtro = df_class_jul2006_dez2011.loc[cond1,:]
 
+# Salva em planilha
+pasta = caminho_base / 'Dados' / 'Ibge' / 'Ipca'
+arq_nome = "classificação.xlsx"
+with pd.ExcelWriter(pasta / arq_nome, mode='a', engine="openpyxl") as writer:  
+    df_class_jul2006_dez2011.to_excel(writer, sheet_name='200607', index=True)
 
 
 # -------------------------------------------------------------------------------------------------------------------
@@ -58,8 +64,14 @@ df = pd.read_excel(pasta / arq_nome, sheet_name='Classificação', skiprows=0, d
 
 print(df.dtypes)
 
-
 df_class_jan2012_dez2019 = df.copy()
+df_class_jan2012_dez2019.set_index('código',inplace=True)
+
+# Salva em planilha
+pasta = caminho_base / 'Dados' / 'Ibge' / 'Ipca'
+arq_nome = "classificação.xlsx"
+with pd.ExcelWriter(pasta / arq_nome, mode='a', engine="openpyxl") as writer:  
+    df_class_jan2012_dez2019.to_excel(writer, sheet_name='201201', index=True)
 
 # -------------------------------------------------------------------------------------------------------------------
 
@@ -96,6 +108,12 @@ df.rename(mapper={'SNIPC':'código'},axis=1,inplace=True)
 df_novosItens = df.copy()
 
 
+
+
+pasta = caminho_base / 'Dados' / 'Ibge' / 'Ipca'
+arq_nome = "classificação.xlsx"
+with pd.ExcelWriter(pasta / arq_nome, mode='a', engine="openpyxl") as writer:  
+    df_novosItens.to_excel(writer, sheet_name='novosItens2', index=False)
 
 ############################### Modificações
 import tabula
@@ -162,9 +180,51 @@ df['código'] = df['código'].astype('str')
 df_class_jan2020_ = df.copy()
 
 df_class_jan2020_.rename(mapper={'descrição':'descrição_nova'},axis=1,inplace=True)
-df_class_jan2020_ = df_class_jan2020_.merge(df_class_jan2012_dez2019,how='left',left_on='código',right_on='código')
+df_class_jan2020_.set_index(['código'],inplace=True)
+df_class_jan2020_ = df_class_jan2020_.merge(df_class_jan2012_dez2019,how='left', left_index=True,right_index=True)
+#df_class_jan2020_.set_index('descrição',inplace=True)
 
 # --------------------------------------------
+import numpy as np
+arq_nome = 'IPCA - Divisão por Categorias2020.xlsx'
+pasta = caminho_base / 'Dados' / 'BD firjan' / 'Inflação'
+df = pd.read_excel(pasta / arq_nome, sheet_name='Classificação', skiprows=0, dtype={'código':'str'})
+
+print(df.dtypes)
+#df['C_NC_M'] = df['C_NC_M'].astype(str)
+
+df['C_NC_M'] = df['C_NC_M'].replace(np.nan, '', regex=True)
+df['D_SD_ND_M_S'] = df['D_SD_ND_M_S'].replace(np.nan, '', regex=True)
+df['C_NC_M'] = df['C_NC_M'].replace('-', '')
+df['D_SD_ND_M_S'] = df['D_SD_ND_M_S'].replace('-', '')
+df.drop(['descrição'],axis=1,inplace=True)
+df.set_index('código',inplace=True)
+
+
+print(df_class_jan2020_.dtypes)
+print(df.dtypes)
+
+df_class_jan2020_.update(df)
+
+df_class_jan2020_['descrição'] = df_class_jan2020_['descrição_nova']
+
+df_class_jan2020_['C_NC_M'] = df_class_jan2020_['C_NC_M'].replace(np.nan, '', regex=True)
+df_class_jan2020_['D_SD_ND_M_S'] = df_class_jan2020_['D_SD_ND_M_S'].replace(np.nan, '', regex=True)
+
+df_class_jan2020_.drop(['descrição_nova'],axis=1,inplace=True)
+
+
+# Salva em planilha
+pasta = caminho_base / 'Dados' / 'Ibge' / 'Ipca'
+arq_nome = "classificação.xlsx"
+with pd.ExcelWriter(pasta / arq_nome, mode='a', engine="openpyxl") as writer:  
+    df_class_jan2020_.to_excel(writer, sheet_name='202001', index=True)
+
+
+
+
+
+
 
 
 cond1 = df_class_jan2020_['descrição_nova'].str.contains('milho',case=False)

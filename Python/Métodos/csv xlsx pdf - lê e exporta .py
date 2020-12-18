@@ -12,8 +12,29 @@ Created on Tue Dec  8 10:23:47 2020
 # Exporta csv
 df.to_csv('cnae2_corresp.csv', sep=';', decimal=',', index=False)
 
+pasta = caminho_base / 'Dados' / 'Ibge' / 'Ipca'
+arq_nome = "classificação.csv"
+df.to_csv(pasta / arq_nome, sep=';', decimal=',', index=False)
+
+# Lê excel
 pasta = caminho_base / 'Dados' / 'Ibge' / 'Ipca-15'
 df_ipca15 = pd.read_excel(pasta / arq_nome, sheet_name='Tabela', skiprows=0)
+
+# Exporta arquivo excel
+
+arq_nome = "class_novosItens.xlsx"
+pasta = caminho_base / 'Dados' / 'Ibge' / 'Ipca'
+df_novosItens.to_excel(pasta / arq_nome,
+             sheet_name='planilha1',
+             index=False)  
+
+
+# Exporta planilha do excel (o arquivo já deve existir)
+import pandas as pd
+pasta = caminho_base / 'Dados' / 'Ibge' / 'Ipca'
+arq_nome = "classificação.xlsx"
+with pd.ExcelWriter(pasta / arq_nome, mode='a', engine="openpyxl") as writer:  
+    df_novosItens.to_excel(writer, sheet_name='novosItens2', index=False)
 
 # Lidando com encoding diferente
 

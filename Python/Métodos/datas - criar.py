@@ -83,17 +83,36 @@ df['dt'] = pd.to_datetime(df[['year', 'month', 'day']])
 df['dt'] = df['Data'].astype('datetime64[ns]')
 # https://stackoverflow.com/questions/17134716/convert-dataframe-column-type-from-string-to-datetime-dd-mm-yyyy-format#:~:text=If%20your%20date%20column%20is,to%20convert%20it%20to%20datetime.&text=You%20can%20try%20it%20with,but%20at%20least%20this%20works.&text=More%20details%20on%20format%20here,html%23strftime%2Dstrptime%2Dbehavior
 
+##########################################################################################################
+############################### cria datas para o ibge ex.: 202010 #######################################
+##########################################################################################################
+
+import numpy as np
+
+np_datas = np.arange('2012-01-01','2020-01-01', 1, dtype='datetime64[M]').astype(str)
+li_datas = [s.replace('-','') for s in np_datas]
+
+
+
+np_datas_2 = np.arange('2012-01-01','2020-01-01', 1, dtype='datetime64[M]').astype(str)
+np_datas_3 = np.arange('2020-01-01','2020-02-01', 1, dtype='datetime64[M]').astype(str)
+pd.DateOffset(months=1)
 
 
 
 
+idx = pd.date_range('2020-01-01', periods=3, freq='M')
 
+my_year = 2020
+my_month = 1
+my_day = 2
+my_hour = 13
+my_min = 30
+my_sec = 15
 
+# Yessss: o procedimento abaixo faz INCLUIR o ENDPOINT do np.arange !!!!
+from datetime import datetime
+data1 = datetime(2020, 1, 1)
+data2 = datetime(2020, 11, 1) + pd.DateOffset(months=1)
 
-
-
-
-
-
-
-
+np_datas_2 = np.arange(data1,data2, 1, dtype='datetime64[M]').astype(str)
