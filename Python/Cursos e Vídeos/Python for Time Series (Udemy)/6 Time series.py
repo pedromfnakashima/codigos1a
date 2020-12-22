@@ -363,8 +363,8 @@ ax.xaxis.grid(True)
 
 
 
-
-
+dt_str = '202001'
+print(pd.to_datetime([dt_str], format='%Y%m'))
 
 
 

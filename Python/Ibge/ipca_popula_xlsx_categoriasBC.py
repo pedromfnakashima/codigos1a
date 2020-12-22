@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 """
-Created on Wed Dec 16 11:29:50 2020
+Created on Mon Dec 21 10:02:32 2020
 
-@author: pedro-salj
+@author: pedro
 """
+
 
 #############################
 ##### CONFIGURAÇÃO GERAL ####
@@ -50,8 +51,9 @@ df_class_jul2006_dez2011.set_index('código',inplace=True)
 # filtro = df_class_jul2006_dez2011.loc[cond1,:]
 
 # Salva em planilha
-pasta = caminho_base / 'Dados' / 'Ibge' / 'Ipca'
-arq_nome = "classificação.xlsx"
+# pasta = caminho_base / 'Dados' / 'Ibge' / 'Ipca'
+pasta = caminho_base / 'Dados' / 'Ibge' / 'Tabelas'
+arq_nome = "categoriasBC.xlsx"
 with pd.ExcelWriter(pasta / arq_nome, mode='a', engine="openpyxl") as writer:  
     df_class_jul2006_dez2011.to_excel(writer, sheet_name='t2938', index=True)
 
@@ -68,8 +70,9 @@ df_class_jan2012_dez2019 = df.copy()
 df_class_jan2012_dez2019.set_index('código',inplace=True)
 
 # Salva em planilha
-pasta = caminho_base / 'Dados' / 'Ibge' / 'Ipca'
-arq_nome = "classificação.xlsx"
+# pasta = caminho_base / 'Dados' / 'Ibge' / 'Ipca'
+pasta = caminho_base / 'Dados' / 'Ibge' / 'Tabelas'
+arq_nome = "categoriasBC.xlsx"
 with pd.ExcelWriter(pasta / arq_nome, mode='a', engine="openpyxl") as writer:  
     df_class_jan2012_dez2019.to_excel(writer, sheet_name='t1419', index=True)
 
@@ -108,12 +111,10 @@ df.rename(mapper={'SNIPC':'código'},axis=1,inplace=True)
 df_novosItens = df.copy()
 
 
-
-
-pasta = caminho_base / 'Dados' / 'Ibge' / 'Ipca'
-arq_nome = "classificação.xlsx"
-with pd.ExcelWriter(pasta / arq_nome, mode='a', engine="openpyxl") as writer:  
-    df_novosItens.to_excel(writer, sheet_name='novosItens2', index=False)
+# pasta = caminho_base / 'Dados' / 'Ibge' / 'Ipca'
+# arq_nome = "categoriasBC.xlsx"
+# with pd.ExcelWriter(pasta / arq_nome, mode='a', engine="openpyxl") as writer:  
+#     df_novosItens.to_excel(writer, sheet_name='novosItens2', index=False)
 
 ############################### Modificações
 import tabula
@@ -215,80 +216,8 @@ df_class_jan2020_.drop(['descrição_nova'],axis=1,inplace=True)
 
 
 # Salva em planilha
-pasta = caminho_base / 'Dados' / 'Ibge' / 'Ipca'
-arq_nome = "classificação.xlsx"
+# pasta = caminho_base / 'Dados' / 'Ibge' / 'Ipca'
+pasta = caminho_base / 'Dados' / 'Ibge' / 'Tabelas'
+arq_nome = "categoriasBC.xlsx"
 with pd.ExcelWriter(pasta / arq_nome, mode='a', engine="openpyxl") as writer:  
     df_class_jan2020_.to_excel(writer, sheet_name='t7060', index=True)
-
-
-
-############################################################################################
-############################################################################################
-############################################################################################
-
-
-
-
-
-
-
-cond1 = df_class_jan2020_['descrição_nova'].str.contains('milho',case=False)
-filtro = df_class_jan2020_.loc[cond1,:]
-
-cond1 = df_class_jan2020_['descrição_nova'].str.contains('neurológico',case=False)
-filtro = df_class_jan2020_.loc[cond1,:]
-
-cond1 = df_class_jan2020_['descrição_nova'].str.contains('Sobrancelha',case=False)
-filtro = df_class_jan2020_.loc[cond1,:]
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-print(df.dtypes)
-df.rename(mapper={'Unnamed: 0':'CNCA','Unnamed: 1':'DNDS','Unnamed: 2':'Código'},axis=1,inplace=True)
-
-df = df.iloc[4:,0:3]
-df.dropna(thresh=2,inplace=True)
-df.rename(mapper={'Código':'código2'},axis=1,inplace=True)
-
-df['código2'] = df['código2'].astype('str')
-
-print(df.dtypes)
-print(df_CódLongo.dtypes)
-
-df_merge = df.merge(df_CódLongo,how='left',left_on='código2',right_on='código2')
-
-# Criar 4 DFs: Variação, Peso, Contribuição, Índice
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-cond1 = df['D4N'] == 'Índice geral'
-filtro = df.loc[cond1,:]
-
-##########################################################################################################
-##########################################################################################################
-##########################################################################################################

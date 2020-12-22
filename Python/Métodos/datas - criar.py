@@ -53,6 +53,10 @@ nova_linha = pd.DataFrame({'novo_nome': pd.date_range(start=df_1['novo_nome'].il
 df_1 = df_1.append(nova_linha)
 
 
+# Gera data a partir de string data tipo ibge
+
+dt_str = '202001'
+print(pd.to_datetime([dt_str], format='%Y%m'))
 
 
 
@@ -116,3 +120,48 @@ data1 = datetime(2020, 1, 1)
 data2 = datetime(2020, 11, 1) + pd.DateOffset(months=1)
 
 np_datas_2 = np.arange(data1,data2, 1, dtype='datetime64[M]').astype(str)
+
+
+
+# Até agora, com menos linhas (lista de datas no formato ibge)
+
+def g_li_datas_ibge(início, final):
+    if início == final:
+        str_dt_ibge = início.replace('-','')
+        li_meses = [str_dt_ibge]
+    else:
+        import numpy as np
+        ano_início = int(início.split('-')[0])
+        mês_início = int(início.split('-')[1])
+        ano_final = int(final.split('-')[0])
+        mês_final = int(final.split('-')[1])
+        data1 = datetime(ano_início, mês_início, 1)
+        data2 = datetime(ano_final, mês_final, 1) + pd.DateOffset(months=1)
+        np_meses = np.arange(data1,data2, 1, dtype='datetime64[M]').astype(str)
+        li_meses = [s.replace('-','') for s in np_meses]
+    return li_meses
+
+li_datas_ibge = g_li_datas_ibge('2019-05', '2020-10')
+
+
+# Tira hífen das datas e deixa no formato ibge
+data1 = datetime(ano_início, mês_início, 1)
+data2 = datetime(ano_final, mês_final, 1) + pd.DateOffset(months=1)
+np_meses = np.arange(data1,data2, 1, dtype='datetime64[M]').astype(str)
+li_meses = [s.replace('-','') for s in np_meses]
+
+
+# Para extrair componentes do numpy date time, deve aplicar a função pd.DatetimeIndex ao numpy.array
+
+li_datas = pd.DatetimeIndex(df['dt'].unique())
+li_datas_anos = li_datas.year
+
+# Mudar o formato de uma lista de datas, para string
+li_datas = pd.DatetimeIndex(df['dt'].unique()) # passo (aplicar a função pd.DatetimeIndex) essencial para aplicar as funções min() e max()
+li_datas_str = [str(dt.year) + str(dt.month).zfill(2) for dt in li_datas]
+
+
+
+
+
+

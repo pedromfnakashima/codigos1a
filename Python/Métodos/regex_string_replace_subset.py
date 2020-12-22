@@ -97,14 +97,27 @@ matches = re.search('^\d+', texto)
 if matches != None:
     print(matches.group(0))
 
-# retorna TRUE ou FALSE
+# Procura, retorna TRUE ou FALSE
 
 # Ok
 import re
 texto = '1101.Cereais, leguminosas e oleaginosas'
-matched = re.match('^\d+', texto)
+matched = re.match('^\d+', texto, re.IGNORECASE)
 is_match = bool(matched)
 print(is_match)
+
+import re
+texto = '2011-12'
+# texto = '201112'
+matched = re.match('\d{4}\-\d{2}', texto, re.IGNORECASE)
+is_match = bool(matched)
+
+import re
+texto = dfc.loc[1,'D4N']
+matched = re.match('^índice', texto, re.IGNORECASE)
+is_match = bool(matched)
+print(is_match)
+
 
 # Ok
 import re
