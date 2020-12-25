@@ -28,5 +28,5 @@ mdic_1f.py
 Feito.
 
 Cinco ncms que mais variaram na média móvel. De cada uma, cinco município sque mais variaram e cinco países
-mdic_1f.py
-Fazendo.
+mdic_1g.py
+Feito?

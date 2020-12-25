@@ -35,13 +35,15 @@ import pandas as pd
 
 '''
 Períodos e tabelas (IPCA)
-2938: julho/2006 até dezembro/2011 (link: https://sidra.ibge.gov.br/Tabela/2938)
-1419: janeiro/2012 até dezembro/2019 (link: https://sidra.ibge.gov.br/tabela/1419)
+2938: de julho/2006 até dezembro/2011 (link: https://sidra.ibge.gov.br/Tabela/2938)
+1419: de janeiro/2012 até dezembro/2019 (link: https://sidra.ibge.gov.br/tabela/1419)
 7060: a partir de janeiro/2020 (link: https://sidra.ibge.gov.br/tabela/7060)
+
 Períodos e tabelas (IPCA-15)
+1387: de agosto/2006 até janeiro/2012 (link: https://sidra.ibge.gov.br/tabela/1387)
+1705: de fevereiro/2012 até janeiro/2020 (link: https://sidra.ibge.gov.br/tabela/1705)
+7062: a partir de fevereiro/2020 (link: https://sidra.ibge.gov.br/tabela/7062)
 '''
-
-
 
 #################################################################################################
 ################################# DOWNLOAD DOS ARQUIVOS #########################################
@@ -57,10 +59,20 @@ def g_data_MinMax(tab_num):
    
     import requests
     
-    # tab_num='2938'
+    # tab_num='7060'
+    # tab_num='7062'
     dtCol='dt'
     
-    url = f'https://apisidra.ibge.gov.br/values/t/{tab_num}/n1/all/v/63/p/all/c315/7169/d/v63%202'
+    if tab_num == '7060' or tab_num == '1419' or tab_num == '2938':
+        print('IPCA')
+        # IPCA. 63 = Variação mensal
+        url = f'https://apisidra.ibge.gov.br/values/t/{tab_num}/n1/all/v/63/p/all/c315/7169/d/v63%202'
+
+    elif tab_num == '7062' or tab_num == '1705' or tab_num == '1387':
+        print('IPCA-15')
+        # IPCA-15. 355 = Variação mensal
+        url = f'https://apisidra.ibge.gov.br/values/t/{tab_num}/n1/all/v/357/p/all/c315/7169/d/v357%204'
+    
     r = requests.get(url)
     j = r.json()
     df = pd.DataFrame.from_dict(j)
@@ -84,7 +96,8 @@ def g_data_MinMax(tab_num):
     
     return li_datas_str, data_máx_str, data_mín_str
 
-# li_datas_str, data_máx, data_mín = g_data_MinMax(tab_num='2938')
+# li_datas_str, data_máx, data_mín = g_data_MinMax(tab_num='7060')
+# li_datas_str, data_máx, data_mín = g_data_MinMax(tab_num='7062')
 
 # Gera datas no formato IBGE
 def g_li_datas_ibge(início, final):
@@ -129,6 +142,7 @@ def g_li_datas_ibge(início, final):
 
 # tab_num = '7060'
 # tab_num = '2938'
+# tabela = '1705'
 
 # Download de tabelas
 def download_tabela(tabela, li_meses):
@@ -138,7 +152,18 @@ def download_tabela(tabela, li_meses):
         print(f'Baixando: {mês}')
     
         #mês = '201201'
-        url = f'https://apisidra.ibge.gov.br/values/t/{tabela}/n1/all/n6/all/v/63,66/p/{mês}/c315/all/d/v63%202,v66%204'
+        # mês = '202001'
+        # url = f'https://apisidra.ibge.gov.br/values/t/{tabela}/n1/all/n6/all/v/63,66/p/{mês}/c315/all/d/v63%202,v66%204'
+        
+        if tab_num == '7060' or tab_num == '1419' or tab_num == '2938':
+            # print('IPCA')
+            # IPCA. 63 = Variação mensal
+            url = f'https://apisidra.ibge.gov.br/values/t/{tabela}/n1/all/n6/all/v/63,66/p/{mês}/c315/all/d/v63%202,v66%204'
+    
+        elif tab_num == '7062' or tab_num == '1705' or tab_num == '1387':
+            # print('IPCA-15')
+            # IPCA-15. 355 = Variação mensal
+            url = f'https://apisidra.ibge.gov.br/values/t/{tabela}/n1/all/n6/all/v/355,357/p/{mês}/c315/all/d/v355%202,v357%204'
         r = requests.get(url)
         j = r.json()
         df = pd.DataFrame.from_dict(j)
@@ -178,7 +203,7 @@ def g_cols_cód_desc(df, colCód, colDesc):
     df = df.loc[cond1,:]
     return df
 
-# df2 = g_cols_cód_desc(df, colCód='códIBGE', colDesc='descCatIBGE')
+# df = g_cols_cód_desc(df, colCód='códIBGE', colDesc='descCatIBGE')
 
 # Gera coluna de categoria IBGE
 def g_col_categoriaIBGE(df, colCód, colCat):
@@ -218,14 +243,14 @@ def add_cols_catBC(df, tab_num, colCódDF, colCódPlanilha, colDescPlanilha):
     # colDescPlanilha = 'descrição'
     arq_xlsx_catBC = 'categoriasBC.xlsx'
     sheet_name = 't' + tab_num
-    pasta = caminho_base / 'Dados' / 'Ibge' / 'Ipca'
+    pasta = caminho_base / 'Dados' / 'Ibge' / 'Tabelas'
     catsBC = pd.read_excel(pasta / arq_xlsx_catBC, sheet_name=sheet_name, skiprows=0, dtype={colCódPlanilha:'str'})
     # catsBC.drop([colDescPlanilha],axis=1,inplace=True)
     
     df = df.merge(catsBC,how='left',left_on=colCódDF,right_on=colCódPlanilha)
     
-    cond1 = ~ df[colCódPlanilha].isnull()
-    df = df.loc[cond1,:]
+    # cond1 = ~ df[colCódPlanilha].isnull()
+    # df = df.loc[cond1,:]
     
     df.drop([colDescPlanilha, colCódPlanilha],axis=1,inplace=True)
     
@@ -242,6 +267,20 @@ def g_col_dt(df, dtCol):
 
 # df = g_col_dt(df, dtCol='dt')
 
+################################################################################################
+################################# DOWNLOAD COMPLETO DOS DADOS ##################################
+################################################################################################
+
+################################################################################################
+########################################### IPCA ###############################################
+################################################################################################
+
+'''
+Períodos e tabelas (IPCA)
+2938: de julho/2006 até dezembro/2011 (link: https://sidra.ibge.gov.br/Tabela/2938)
+1419: de janeiro/2012 até dezembro/2019 (link: https://sidra.ibge.gov.br/tabela/1419)
+7060: a partir de janeiro/2020 (link: https://sidra.ibge.gov.br/tabela/7060)
+'''
 
 ##################################### TABELA 7060 #####################################
 tab_num = '7060'
@@ -275,6 +314,57 @@ df.to_csv(pasta / arq_nome, sep='|', decimal=',', index=False)
 ##################################### TABELA 2938 #####################################
 
 tab_num = '2938'
+
+li_datas_str, data_máx, data_mín = g_data_MinMax(tab_num=tab_num)
+df = download_tabela(tab_num, g_li_datas_ibge(data_mín, data_máx))
+df = g_cols_cód_desc(df, colCód='códIBGE', colDesc='descCatIBGE')
+df = g_col_categoriaIBGE(df, colCód='códIBGE', colCat='tipoCatIBGE')
+df = add_cols_catBC(df, tab_num=tab_num, colCódDF='códIBGE', colCódPlanilha='código', colDescPlanilha='descrição')
+df = g_col_dt(df, dtCol='dt')
+
+pasta = caminho_base / 'Dados' / 'Ibge' / 'Tabelas'
+arq_nome = 't' + tab_num + '.csv'
+df.to_csv(pasta / arq_nome, sep='|', decimal=',', index=False)
+
+################################################################################################
+########################################### IPCA-15 ############################################
+################################################################################################
+'''
+Períodos e tabelas (IPCA-15)
+1387: de agosto/2006 até janeiro/2012 (link: https://sidra.ibge.gov.br/tabela/1387)
+1705: de fevereiro/2012 até janeiro/2020 (link: https://sidra.ibge.gov.br/tabela/1705)
+7062: a partir de fevereiro/2020 (link: https://sidra.ibge.gov.br/tabela/7062)
+'''
+##################################### TABELA 7062 #####################################
+tab_num = '7062'
+
+li_datas_str, data_máx, data_mín = g_data_MinMax(tab_num=tab_num)
+df = download_tabela(tab_num, g_li_datas_ibge(data_mín, data_máx))
+df = g_cols_cód_desc(df, colCód='códIBGE', colDesc='descCatIBGE')
+df = g_col_categoriaIBGE(df, colCód='códIBGE', colCat='tipoCatIBGE')
+df = add_cols_catBC(df, tab_num=tab_num, colCódDF='códIBGE', colCódPlanilha='código', colDescPlanilha='descrição')
+df = g_col_dt(df, dtCol='dt')
+
+pasta = caminho_base / 'Dados' / 'Ibge' / 'Tabelas'
+arq_nome = 't' + tab_num + '.csv'
+df.to_csv(pasta / arq_nome, sep='|', decimal=',', index=False)
+
+##################################### TABELA 1705 #####################################
+tab_num = '1705'
+
+li_datas_str, data_máx, data_mín = g_data_MinMax(tab_num=tab_num)
+df = download_tabela(tab_num, g_li_datas_ibge(data_mín, data_máx))
+df = g_cols_cód_desc(df, colCód='códIBGE', colDesc='descCatIBGE')
+df = g_col_categoriaIBGE(df, colCód='códIBGE', colCat='tipoCatIBGE')
+df = add_cols_catBC(df, tab_num=tab_num, colCódDF='códIBGE', colCódPlanilha='código', colDescPlanilha='descrição')
+df = g_col_dt(df, dtCol='dt')
+
+pasta = caminho_base / 'Dados' / 'Ibge' / 'Tabelas'
+arq_nome = 't' + tab_num + '.csv'
+df.to_csv(pasta / arq_nome, sep='|', decimal=',', index=False)
+
+##################################### TABELA 1387 #####################################
+tab_num = '1387'
 
 li_datas_str, data_máx, data_mín = g_data_MinMax(tab_num=tab_num)
 df = download_tabela(tab_num, g_li_datas_ibge(data_mín, data_máx))

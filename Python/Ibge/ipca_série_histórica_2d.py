@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 """
-Created on Wed Dec 16 11:29:50 2020
+Created on Tue Dec 22 08:30:03 2020
 
-@author: pedro-salj
+@author: pedro
 """
+
 
 #############################
 ##### CONFIGURAÇÃO GERAL ####
@@ -39,6 +40,7 @@ Períodos e tabelas
 ##########################################################################################################
 
 def junta_arqs(arqs_csv, pasta):
+    import pandas as pd
     for index_arq, arq_nome in enumerate(arqs_csv):
         
         # arq_nome = "t7060.csv"
@@ -54,97 +56,73 @@ def junta_arqs(arqs_csv, pasta):
         else:
             df2 = df2.append(df)
     
+                # Converte para numérico
+    df2['V'] = pd.to_numeric(df2['V'], errors='coerce')
     return df2
 
 arqs_csv = ['t2938.csv','t1419.csv','t7060.csv']
 pasta = caminho_base / 'Dados' / 'Ibge' / 'Tabelas'
 
-df = junta_arqs(arqs_csv=arqs_csv, pasta=pasta)
 
+df1 = junta_arqs(arqs_csv=arqs_csv, pasta=pasta)
+
+df = df1.copy()
 # li_datas = pd.DatetimeIndex(df['dt'].unique())
 # df_datas = pd.DataFrame({'dt':li_datas})
 # df_datas.set_index('dt',inplace=True)
 # del li_datas
-
+print(df1.dtypes)
 ##########################################################################################################
 ################################# Importa categorias IBGE ######################################
 ##########################################################################################################
 
-def g_dic_categorias(arq_nome, pasta):
-    
-    dic_categorias = {}
-    
-    li_categorias = ['Grupo','Subgrupo','Item','Subitem']
-    
-    for plan_nome in li_categorias:
-        
-        # plan_nome = 'Grupo'
-        df_cat_i = pd.read_excel(pasta / arq_nome, sheet_name=plan_nome, skiprows=0,dtype={'código':'str'},parse_dates=['início'])
-        
-        dic_categorias[plan_nome] = df_cat_i
-    
-    return dic_categorias
+cond1 = df['D1C'] == '1'
+filtro1 = df.copy().loc[cond1,['dt','códIBGE','D2N','C_NC_M','D_SD_ND_M_S','V']]
 
-arq_nome = 'categoriasIBGE.xlsx'
-pasta = caminho_base / 'Dados' / 'Ibge' / 'Tabelas'
+filtro1.sort_values(by=['dt','códIBGE','D2N'],ascending=[True,True,False],inplace=True)
 
-dic_categorias = g_dic_categorias(arq_nome=arq_nome, pasta=pasta)
+cond1 = filtro1['D2N'].str.contains('Variação',case=False)
+filtro2 = filtro1.copy().loc[cond1,['dt','códIBGE','C_NC_M','D_SD_ND_M_S','V']]
+df_variação = filtro2.copy()
+df_variação.set_index(['dt','códIBGE'],inplace=True)
+df_variação.rename(mapper={'V':'Variação'},axis=1,inplace=True)
+
+cond1 = filtro1['D2N'].str.contains('Peso',case=False)
+filtro2 = filtro1.copy().loc[cond1,['dt','códIBGE','V']]
+df_peso = filtro2.copy()
+df_peso.set_index(['dt','códIBGE'],inplace=True)
+df_peso.rename(mapper={'V':'Peso'},axis=1,inplace=True)
+
+df_varPes = df_variação.merge(df_peso,how='left',left_index=True,right_index=True)
+df_varPes['Contribuição'] = df_varPes['Variação'] * df_varPes['Peso']
 
 
-# print(df.dtypes)
+# seleção1 = df_varPes.loc['2011-12-01']
+# seleção2 = df_varPes.loc[('2011-12-01','1'), :]
+# seleção3 = df_varPes.loc[('2011-12-01','1'), ('Contribuição')]
+# seleção4 = df_varPes.loc[(['2011-12-01','2012-01-01'],'1'), ('Contribuição')]
+# seleção5 = df_varPes.loc[('2011-12-01',['1','2']), ('Contribuição')]
+# seleção6 = df_varPes.loc[(slice(None),['1','2']), ('Contribuição')]
+# seleção7 = df_varPes.loc[(['2011-12-01','2012-01-01'],slice(None)), ('Contribuição')]
+# del seleção1, seleção2, seleção3, seleção4, seleção5, seleção6, seleção7 
+# seleção1 = df_varPes.loc[('2011-12-01',['1','2']), ('Contribuição')]
 
-cod_D1C = '1' # Território: Brasil
-categoria = 'Grupo'
 
-arq_nome = 'categoriasIBGE.xlsx'
-pasta = caminho_base / 'Dados' / 'Ibge' / 'Tabelas'
-df_categoria_i = pd.read_excel(pasta / arq_nome, sheet_name=categoria, skiprows=0)
+df_varPes.reset_index(inplace=True)
 
-# for index_linha, linha in df_categoria_i.iterrows():
-#     print(linha['código'])
+df_varPes_agregC_NC_M = df_varPes.groupby(['dt','C_NC_M'])['Peso'].sum().to_frame()
+seleção1 = df_varPes_agregC_NC_M.loc[('2011-12-01',['C','NC']), ('Peso')].to_frame()
 
-dicionário1 = {}
-li_variação_peso = ['Variação', 'Peso']
+df_varPes_agregC_NC_M = df_varPes.groupby(['dt','C_NC_M'])['Contribuição'].sum().to_frame()
+seleção2 = df_varPes_agregC_NC_M.loc[('2011-12-01',['C','NC']), ('Contribuição')].to_frame()
 
-# vp = 'Variação'
-# vp = 'peso'
+seleção12 = seleção1.merge(seleção2,how='left',left_index=True,right_index=True)
+seleção12['cont_planilha'] = seleção12['Contribuição'] /seleção12['Peso']
 
-for vp in li_variação_peso:
-    
-    cond1 = df['D2N'].str.contains(vp,case=False)
-    cond2 = df['tipoCatIBGE'] == categoria
-    cond3 = df['D1C'] == cod_D1C
-    cond = cond1 & cond2 & cond3
-    filtro1 = df.copy().loc[cond,:]
-    
-    # print(df_categoria_i.dtypes)
-    
-    for index_linha, linha in df_categoria_i.iterrows():
-        CódIBGE_cat_i = linha['código']
-        DescIBGE_cat_i = linha['descrição']
-        CódDescIBGE_cat_i = str(CódIBGE_cat_i) + '. ' + DescIBGE_cat_i
-        # print(index_linha, CódDescIBGE_cat_i)
-        
-        # index_linha = 0
-        # CódIBGE_cat_i ='1. Alimentação e bebidas'
-        cond1 = filtro1['códIBGE'] == str(CódIBGE_cat_i)
-        filtro2 = filtro1.loc[cond1,['dt','V']]
-        filtro2.set_index('dt',inplace=True)
-        filtro2.rename(mapper={'V':CódDescIBGE_cat_i},axis=1,inplace=True)
-        
+print(df_varPes.dtypes)
 
-        
-        if index_linha == 0:
-            df_todos = filtro2.copy()
-        else:
-            df_todos = df_todos.merge(filtro2,how='left',left_index=True,right_index=True)
-        
-        # Converte para numérico
-        df_todos = df_todos.apply(pd.to_numeric)
-    
-    dicionário1[vp] = df_todos
 
-dicionário1['Contribuição'] = (dicionário1['Variação'] * dicionário1['Peso']) / 100
+
 
 
 

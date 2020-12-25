@@ -3,12 +3,14 @@ Colocar Grupo, Subgrupo, Item e Subitem em arquivos csv separados
 
 Pegar a correspondência de itens do ipca com duráveis, não duráveis...
 
+######################################
+ipca_série_histórica_2c.py
 
+Ibge - categorias - dicionário com DFs de variação, peso e contribuição, para cada categoria
 
+######################################
 
+ipca_série_histórica_2g.py
 
-
-
-
-
+BC - categorias - dicionário com DFs de variação, peso e contribuição, para cada categoria
 
