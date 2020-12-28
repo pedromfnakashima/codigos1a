@@ -4,12 +4,39 @@ Created on Fri Nov 13 16:49:28 2020
 
 @author: pedro
 """
+#############################
+##### CONFIGURAÇÃO GERAL ####
+#############################
+globals().clear()
+""" Mudar diretório """
+import os
+from pathlib import Path
+import getpass
+if getpass.getuser() == "pedro":
+    caminho_base = Path(r'D:\Códigos, Dados, Documentação e Cheat Sheets')
+elif getpass.getuser() == "pedro-salj":
+    caminho_base = Path(r'C:\Users\pedro-salj\Desktop\Pedro Nakashima\Códigos, Dados, Documentação e Cheat Sheets')
+
+""" Mudar diretório para dados Siconfi"""
+caminho_wd = caminho_base / 'Dados'
+os.chdir(caminho_wd)
+
+#import numpy as np
+import pandas as pd
+
+############################
+############################
+############################
+
+import numpy as np
+import pandas as pd
 
 dfx1 = pd.DataFrame(np.arange('2019-07-01','2020-12-01', 1, dtype='datetime64[M]'))
 dfx1.set_index(0, inplace=True)
 dfx1['Valor'] = np.nan
 
 # ----------------------------------------------------------------------------------------
+# Função processa_arquivos_zip no script junta_siconfi_01c.py
 
 pasta = caminho_base / 'Dados' / 'Siconfi' / 'RREO - Estados' / 'Anexo 03 - Demonstrativo da Receita Corrente Líquida'
 df = processa_arquivos_zip(arquivo='2020b3.zip',
@@ -139,7 +166,8 @@ for coluna, busca in zip(colunas,buscas):
 #################################################################################################
 ################################### FAZER O LOOPING #############################################
 #################################################################################################
-
+import numpy as np
+import pandas as pd
 
 dfx1 = pd.DataFrame(np.arange('2019-07-01','2020-12-01', 1, dtype='datetime64[M]'))
 dfx1.set_index(0, inplace=True)

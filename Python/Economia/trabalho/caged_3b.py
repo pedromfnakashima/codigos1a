@@ -438,8 +438,8 @@ def cgd_01b(uf, início, final, agregação):
     def mais_relevantes(df):
         # Copia o data frame
         df_cp = df.copy()
-        # Cria coluna do mês por extenso
-        df_cp['dt_ano_mes'] = df_cp.index.year.astype('str') + '_' + df_cp.index.month.astype('str')
+        # Cria coluna do mês por extenso (pode dar erro pois foi incluído depois)
+        df_cp['dt_ano_mes'] = [str(dt.year) + str(dt.month).zfill(2) for dt in df_cp.index]
         # Deleta coluna do total
         df_cp.drop(['total'],axis=1,inplace=True)
         # Pega o último mês, que vai servir de referência para a ordenação

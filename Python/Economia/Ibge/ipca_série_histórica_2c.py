@@ -61,9 +61,9 @@ def junta_arqs(arqs_csv, pasta):
     return df2
 
 # IPCA
-arqs_csv = ['t2938.csv','t1419.csv','t7060.csv']
-pasta = caminho_base / 'Dados' / 'Ibge' / 'Tabelas'
-df = junta_arqs(arqs_csv=arqs_csv, pasta=pasta)
+# arqs_csv = ['t2938.csv','t1419.csv','t7060.csv']
+# pasta = caminho_base / 'Dados' / 'Ibge' / 'Tabelas'
+# df = junta_arqs(arqs_csv=arqs_csv, pasta=pasta)
 
 # IPCA-15
 arqs_csv = ['t1387.csv','t1705.csv','t7062.csv']
@@ -152,7 +152,7 @@ def g_dic_contribuição(df, cod_D1C, categoria):
     
     return dicionário1
 
-dicCatIBGE = g_dic_contribuição(df, cod_D1C='1', categoria='Grupo')
+# dicCatIBGE = g_dic_contribuição(df, cod_D1C='1', categoria='Grupo')
 
 # dicCatIBGE = g_dic_contribuição(df, cod_D1C='1', categoria='Subgrupo')
 
