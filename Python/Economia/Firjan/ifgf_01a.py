@@ -16,17 +16,14 @@ import os
 from pathlib import Path
 import getpass
 if getpass.getuser() == "pedro":
-    print('\nLogado de casa')
     caminho_base = Path(r'D:\Códigos, Dados, Documentação e Cheat Sheets')
 elif getpass.getuser() == "pedro-salj":
-    print('\nLogado da salj-alems')
     caminho_base = Path(r'C:\Users\pedro-salj\Desktop\Pedro Nakashima\Códigos, Dados, Documentação e Cheat Sheets')
 
 """ Mudar diretório para dados Siconfi"""
 caminho_wd = caminho_base / 'Dados' / 'Firjan'
-print('\nDiretório anterior:\n', os.getcwd())
 os.chdir(caminho_wd)
-print('\nDiretório atual:\n', os.getcwd())
+
 ##########################################################################################################
 ##########################################################################################################
 ##########################################################################################################
