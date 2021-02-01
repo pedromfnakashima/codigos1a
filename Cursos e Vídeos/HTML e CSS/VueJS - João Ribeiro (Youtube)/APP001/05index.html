@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aula 05</title>
+    <!-- Importando o o VUE -->
+    <script src="../vue.js"></script>
+</head>
+
+<body>
+
+    <div id="root">
+        O meu nome é {{nome}}.
+    </div>
+
+
+    <script>
+        let root = new Vue({
+            el: "#root", /* Elemento do html que vai estar associado à instância View (div com id #root) */
+            data: { /* colocar aqui variáveis da instância view */
+                nome: "Pedro Massao Favaro Nakashima"
+            }
+        });
+    </script>
+
+
+
+</body>
+</html>
+
+
+<!--   -->
+
+<!-- 
+
+# AULA 05: https://www.youtube.com/watch?v=6YLJH6k_ZE8&list=PLXik_5Br-zO_xQHAH9GrNR1gAefYWaKxz&index=5
+
+A ideia por trás do Vue é a criação de aplicações recorrendo a uma estrutura organizada por COMPONENTES.
+
+Todas as aplicações Vue começam por ter uma instância Vue.
+
+el: element
+
+PRÓXIMO VÍDEO: https://www.youtube.com/watch?v=Ic57QAoK5lI&list=PLXik_5Br-zO_xQHAH9GrNR1gAefYWaKxz&index=6
+
+ -->
+
+
+
+
+

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+
+
+   <p><strong>Elemento Select</strong></p>
+
+    <form name="Cadastro" method="GET" action="script.php">
+
+<!-- 
+    <fieldset>
+        <legend>Selecione as tecnologias desejadas:</legend>
+
+        <select name="tecnologias" id="tecno" multiple size="6">
+
+            <option value="ADA">ADA</option>
+            <option value="C">Linguagem C</option>
+            <option value="C++">C++</option>
+            <option value="Java">Java</option>
+            <option value="PHP">PHP</option>
+            <option value="Python" selected>Python</option>
+            <option value="Ruby">Ruby</option>
+
+        </select>
+        
+        <br>
+
+    </fieldset> -->
+
+    <!-- GRUPOS DE OPÇÕES -->
+
+    <fieldset>
+        <legend>Selecione as tecnologias desejadas:</legend>
+
+        <!-- <select name="tecnologias" id="tecno"> -->
+        <select name="tecnologias" id="tecno" multiple size="6">
+
+            <optgroup label="Linguagens Compiladas">
+                <option value="ADA">ADA</option>
+                <option value="C">Linguagem C</option>
+                <option value="C++">C++</option>
+            </optgroup>
+
+            <optgroup label="Linguagens de Script">
+                <option value="PHP">PHP</option>
+                <option value="Python" selected>Python</option>
+                <option value="Ruby">Ruby</option>
+            </optgroup>
+
+        </select>
+        
+        <br>
+
+    </fieldset>
+
+
+    <br>
+    <input type="submit" value="Enviar">
+
+    </form>
+
+
+
+
+
+
+
+
+
+</body>
+</html>

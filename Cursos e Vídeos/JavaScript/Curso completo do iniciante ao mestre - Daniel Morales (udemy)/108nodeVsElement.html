@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML Collection vs. Node list</title>
+
+    <style>
+        .container2 {
+            background-color: #ccc;
+            padding: 15px;
+        }
+
+        .container2 p {
+            border: 1px solid red;
+            padding: 10px;
+            margin: 15px;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <h1>teste DOM</h1>
+
+    <!-- insertAdjacentHTML: beforebegin -->
+    <div class="container2">
+        <!-- insertAdjacentHTML: afterbegin -->
+        <p>parágrafo 1</p>
+        <p>parágrafo 2</p>
+        <p>parágrafo 3</p>
+        <!-- insertAdjacentHTML: beforeend -->
+    </div>
+    <!-- insertAdjacentHTML: afterend -->
+
+    <div class="container">
+        <p>TESTE 1 (dentro da div.container)</p>
+        <p>aaaaaaaa <a href="#">link</a> bbbbbb </p>
+        <p>teste2</p>
+
+        <h2>Lista</h2>
+        <ul>
+            <li>item 1</li>
+            <li>item 2
+                <ul>
+                    <li>item 2.a</li>
+                    <li>item 2.b</li>
+                    <li>item 2.c</li>
+                    <li><!-- comentário aqui --></li>
+                </ul>
+            </li>
+            <li>item <a href="#">link</a></li>
+        </ul>
+
+    </div>
+
+    <script src="108nodeVsElement.js"></script>
+    
+</body>
+
+</html>

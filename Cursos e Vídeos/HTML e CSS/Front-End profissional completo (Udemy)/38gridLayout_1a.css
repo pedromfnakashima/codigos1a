@@ -1,0 +1,47 @@
+/* 
+https://css-tricks.com/snippets/css/complete-guide-grid/
+*/
+
+#principal {
+    /* GRID LAYOUT: */
+    display: grid; /* essa linha define o grid layout */
+    /*  */
+    grid-template-areas: "cabecalho vazio"
+                         "menu      menu"
+                         "conteudo  aside"
+                         "rodape    rodape"
+}
+
+.cabecalho {
+    background-color: red;
+    /* valor do grid-area = mesmo do #principal -> grid-template-areas */
+    grid-area: cabecalho;
+}
+
+.menu {
+    background-color: blue;
+    /* valor do grid-area = mesmo do #principal -> grid-template-areas */
+    grid-area: menu;
+}
+
+.conteudo {
+    background-color: green;
+    /* valor do grid-area = mesmo do #principal -> grid-template-areas */
+    grid-area: conteudo;
+}
+
+.conteudo-secundario {
+    background-color: violet;
+    /* valor do grid-area = mesmo do #principal -> grid-template-areas */
+    grid-area: aside;
+}
+
+.rodape {
+    background-color: darkgoldenrod;
+    /* valor do grid-area = mesmo do #principal -> grid-template-areas */
+    grid-area: rodape;
+}
+
+
+
+

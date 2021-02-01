@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elementos de Formulários: Botões</title>
+
+    <style>
+
+        .estilo {
+            background-color: lightblue;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+    
+    <p><strong>Controles para Botões</strong></p>
+
+    <form name="Cadastro" method="GET" action="script.php">
+
+        <label for="nomeU">Digite seu nome:
+            <input type="text" name="nome" id="nomeU"><br>
+        </label>
+        <br>
+
+        <input type="submit" name="enviar" value="Enviar">
+
+        <input type="reset" name="reset" value="Apagar"><br><br>
+
+        <!-- <button type="button" onclick="alert('Bom dia!')" class="estilo">Executar JavaScript</button><br><br> -->
+        <button type="button" onclick="console.log('Bom dia!')" class="estilo">Executar JavaScript</button><br><br>
+        
+        <input type="image" id="btnImagem" alt="Botão Gráfico" src="imgBotao.jpg"><br>
+
+
+
+    </form>
+
+
+
+
+
+
+</body>
+</html>

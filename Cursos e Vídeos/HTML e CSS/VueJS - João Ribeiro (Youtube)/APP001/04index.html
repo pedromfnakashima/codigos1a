@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aula 04</title>
+    <!-- Importando o o VUE -->
+    <script src="../vue.js"></script>
+</head>
+
+<body>
+
+    <div id="root">
+        <p>{{nome}}</p> <!-- No console do Chrome, faz mudar o nome que aparece: root.nome = "Fulano de tal" -->
+    </div>
+
+    <script>
+
+        let root = new Vue({
+            el: "#root",
+            data: {
+                nome: "Pedro Nakashima"
+            }
+        });
+
+    </script>
+    
+</body>
+</html>
+
+<!-- 
+
+# AULA 04: 
+
+
+ -->

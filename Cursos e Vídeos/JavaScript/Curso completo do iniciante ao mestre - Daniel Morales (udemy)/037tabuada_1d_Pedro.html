@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tabuada</title>
+</head>
+
+<body>
+    
+    <h1>Funções - tabuada</h1>
+    <button onclick="mostrarTabuada2(6)">Teste 1</button><br><br>
+    <button onclick="mostrarTabuada3(5)">Teste 2</button><br><br>
+    <button onclick="mostrarTabuada()">Mostrar Tabuada</button><br><br>
+    <!-- <button>Mostrar Tabuada</button><br><br> -->
+    <button onclick="limpaDiv()">Limpar Tabuada</button><br><br>
+
+    <div id="output"></div>
+
+    <script>
+
+        const output = document.getElementById('output'); // essa variável é importantíssima. É O ELEMENTO HTML.
+
+        function mostrarTabuada() {
+            // output.innerHTML = 'valor qualquer <br> pula linha'
+            // let número = 5
+            let número = Number(prompt('Digite um número de 0 a 10'));
+            // console.log(typeof número);
+
+            let limite = 10
+            let texto = ''
+            for (let i=1; i<=limite; i+=1) {
+                // document.write(`${i} x ${número} = ${i * número} <br>`);
+                texto += `${i} x ${número} = ${i * número} <br>`;
+            }
+            output.innerHTML = texto; // essa variável é importantíssima. É O CONTEÚDO DO ELEMENTO HTML.
+        }
+        // mostrarTabuada();
+        function mostrarTabuada2(valor) {
+            // output.innerHTML = 'valor qualquer <br> pula linha'
+            // let número = 5
+            let número = Number(valor);
+            // console.log(typeof número);
+
+            let limite = 10
+            let texto = ''
+            for (let i=1; i<=limite; i+=1) {
+                // document.write(`${i} x ${número} = ${i * número} <br>`);
+                texto += `${i} x ${número} = ${i * número} <br>`;
+            }
+            output.innerHTML = texto; // essa variável é importantíssima. É O CONTEÚDO DO ELEMENTO HTML.
+        }
+        // mostrarTabuada2(5);
+
+        function limpaDiv() {
+            output.innerHTML = '';
+        }
+
+        function mostrarTabuada3(limite) {
+            // output.innerHTML = 'valor qualquer <br> pula linha'
+            let número = 5
+            // let número = Number(valor)
+            // console.log(typeof número);
+
+            // let limite = 10
+            limite = Number(limite);
+            console.log(`Valor de limite ${limite}`);
+
+            let texto = ''
+            for (let i=1; i<=limite; i+=1) {
+                // document.write(`${i} x ${número} = ${i * número} <br>`);
+                texto += `${i} x ${número} = ${i * número} <br>`;
+            }
+            output.innerHTML = texto; // essa variável é importantíssima. É O CONTEÚDO DO ELEMENTO HTML.
+        }
+        // mostrarTabuada3(5);
+
+    </script>
+
+</body>
+
+</html>

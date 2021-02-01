@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+
+
+    <script>
+
+        let número = prompt('Digite um número');
+
+        // SEM LOOPING
+        // document.write(`1 x ${número} = ${1 * número}<br>`);
+        // document.write(`2 x ${número} = ${2 * número}<br>`);
+        // document.write(`3 x ${número} = ${3 * número}<br>`);
+
+        // COM O WHILE
+        // let índice = 0
+        // while (índice < 10) {
+        //     índice += 1;
+        //     document.write(`${índice} x ${número} = ${índice * número}<br>`);
+        // }
+
+        // COM O FOR
+        // for (let j=1; j<=10; j+=1) {
+        //     document.write(`${j} x ${número} = ${j * número}<br>`);
+        // }
+
+        // DOWHILE (garante que o código seja executado ao menos uma vez, mesmo que a condição inicial seja falsa, como se índice = 11; a difereça para o while, é que no do wilhe primeiro vai ser executado e depois vai ser avaliado)
+        let índice = 11
+        do {
+            document.write(`${índice} x ${número} = ${índice * número}<br>`);
+            índice += 1
+        }
+        while (índice <= 10)
+
+
+
+    </script>
+
+
+
+
+
+
+    
+</body>
+</html>

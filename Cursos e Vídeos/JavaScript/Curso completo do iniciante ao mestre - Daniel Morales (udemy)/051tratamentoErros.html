@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tratamento de erros</title>
+</head>
+
+<body>
+    <h1>Abrir o console do chrome</h1>
+    
+    <script src="051sum.js"></script>
+
+    <script>
+        // console.log(sum(3,5));
+        // alert(sum(3,8));
+        // document.write(sum(4,2));
+
+        // passando uma string como argumento de sum ->
+        // console.log(sum('a',5));
+
+        // TRATAMENTO DE ERROS:
+        try {
+            let soma = sum('a',5);
+        }
+        catch(e) { // é executado se ocorrer erro
+            console.log(`Ocorreu o erro: ${e}`);
+            console.log(`Mensagem do erro: ${e.message}`);
+        }
+        finally {// sempre é executado
+            console.log('bloco finally'); 
+        }
+        
+
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+
+<body>
+    
+    <p><strong>Elemento Datalist</strong></p>
+
+   <form name="Cadastro" method="GET" action="script.php">
+
+        <label for="bebida">Digite a bebida desejada:</label>
+        <input type="text" name="bebida" id="bebida" list="idbebidas">
+
+        <datalist id="idbebidas">
+            <option value="Cerveja">
+            <option value="Chopp">
+            <option value="Vinho Tinto">
+            <option value="Vinho Rosé">
+            <option value="Campari">
+            <option value="Gin Tônica">
+        </datalist>
+
+        <br><br>
+
+        <button type="submit" nampe="envio" value="Enviar">
+            <p>Solicitar Bebida</p>
+        </button>
+
+   </form>
+
+</body>
+</html>

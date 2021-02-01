@@ -1,0 +1,174 @@
+/* DICAS (sites):
+https://css-tricks.com/snippets/css/a-guide-to-flexbox/
+flexbox.help: http://flexbox.help/
+flexyboxes: https://the-echoplex.net/flexyboxes/
+*/
+
+/*
+ATRIBUTOS DO CONTAINER:
+- flex-direction: 
+- flex-wrap: 
+- flex-content: 
+- align-items: 
+*/
+
+
+#container {
+    /* Configurações gerais: */
+    background: #999; /* cor de fundo */
+    width: 250px; /* largura */
+    height: 250px; /* altura */
+    /* FLEXBOX: */
+    display: flex; /* essa linha define o flexbox */
+    flex-direction: row; /* OPÇÕES: row (padrão), column, row-reverse, column-reverse  */
+    flex-wrap: nowrap; /* OPÇÕES: nowrap (padrão), wrap, wrap-reverse  */
+    justify-content: space-evenly; /* alinhamento horizontal; OPÇÕES: flex-start (padrão), flex-end, center, space-around, space-between, space-evenly */
+    align-items: center; /* alinhamento vertical; OPÇÕES: flex-start (padrão), flex-end,  center, stretch (não funciona se o box tiver altura - tirar heigth do .item), baseline */
+
+
+
+}
+
+.item {
+    /* Configurações gerais: */
+    height: 50px;
+    width: 50px;
+    background-color: blue;
+    margin: 5px; /* distância entre as caixas internas */
+    color: white; /* cor do texto */
+    padding: 2px; /* margem interna (distância entre o texto e a margem) */
+    text-align: center; /* alinhamento do texto */
+}
+/*
+===============================================
+Linha abaixo faz referência à n-ésima caixa
+===============================================
+*/
+/* .item:nth-child(2){
+    font-size: 5px;
+}
+ */
+
+/*
+===============================================
+ATRIBUTOS DOS ITENS
+===============================================
+FLEX-GROWTH
+Padrão: 0
+Define a capacidade de um item flexível crescer, se necessário. Aceita um valor sem undiade que serve como proporção. Ele determina qual a quantidade de espaço disponível dentro do conteiner flexível que o item deve ocupar.
+Se todos os itens estiverem flex-grow definidos com o 1, o espaço restante no conteiner será distribuído igualmente para todas as filhas; Se uma das filhas tiver um valor 2, o espaço restante ocuparia o dobro do espaço que as outras (ou pelo menos tentará). Números negativos são inválidos.
+===============================================
+FLEX-SHRINK
+Padrão: 1
+Define a capacidade de um item flexível encolher, se necessário. Números negativos são inválidos.
+===============================================
+ORDER
+Padrão: 0
+Permite mudar os elementos de posição. Trabalha com números positivos e negativos. Negativo, caso queira que volte casas. Positivos, caso queira que vá para frente.
+*/
+
+/*
+===============================================
+ABAIXO, fazemos: 
+- box 2 adiantar uma casa (toma o lugar do box 3);
+===============================================
+*/
+
+/* .item:nth-child(1){
+    flex-grow:1;
+}
+
+.item:nth-child(2){
+    flex-shrink:3;
+    order: 1;
+}
+
+.item:nth-child(3){
+    flex-grow:1;
+} */
+
+/*
+===============================================
+ABAIXO, fazemos: 
+- box 2 voltar uma casa (toma o lugar do box 1);
+===============================================
+*/
+
+/* .item:nth-child(1){
+    flex-grow:1;
+}
+
+.item:nth-child(2){
+    flex-shrink:3;
+    order: -1;
+}
+
+.item:nth-child(3){
+    flex-grow:1;
+} */
+
+/*
+===============================================
+ABAIXO, fazemos: 
+- box 1 adiantar duas casa (toma o lugar do box 3);
+- box 2 adiatar uma casa (toma o lugar do 2);
+===============================================
+*/
+
+.item:nth-child(1){
+    flex-grow:1;
+    order:2;
+}
+
+.item:nth-child(2){
+    flex-shrink:3;
+    order: 1;
+}
+
+.item:nth-child(3){
+    flex-grow:1;
+}
+
+
+/*
+===============================================
+ABAIXO, a caixa 2 reduziu o tamanho com relação às outras duas. As outras duas ocupam o espaço que sobra.
+===============================================
+*/
+
+/* .item:nth-child(1){
+    flex-grow:1;
+}
+
+.item:nth-child(2){
+    flex-shrink:3;
+}
+
+.item:nth-child(3){
+    flex-grow:1;
+} */
+
+
+/*
+===============================================
+ABAIXO, caixa 2 maior do que as demais
+===============================================
+*/
+
+/* .item:nth-child(2){
+    flex-grow:2;
+} */
+
+/*
+===============================================
+ABAIXO, caixa 1 de um tamanho, caixa 2 maior, e a caixa 3 com a sobra
+===============================================
+*/
+
+/* .item:nth-child(1){
+    flex-grow:1;
+
+.item:nth-child(2){
+    flex-grow:3;
+}
+ */

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Array.from() e Array.of()</title>
+</head>
+
+<body>
+    <h1>O Array.from é especialmente útil quando se tem um objeto que SE PARECE com um um array, e eu quero TRANSFORMAR em um Array de verdade para que eu possa ter acesso aos MÉTODOS e PROPRIEDADES de um Array de verdade</h1>
+
+    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime et, optio vitae laboriosam ratione beatae excepturi soluta eius neque fugiat, repellat deleniti. Ut, rem eaque aperiam quia quasi necessitatibus mollitia!</p>
+    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime et, optio vitae laboriosam ratione beatae excepturi soluta eius neque fugiat, repellat deleniti. Ut, rem eaque aperiam quia quasi necessitatibus mollitia!</p>
+    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime et, optio vitae laboriosam ratione beatae excepturi soluta eius neque fugiat, repellat deleniti. Ut, rem eaque aperiam quia quasi necessitatibus mollitia!</p>
+
+    <script>
+
+        // const arr1 = new Array(1,2,3)
+        // const arr2 = Array.from(arr1) // faz uma cópia de arr1
+        // arr2.push(4,5)
+        // const arr3 = Array.of(3)
+        
+        // console.log(arr1)
+        // console.log(arr2)
+        // console.log(arr3)
+        // console.log(arr1.length)
+        // console.log(arr3.length)
+
+        // Exemplo 01 - colocando número antes dos parágrafos com o forEach (não funciona nos browsers mais antigos)
+        // const parágrafos = document.querySelectorAll('p')
+        // console.log(parágrafos)
+        // parágrafos.forEach(function(p,i){
+        //     // console.log(p.textContent)
+        //     p.textContent = `${++i} - ${p.textContent}`
+        // })
+
+        // Exemplo 02 - colocando número antes dos parágrafos com o forEach. Importante: parágrafos parece com array, mas não é array; precisa ser transformado para poder usar o .map
+        let parágrafos = document.querySelectorAll('p')
+        console.log(parágrafos)
+        parágrafos = Array.from(parágrafos)
+        parágrafos.map(function(p,i){
+            // console.log(p.textContent)
+            p.textContent = `${++i} - ${p.textContent}`
+        })
+        
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,343 @@
+1 
+2 https://www.youtube.com/watch?v=hMAvQtQ97eE&list=PLucm8g_ezqNqenmYtyuCiOeUflgRAGMTr&index=2
+
+
+
+
+Tags <thead>, <tbody> e <tfoot>
+
+- Definições estruturais; Esses elementos permitem especificar cada parte da tabela: cabeçalho, corpo e rodapé, facilitando a semântica e formatação;
+- Muito úteis para estilização e layout, permitindo aplicar CSS facilmente na tabela;
+- Os navegadores podem usar essas tags para habiltiar a rolagem do corpo da tabela de forma independente de seu cabeçalho e rodapé;
+- Além disso, ao imprimirmos uma tabela que ocupa várias páginas, o cabeçalho e o rodapé da tabela podem ser impressos no início e final de cada página;
+- Esses elementos não afetam o layout da tabela por padrão mas podem ser estilizadas via CSS.
+
+Como usar as tags <thead>, <tbody> e <tfoot>
+
+<thead> é usada para agrupar conteúdo de um cabeçalho de tabela. Deve vir após tags <caption> e <colgroup>, e antes de elementos <tbody>, <tfoot> e <tr>;
+
+<tbody> é usada para agrupar o conteúdo do corpo; Deve vir após tags <caption>, <colgroup> e <thead>;
+
+<tfoot> é usada para agrupar conteúdo do rodapé. Deve vir após tags <caption>, <colgroup> e <thead>.
+
+ELEMENTOS DE BLOCO E ELEMENTOS INLINE
+
+ELEMENTOS DE NÍVEL DE BLOCO - usados no corpo da página. Ocupam um bloco de espaço e começam em uma nova linha. Geralmente há uma linha vazia acima e abaixo do bloco. Podem conter elementos inline e outros elementos de nível de bloco. Exemplos: <p>, <h1> - <h6>.
+
+ELEMENTOS INLINE - como o nome sugere são 'na-linha'. Podem começar em qualquer lugar em uma linha. Só podem conter dados (como texto) ou outros elementos inline. Exemplos: <em>, <strong>.
+
+
+ELEMENTO DIV
+É usado para definir uma divisão ou uma seção do documento. Não é um elemento semântico, no entanto, é comumente usado quando não há uma melhor atribuição semântica..
+Uma div é como um contêiner genérico que pode conter vários elementos, como parágrafos, imagens, links, tabelas, etc.
+Usado para agrupar elementos para fins de aplicação de estilo, por meio de um atributo id ou class.
+Uma <div> deve ser usada se você não puder usar nenhum outro elemento semântico em seu lugar.
+
+ELEMENTO SPAN
+Assim como o <div>, <span> não é um elemento semântico. Só devemos usá-lo se nenhum outro elemento semântico for apropriado.
+<div> e <span> possuem a mesma finalidade, mas são aplicados em diferentes níveis:
+- <div> é um elemento de nível de BLOCO (para um BLOCO de espaço);
+- <span> é um elemento de LINHA (para dentro de uma LINHA ou FRASE).
+
+APLICAÇÕES DO ELEMENTO SPAN:
+- Usamos o elemento <span> para adicionar um estilo a parte de uma FRASE (inline);
+- Manipular PARTE DE UMA LINHA usando JavaScript;
+- Quando nenhum outro elemento HTML for aplicável, podemos usar <span> (e <div>) para adicionar estilos com classe e id.
+Atenção: Há vários outros elementos inline semânticos, como <abbr>, <cite> e <code>, que devem ser usados sempre que possível, em vez de <span>.
+
+
+ELEMENTO <img>
+O elemento <img> é empregado para inserir imagens em um docuemnto HTML.
+
+Sintaxe básica:
+<img src="arquivo.imagem">
+
+O arquivo.imagem pode ser uma figura armazenada no mesmo servidor da página onde será exibida, estar em uma subpasta ou ainda em um endereço remoto, como outro site (usar URL neste caso).
+
+ELEMENTO <img> - Atributos
+
+src="imagem" - Arquivo de imagem a ser exibido;
+
+alt="texto alternativo" - Texto alternativo a ser exibido no lugar da imagem (descrição textual da imagem);
+
+width="largura" - Largura em pixels da imagem;
+
+height="altura" - Altura em pixels da imagem;
+
+title="Texto de suporte" - Texto auxiliar exibido ao passar o mouse na imagem. Não recomendado por conta de problemas de acessibilidade.
+
+ELEMENTO <img> - Formatos de imagem:
+
+Principais formatos de imagens suportadas:
+- JPEG;
+- GIF;
+- PNG;
+- BMP;
+- SVG.
+
+ELEMENTOS <figure> e <figcaption>
+
+O elemento <figure> representa imagem, uma ilustração, um diagrama, um trecho de código, frequentemente com uma legenda.
+O elemento <figcaption> representa a legenda adicionada ao elemento <figure>.
+
+FORMULÁRIO
+
+Um formulário é criado com o uso do elemento <form>, fechado com </form>
+
+<form name="nome_formulário" action="script" method="método_envio" enctype="tipo" accept-charset="condificação">
+
+Controles do formulário
+
+</form>
+
+
+FORMULÁRIO - SINTAXE BÁSICA E Atributos
+- NAME é o nome do formulário, que pode ser usado para referenciá-lo em uma função, por exemplo.
+- ACTION indica o script que deverá efetuar o processamento dos dados inseridos no formulário. Em nosso caso, será um script em PHP.
+- METHOD é o método de envio dos dados para o servidor web onde está o script de processamento. Pode ser GET ou POST.
+- ENCTYPE permite definir o formato com que os dados serão codificados antes de serem enviados ao servidor http. Somente é válido quando o método de envio for POST.
+
+ELEMENTOS DE UM FORMULÁRIO HTML
+Existem vários tipos de elementos que podem ser usados em um formulário HTML, dependendo do tipo de informação que se deseja enviar ao servidor.
+
+Os elementos mais comuns são:
+- input
+- select
+- option
+- textarea
+- button
+- label
+
+ELEMENTO INPUT
+De acordo com Mozilla MDN:
+" O elemento input é usado para criar controles interativos para formulários baseados na web para receber dados do usuário."
+
+Sintaxe geral:
+<input type="tipo" name="nome_controle" id="id_contole" value="valor_inicial" size="tamanho" maxlength="caracteres" [checked] />
+
+ATRIBUTOS DO ELEMENTO INPUT
+- type: tipo de controle a ser utilizado. O padrão é text.
+- name: nome do campo.
+- id: identificação do campo.
+- value: valor inicial do campo; é opcional, exceto para os tipos de checkbox e radio.
+- autofocus: especificar o controle a receber foco de entrada ao carregar a página.
+- size: tamanho do controle; difere de acordo com a fonte, que no geral possui tamanho variável.
+- maxlength: número máximo de caracteres que podem ser digitados no campo; válido somente para text e password.
+- checked: define se um campo deve estar marcado inicialmente, válido para os tipos de checkbox e radio.
+
+ATRIBUTO TYPE DO ELEMENTO INPUT - VALORES
+- text: controle de texto de linha única(simples).
+- password: caixa de senha (valor não mostrado).
+- checkbox: campo que permite escolher uma entre várias opções.
+- hidden: campo não visível para o usuário, usado para o envio de dados ao servidor sem que o usuário interfira.
+- button: botão de uso geral.
+- submit: botão de envio do formulário.
+- reset: botão para "zerar" o formulário, limpando todos os campos e restaurando valorse iniciais.
+- file: campo usado para envio de arquivos.
+
+ATRIBUTO TYPE DO ELEMENTO INPUT - VALORES (HTML5)
+- color: controle para especificação de cores.
+- date: controle para inserir uma data (ano, mês e dia, sem horário).
+- datetime: controle para inserir data e horário (hora, minuto, segundo e fração de segundo) baseado no fuso horário UTC.
+- datetime-local: inserir data e horário, sem fuso horário.
+- email: campo para editar um endereço de e-mail.
+- month: inserir mês e ano, sem fuso horário.
+- number: controle para inserir um número de ponto flutuante.
+- range: controle para inserir um número cujo valor exatao não é importante, dentro de uma faixa especificada.
+- tel: controle para inserir um número de telefone.
+- time: inserir um horário sem fuso horário.
+- url: campo para editar uma URL. É validado para ser vazio ou uma URL absoluta válida antes de ser enviado.
+
+USANDO OS CONTROLES EM FORMULÁRIOS
+Criando um formulário vazio:
+
+<form name"cadastro" action="processa.php" method="POST" accept-charset='UTF-8'>
+
+CONTROLES EM FORMULÁRIOS - CAIXA DE TEXTO simples
+Acrescentar ao formulário criado anteriormente:
+Nome: <input type="text" name="nome" size="30" placeholder="Digite seu nome aqui"><br>
+
+CONTROLE <label>
+
+O controle <label> ("etiqueta") representa uma etiqueta para um item na interface.
+Pode ser associado a outro controle, englobando-o ou por meio do atributo for.
+
+Acessibilidade: Leitores de tela leem o label quando o item associado é focado.
+
+Clicar no label ativa ou foca o item associado, aumentado sua área ativa.
+
+BOTÕES DE RÁDIO
+Elemento usado geralmente em grupos chamados de radio groups, que são coleções de botões que descrevem um conjunto de opções relacionadas.
+Somente um botão de rádio em um grupo pode ser selecionado por vez.
+
+BOTÕES DE RÁDIO - ATRIBUTOS
+value: valor do botão de rádio, que será enviado pelo formulário. Identifica o botão selecionado.
+name: identificação do grupo ao qual pertence um botão de rádio.
+checked: indica um valor padrão opcional enviado caso o usuário não clique em nenhum botão do grupo.
+
+CHECKBOX
+Elemento usado para seleção de itens por meio do clique em caixas de verificação.
+Muitas vezes é encontrado em grupos nos formulários.
+Vários checkboxes podem ser selecionados de uma vez.
+Aplicações básicas:
+- Quando é necessária a confirmação de uma informação.
+- Quando uma informação pode necessitar de múltiplos valores.
+
+ELEMENTO <fieldset>
+Elemento empregado para dividir um formulário em blocos lógicos, para organização e estilização.
+É possível agregar um título a cada bloco, por meio do uso do elemento <legend>.
+
+FIELDSET = CONJUNTO DE CAMPOS
+
+CAIXA DE COMENTÁRIOS: <textarea>
+
+Controle de edição para uma caixa de texto, para que o usuário possa entrar com um texto extenso.
+Útil para recolher informações como comentários ou sugestões do usuário, ou informações textuais mais extensas, como um currículo online.
+
+BOTÕES
+Os botões são usados apra executar ações com os dados do formulário. Existem quatro tipos:
+- Botão submit - Coleta os dados inseridos no formulário e os envia a seu destino.
+- Botão image - Igual ao submit, porém mostrando uma imagem clicável em vez do botão clássico.
+- Botão reset - Limpa o conteúdo do formulário.
+- Botão button - Sem comportamento padrão; 
+
+CONTROLE DATALIST (HTML5)
+Um controle datalist é empregado para adicionar sugestões a um campo de texto enquanto o usuário digita algo.
+A lista é vinculada a uma caixa de texto qualquer por meio de seu id.
+
+ELEMENTO <audio>
+O elemento <audio> é empregado para incorporar conteúdo de som em um documento HTML.
+
+Sintaxe:
+<audio src="arquivo" atributos>
+</audio>
+
+ELEMENTO <audio> - ATRIBUTOS
+- autoplay - Inicia o áudio automaticamente.
+- controls - Com esse atributo, o navegador mostrará controles de reprodução do áudio, como navegação e volume.
+- loop - se especificado, o áudio repete automaticamente.
+- muted - se especificado, o áudio é inicializado silenciado.
+- preload - usado para carregar arquivos grandes. Possui 3 valores:
+  - none: o áudio não será pré-carregado.
+  - auto: carrega o áudio todo antes da execução.
+  - metadata: carrega apenas metadados do arquivo.
+- src - URL do áudio que será incorporado no documento, local ou remoto.
+
+ELEMENTO <video>
+O elemento <video> é empregado para incorporar conteúdo de vídeo em um documento HTML.
+
+Sintaxe:
+<video src="arquivo" atributos>
+</video>
+
+ELEMENTO <video> - ATRIBUTOS
+- autoplay - Inicia o vídeo automaticamente assim que possível.
+- controls - controles de reprodução do vídeo.
+- loop - se especificado, o vídeo reinicia sua execução ao terminar automaticamente.
+- width - largura da área de exibição do vídeo, em pixels.
+- height - altura da área de exibição do vídeo, em pixels.
+- muted - se especificado, o áudio é inicializado silenciado.
+- preload - usado para carregar arquivos grandes. Possui 3 valores:
+  - none: o vídeo não será pré-carregado.
+  - auto: carrega o vídeo todo antes da execução.
+  - metadata: carrega apenas metadados do arquivo.
+- poster - imagem prévia do vídeo, exibida antes de seu carregamento.
+- src - URL do vídeo que será incorporado no documento, local ou remoto.
+
+ELEMENTO <source>
+Podemos especificar vários arquivos de mídia usando o elemento <source>, de modo a disponibilizar o áudio ou vídeo (ou elementos <picture>) em formatos diferentes, para reproduçção em navegadores que os suportem.
+
+Sintaxe:
+
+<audio | video>
+    <source src="arq.formato1" type="audio|video/formato1">
+    <source src="arq.formato2" type="audio|video/formato2">
+    <source src="arq.formato3" type="audio|video/formato3">
+</audio | video>
+
+https://www.youtube.com/watch?v=7m4KxdXHdhY&list=PLucm8g_ezqNqenmYtyuCiOeUflgRAGMTr&index=26
+
+CSS - Cascading Style Sheets
+
+Documentos CSS são empregados para estilizar o conteúdo de um documento HTML, ou seja, controlar a apresentação de documentos de marcação.
+
+O HTML controla a estrutura de uma página, ao passo que o CSS determina a sua aparência.
+
+Uma folha de estilos é uma coleção de regras de formatação aplicadas a um documento HTML.
+
+COMO APLICAR O CSS
+
+As regras do CSS podem ser aplicadas de três formas distintas:
+- inline: estilos aplicados diretamente em um elemento HTML, dentro do documento.
+- incorporado: o elemento style permite aplicar várias regras de uma vez no próprio documento HTML.
+- folha de estilos externa: um documento com extensão .css permite aplicar regras a um website inteiro de uma vez.
+
+Os estilos são aplicados na ordem em que são encontrados, cascateando ddos estilos externos até os estilos inline.
+
+Sintaxe de uma regra CSS
+
+Regra CSS é uma unidade básica de construção de uma folha de estilos.
+
+Sintaxe de uma regra:
+
+seletor {propriedade:valor;}
+
+A regra é composta de um seletor (alvo da regra) e de uma declaração (parâmetros de estilo).
+
+A declaração, por sua vez, é composta por um par de propriedade: valor
+
+EXEMPLO DE UMA REGRA CSS
+
+Abaixo temos uma regra CSS que aplica três declarações:
+
+p {
+  text-align: center;
+  color: yellow;
+  font-size: 20px;
+}
+
+- Seletor: elemento p (regra aplicada a parágrafos).
+- Declarações: text-align: center; color:yellow; font-size: 20px;
+- Propriedades: text-align, color e font-size.
+
+TIPOS DE SELETORES
+
+1. Seletor Universal: Representa todos os elementos.
+Simbolizado pelo *
+
+* {color:green;} /* todos os elementos do documento terão a cor verde
+
+2. Seletor de Tipo (ou de Elemento): Representa um determinado elemento.
+
+p {color:red;} /* todos os parágrafos terão texto na cor vermelha
+h1 {color: yellow;} /* todos os elementos h1 terão texto em amarelo
+
+3. Seletor de Classe: Aplica estilo a elementos com atributo class definido.
+
+.verde {color:green;} /* Aplica cor verde aos elementos que possuam o atributo class="verde".
+
+h1.verde {color: green;} /* Aplica cor verde apenas elementos h1 que possuam o atributo class="verde".
+
+4. Seletor de ID: Aplica estilo a elementos com o atributo id definido.
+
+#corAzul {color: blue;} /* Aplica cor azul ao elemento que possua o atributo id="corAzul".
+
+h1#corAzul {color: blue;} /* Aplica cor azul ao elemento h1 que possua o atributo id="corAzul".
+
+CONVENÇÕES PARA NOMES DE ID E Classe
+
+Algumas convenções importantes para seguir ao criar nomes para atributos id e class:
+- Não usar espaços em branco;
+- Não empregar caracteres especiais;
+- CSS é case-sensitive.
+
+
+
+
+
+
+
+
+
+
+

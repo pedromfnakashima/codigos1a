@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    
+    <script>
+
+        // DECLAÇÃO DE FUNÇÃO
+        // function ola() {
+        //     document.write('olá, mundo, da função ola');
+        // }
+
+        // ola();
+
+        // EXPRESSÃO DE FUNÇÃO
+        // const ola2 = function() {
+        //     document.write('olá, mundo da função 2');
+        // }
+
+        // ola2();
+
+        // ARROW FUNCTION
+        // const f1 = (x => x + 1);
+        // document.write(f1(2));
+
+        // const f2 = () => {
+        //     document.write('olá mundo de f2');
+        // }
+        // f2();
+
+        // 035 FUNÇÕES QUE RETORNAM VALORES
+
+        // function obtemDiaSemana() {
+        //     return 6 + '<br>'
+        // };
+        // document.write(obtemDiaSemana());
+        // let dia = obtemDiaSemana();
+        // document.write(dia);
+
+        // function obtemDiaSemana() { // retorna o dia da semana
+        //     return new Date().getDay();
+        // }
+        // document.write(obtemDiaSemana());
+
+        // function obtemDiaSemana() { // retorna o dia da semana
+        //     let diaSemana = new Date().getDay();
+        //     return diaSemana;
+        // }
+        // document.write(obtemDiaSemana());
+
+        // 036 FUNÇÕES QUE RECEBEM PARÂMETROS
+        // function somar(a,b) {
+        //     let c = a + b;
+        //     let c_br = c + '<br>'
+        //     return c_br;
+        // }
+        // document.write(somar(2,3));
+        // document.write(somar(4,5));
+
+        // function somar2(a,b,tag) {
+        //     let c = a + b;
+        //     let c_br = c + tag
+        //     return c_br;
+        // }
+        // document.write(somar2(2,3,'<br>'));
+        // document.write(somar2(4,3,'<br>'));
+
+        // function somar3(a,b,tag) {
+        //     let c = a + b;
+        //     let c_tag = `<${tag}>${c}</${tag}>`
+        //     return c_tag;
+        // }
+        // document.write(somar3(8,3,'p'));
+        // document.write(somar3(5,3,'p'));
+        // document.write(somar3(8,3,'h1'));
+        // document.write(somar3(5,3,'h2'));
+
+        // closure (Pedro)
+        // function html_tag(tag){
+        //     function wrap_text(msg){
+        //         document.write('<' + tag + '>' + msg + '</' + tag + '>')
+        //     }
+        //     return wrap_text
+        // }
+        // let h1 = html_tag('h1')
+        // let h2 = html_tag('h2')
+        // h1('Esse é um texto com título h1');
+        // h2('Esse é um texto com título h2');
+        // h2('Esse é um outro texto com título h2');
+
+        // closure (Pedro)
+        // function html_tag(tag){
+        //     function wrap_text(msg){
+        //         let textoComTag = '<' + tag + '>' + msg + '</' + tag + '>';
+        //         return textoComTag;
+        //     }
+        //     return wrap_text
+        // }
+        // let h1 = html_tag('h1');
+        // let h2 = html_tag('h2');
+        // let p = html_tag('p');
+        // document.write(h1('Esse é um título h1'));
+        // document.write(p('Este é um parágrafo'));
+        // document.write(p('Este é um outro parágrafo'));
+        // document.write(h2('Esse é um título h2'));
+        // document.write(p('Este é um mais um parágrafo'));
+        
+        // VALORES PADRÃO
+        function somar(n1 = 0, n2 = 0) {
+            let soma = n1 + n2;
+            return soma + '<br>';
+        };
+        document.write(somar(2))
+        document.write(somar(2,3))
+
+    </script>
+
+</body>
+
+</html>

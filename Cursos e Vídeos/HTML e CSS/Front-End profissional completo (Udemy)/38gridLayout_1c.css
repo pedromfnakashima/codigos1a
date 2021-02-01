@@ -1,0 +1,119 @@
+/* 
+https://css-tricks.com/snippets/css/complete-guide-grid/
+
+Duas formas de definir:
+- com grid-template
+- sem grid-template, mas com 
+--grid-row-start: valor;
+--grid-row-end: valor;
+--grid-column-start: valor;
+--grid-column-end: valor;
+
+Ver as observações.
+!Importante: sempre colocar 1 a mais nos ends.
+
+*/
+
+#principal {
+    /* GRID LAYOUT: */
+    display: grid; /* essa linha define o grid layout */
+    /* Linhas abaixo definem como serão dispostos os blocos */
+    /* grid-template-areas: "cabecalho cabecalho"
+                         "menu      menu"
+                         "conteudo  aside"
+                         "rodape    rodape"; */
+    
+    /* 2 enters para as linhas de cima */
+    /* Define a altura das LINHAS. Pode ser tanto definindo individualmente o valor de cada linha (em pixels) quanto usando o repeat [sintaxe: repeat(número_de_linhas, quanto de px p/ cada linha)]. Exemplos: 
+    50px 50px 50px 50px
+    repeat(1, 50px)
+    */
+    grid-template-rows: repeat(5, 50px); /* primeira_linha(cabecalho) segunda_linha(menu) terceira_linha(conteudo e aside) quarta_linha(rodape)*/
+    /* Define a largura das COLUNAS. Pode ser tanto definindo diretamente os valores de cada coluna [unidades: valores absolutos, percentuais, ou frações] quanto usando o repeat [quando quer colocar o mesmo valor para cada coluna - sintaxe: repeat(número_de_colunas, quanto_cada_coluna_ocupa)]. Exemplos: 
+    50px 50px
+    80% 20%
+    1fr 1fr OU 2fr 1fr OU 1.7fr 0.3fr
+    repeat(2, 1fr) OU repeat(2, 50%)
+    */
+    grid-template-columns: repeat(5, 1fr); /* primeira_coluna segunda_coluna */
+    /* Espaçamentro entre colunas */
+    grid-column-gap: 10px;
+    /* Espaçamentro entre linhas */
+    grid-row-gap: 10px;
+    
+}
+
+.cabecalho {
+    background-color: red;
+    /* valor do grid-area = mesmo do #principal -> grid-template-areas */
+    /* grid-area: cabecalho; */
+    /* Início e fim de elementos na posição de linhas e colunas. Obs. 1: o último não conta (por isso colocamos sempre 1 a mais; ou seja, se quisermos 2 linhas, colocamos grid-row-end:3).
+    Exemplos: 
+    grid-row-start: 1 -> começa na primeira linha
+    grid-row-end: 1 -> termina na primeira linha
+    grid-row-start: 1 -> começa na primeira linha
+    grid-row-end: 3 -> termina na segunda linha
+    */
+    grid-row-start: 1;
+    grid-row-end: 1;
+    /* Em qual coluna começa e em qual coluna termina. Obs. 2: o último não conta (por isso colocamos sempre 1 a mais; ou seja, se quisermos 5 colunas, colocamos grid-column-end:6) 
+    Exemplos (há 5 colunas): 
+    grid-column-start: 1; -> começa na primeira coluna
+    grid-column-end: 6; -> termina na quinta coluna
+    */
+    grid-column-start: 1;
+    grid-column-end: 6;
+
+}
+
+.menu {
+    background-color: blue;
+    /* valor do grid-area = mesmo do #principal -> grid-template-areas */
+    /* grid-area: menu; */
+    /* Onde começa e termina linhas e colunas. Ver explicação na class cabecalho. Obs. 3: definindo os mesmos valores que a class cabeçalho, ele fica em cima ou atrás. Para checar, basta testar com a opção: z-index:-1; ou z-index:1; Exemplo: 
+    z-index: -1;
+    z-index: 1;
+    Por isso, colocamos p/ a linha de baixo (2).
+     */
+    grid-row-start: 2;
+    grid-row-end: 2;
+    grid-column-start: 1;
+    grid-column-end: 6;
+}
+
+.conteudo {
+    background-color: green;
+    /* valor do grid-area = mesmo do #principal -> grid-template-areas */
+    /* grid-area: conteudo; */
+    /* Início e término das posições de linhas e colunas. Ver explicações das classes cabecalho e menu. */
+    grid-row-start: 3;
+    grid-row-end: 5;
+    grid-column-start: 1;
+    grid-column-end: 4;
+}
+
+.conteudo-secundario {
+    background-color: violet;
+    /* valor do grid-area = mesmo do #principal -> grid-template-areas */
+    /* grid-area: aside; */
+    /* Início e término das posições de linhas e colunas. Ver explicações das classes cabecalho e menu. */
+    grid-row-start: 3;
+    grid-row-end: 5;
+    grid-column-start: 4;
+    grid-column-end: 6;
+}
+
+.rodape {
+    background-color: darkgoldenrod;
+    /* valor do grid-area = mesmo do #principal -> grid-template-areas */
+    /* grid-area: rodape; */
+    /* Início e término das posições de linhas e colunas. Ver explicações das classes cabecalho e menu. */
+    grid-row-start: 5;
+    grid-row-end: 5;
+    grid-column-start: 1;
+    grid-column-end: 6;
+}
+
+
+
+

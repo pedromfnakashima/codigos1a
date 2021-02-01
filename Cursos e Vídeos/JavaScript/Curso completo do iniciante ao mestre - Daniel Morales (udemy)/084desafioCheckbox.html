@@ -1,0 +1,57 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>Curso Javascript Completo 2018</title>
+    <meta charset="utf-8">
+
+</head>
+
+<body>
+    <h1 id="title1">Curso Javascript Completo</h1>
+
+    <main class="cmain" id="idmain">
+        <h2>subtitulo</h2>
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. </p>
+    </main>
+
+    <form action="#">
+        <input type="text" id="txtNome" placeholder="nome"><br><br>
+        <input type="text" id="txtEmail" placeholder="email"><br><br>
+        <!-- Abaixo, pode ser tanto com o onclick quanto com o onchange -->
+        <!-- <input type="checkbox" id="contrato" onchange="enableOrDisableButton()"> -->
+        <input type="checkbox" id="contrato" onclick="enableOrDisableButton()">
+        <label for="contrato">Li e aceito o seguinte contrato</label><br><br>
+        <textarea name="" id="" cols="30" rows="10" readonly>Este contrato nos dá direito à ...</textarea><br><br>
+        <!-- <input type="submit" value="cadastrar" disabled> -->
+        <input type="submit" value="cadastrar">
+    </form>
+
+    <script>
+
+        const btn = document.querySelector('form input[type="submit"]')
+        // Setamos o btn.disabled com o JS (e não no HTML, em <input type="submit" value="cadastrar" disabled>) para permitir que o usuário envie as informações mesmo na ocasião de dar problema no carregamento do JS. Nesse caso, a validação também tem que ocorrer no lado do servidor (back-end).
+        btn.disabled = true
+
+        function enableOrDisableButton() {
+            // console.log('checkbox clicado')
+            const contrato = document.querySelector('#contrato')
+            // const btn = document.querySelector('form input[type="submit"]')
+            let checked = contrato.checked
+            // console.log(checked)
+            /* NOTAÇÃO MAIS VERBOSA: */
+            // if (checked) {
+            //     btn.disabled = false
+            // }
+            // else {
+            //     btn.disabled = true
+            // }
+            /* NOTAÇÃO MENOS VERBOSA: */
+            btn.disabled = !checked
+        }
+
+    </script>
+
+</body>
+
+</html>
