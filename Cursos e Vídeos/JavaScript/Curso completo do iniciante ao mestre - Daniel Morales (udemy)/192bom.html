@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1>Teste B.O.M. - CJS</h1>
+
+    <a href="193history.html">Vai para 193history.html</a>
+    <br />
+    <br />
+    <button>abre com método open</button>
+
+    <img
+      src="https://cdn.searchenginejournal.com/wp-content/uploads/2020/02/seo-javascript-the-good-the-bad-the-uncertainty-5e4a09b3cd5db-760x400.png"
+      alt="javaScript"
+    />
+
+    <hr />
+    <p>
+      Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ratione
+      praesentium autem dolore ut sint harum a expedita! Quibusdam aspernatur
+      vel maxime? Est quia non odio autem eveniet possimus vel tenetur.
+    </p>
+    <p>
+      Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ratione
+      praesentium autem dolore ut sint harum a expedita! Quibusdam aspernatur
+      vel maxime? Est quia non odio autem eveniet possimus vel tenetur.
+    </p>
+    <p>
+      Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ratione
+      praesentium autem dolore ut sint harum a expedita! Quibusdam aspernatur
+      vel maxime? Est quia non odio autem eveniet possimus vel tenetur.
+    </p>
+    <p>
+      Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ratione
+      praesentium autem dolore ut sint harum a expedita! Quibusdam aspernatur
+      vel maxime? Est quia non odio autem eveniet possimus vel tenetur.
+    </p>
+    <p>
+      Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ratione
+      praesentium autem dolore ut sint harum a expedita! Quibusdam aspernatur
+      vel maxime? Est quia non odio autem eveniet possimus vel tenetur.
+    </p>
+    <p>
+      Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ratione
+      praesentium autem dolore ut sint harum a expedita! Quibusdam aspernatur
+      vel maxime? Est quia non odio autem eveniet possimus vel tenetur.
+    </p>
+    <p>
+      Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ratione
+      praesentium autem dolore ut sint harum a expedita! Quibusdam aspernatur
+      vel maxime? Est quia non odio autem eveniet possimus vel tenetur.
+    </p>
+
+    <script src="192bom.js"></script>
+
+    <script>
+      let teste = 'variável de 192bom.html'; // não deu com let teste =
+      console.log('opener :>> ', opener);
+
+      function f_teste2() {
+        console.log('teste 2 chamado');
+      }
+
+      // document.querySelector('button').addEventListener('click', function () {
+      //   window.open('193history.html');
+      // });
+
+      document.querySelector('button').addEventListener('click', function () {
+        window.open('193history.html', 'nome-janela', 'width=600,height=300');
+      });
+
+      // scrollTo(0, 50);
+      // scrollBy(0, 50);
+      // scrollBy(0, -50);
+      // scrollTo(0,0)
+      // pageXOffset
+      // pageYOffset
+
+      // 'load' dispara o evento quando toda a página tiver sido carregada, INCLUSIVE OS ASSETS (IMAGENS, ETC)
+      window.addEventListener('load', function () {
+        console.log('load');
+      });
+
+      //'DOMContentLoaded' dispara o evento quando a estrutura do DOM já estiveremdisponíveis para serem manipulados pelo JavaScript
+      window.addEventListener('DOMContentLoaded', function () {
+        console.log('DOMContentLoaded');
+      });
+
+      // resize
+      window.addEventListener('resize', function () {
+        console.log('resize', innerWidth, innerHeight);
+      });
+
+      // scroll
+      window.addEventListener('scroll', function () {
+        console.log('scroll', pageYOffset);
+      });
+
+      // unload
+      window.addEventListener('unload', function () {
+        // debugger
+        console.log('unload');
+      });
+
+      // beforeunload
+      window.addEventListener('beforeunload', function () {
+        // debugger
+        console.log('beforeunload');
+      });
+    </script>
+  </body>
+</html>
