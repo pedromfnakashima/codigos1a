@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+
+  <body>
+    <button>clica</button>
+
+    <script src="210arrowFunctions.js"></script>
+
+    <script>
+      const btn = document.querySelector('button');
+      const _this = this;
+
+      btn.addEventListener('click', function () {
+        console.log('************ function expression ************');
+        console.log('this :>> ', this); // this = button (btn)
+        console.log('_this :>> ', _this);
+        console.log('this === _this :>> ', this === _this); // false (não apontam para o mesmo objeto)
+      });
+
+      btn.addEventListener('click', () => {
+        console.log('************ arrow function ************');
+        console.log('this :>> ', this); // this = window (objeto global, pois não sofreu alteração)
+        console.log('_this :>> ', _this);
+        console.log('this === _this :>> ', this === _this); // true (apontam para o mesmo objeto)
+      });
+    </script>
+  </body>
+</html>
