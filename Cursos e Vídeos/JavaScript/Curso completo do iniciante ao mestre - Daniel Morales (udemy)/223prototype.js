@@ -63,3 +63,6 @@ console.log('Array.prototype :>> ', Array.prototype);
 
 Array.prototype.map2 = function () {};
 console.log('arr.map2() :>> ', arr.map2());
+
+// Função construtora
+console.log('cachorro.constructor :>> ', cachorro.constructor);
