@@ -4,9 +4,11 @@ class AlunoModel {
   // }
   constructor({ nome, _id, notas } = { notas: {} }) {
     this.nome = nome;
-    this._id = _id !== undefined ? _id : this.generateId();
     this.notas = { ...notas };
 
+    this._id = _id !== undefined ? _id : this.generateId();
+
+    /* maxId começa com zero; cada vez que a classe é instanciada, o maxId é atualizado com o último id */
     if (this._id > AlunoModel.maxId) {
       AlunoModel.maxId = this._id;
     }
