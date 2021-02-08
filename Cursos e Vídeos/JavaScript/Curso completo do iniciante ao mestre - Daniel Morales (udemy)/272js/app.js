@@ -1,4 +1,4 @@
-const alunos = [
+const alunosold = [
   {
     _id: 0,
     nome: 'chico melato',
@@ -23,38 +23,16 @@ const alunos = [
 
 const alunosService = new AlunosService();
 
-// Calcula a média por matéria de cada aluno e cria uma propriedade chamada média
-alunos.forEach((aluno) => {
-  alunosService.add(new AlunoModel(aluno));
-});
-
 const alunosView = new AlunosView(
-  document.querySelector('[data-table-alunos]')
+  document.querySelector('[data-table-alunos]'),
+  new MateriasService().materias
 );
 
 const alunosController = new AlunosController(alunosService, alunosView);
 
-// document.querySelector('form').addEventListener('submit', function (e) {
-//   e.preventDefault();
-//   const nome = document.getElementById('first_name').value;
-//   const newAluno = {
-//     _id: 0,
-//     nome,
-//     notas: {
-//       portugues: [1, 1, 2, 2],
-//       matematica: [2, 2, 2, 2],
-//       historia: [2, 2, 3, 3],
-//       ciencias: [3, 3, 3, 3],
-//     },
-//   };
-//   // console.log('nome :>> ', nome);
-//   newAluno.media = {};
+document.querySelector('form').addEventListener('submit', function (e) {
+  e.preventDefault();
+  const nome = document.getElementById('first_name').value;
 
-//   for (let materia in newAluno.notas) {
-//     newAluno.media[materia] = average(...newAluno.notas[materia]);
-//   }
-
-//   alunos.push(newAluno);
-
-//   render();
-// });
+  alunosController.add({ nome });
+});
