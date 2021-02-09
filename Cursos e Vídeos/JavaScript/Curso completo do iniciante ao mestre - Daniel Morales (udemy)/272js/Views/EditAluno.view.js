@@ -1,4 +1,4 @@
-class EditAlunoView {
+export class EditAlunoView {
   constructor(form, materias) {
     // this.render();
     this.form = form;
