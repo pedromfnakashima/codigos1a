@@ -13,12 +13,17 @@ class AlunosService {
   }
 
   edit(aluno) {
-    return aluno;
+    aluno.generateAverage();
+    this.updateLocalStorage();
   }
 
   searchById(id) {
     // console.log('this.alunos :>> ', this.alunos);
     return this.alunos.find((aluno) => aluno._id === id);
+  }
+
+  search(name) {
+    return this.alunos.filter((aluno) => aluno.nome.indexOf(name) >= 0);
   }
 
   updateLocalStorage() {

@@ -15,6 +15,8 @@ class AlunoModel {
 
     this.media = {};
 
+    this.generateAverage();
+
     for (let materia in this.notas) {
       this.media[materia] = average(...this.notas[materia]);
     }
@@ -22,6 +24,12 @@ class AlunoModel {
 
   generateId() {
     return AlunoModel.maxId + 1;
+  }
+
+  generateAverage() {
+    for (let materia in this.notas) {
+      this.media[materia] = average(...this.notas[materia]);
+    }
   }
 }
 
