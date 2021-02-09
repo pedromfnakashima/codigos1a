@@ -8,6 +8,10 @@ Design
 *.png
 *.xml
 
+# Dependency directories
+node_modules/
+jspm_packages/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
