@@ -11,12 +11,18 @@ export default class TasksController {
     this.service.add(
       new Task(title),
       () => this.view.render(this.service.tasks),
+      (erro) => alert(erro),
       userId
     );
   }
 
   remove(id) {
-    this.service.remove(id, () => this.view.render(this.service.tasks), userId);
+    this.service.remove(
+      id,
+      () => this.view.render(this.service.tasks),
+      (erro) => alert(erro),
+      userId
+    );
   }
 
   update(task) {
@@ -24,6 +30,7 @@ export default class TasksController {
     this.service.update(
       task,
       () => this.view.render(this.service.tasks),
+      (erro) => alert(erro),
       userId
     );
   }
@@ -35,6 +42,10 @@ export default class TasksController {
   }
 
   getTasks() {
-    this.service.getTasks(userId, () => this.view.render(this.service.tasks));
+    this.service.getTasks(
+      userId,
+      () => this.view.render(this.service.tasks),
+      (erro) => alert(erro)
+    );
   }
 }
