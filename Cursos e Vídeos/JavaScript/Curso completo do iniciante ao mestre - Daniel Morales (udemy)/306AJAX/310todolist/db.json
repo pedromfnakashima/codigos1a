@@ -1,51 +1,28 @@
 {
   "tasks": [
     {
-      "title": "primeira tarefa",
-      "completed": false,
+      "title": "segunda tarefa editada",
+      "completed": true,
       "createdAt": "",
-      "updatedAt": "",
-      "userId": 1,
-      "id": 1
-    },
-    {
-      "title": "segunda tarefa",
-      "completed": false,
-      "createdAt": "",
-      "updatedAt": "",
-      "userId": 1,
+      "updatedAt": 1612917430094,
+      "userId": 2,
       "id": 2
     },
     {
       "title": "terceira tarefa",
-      "completed": false,
-      "createdAt": "",
-      "updatedAt": "",
-      "userId": 1,
-      "id": 3
-    },
-    {
-      "title": "segunda tarefa",
-      "completed": false,
-      "createdAt": "",
-      "updatedAt": "",
-      "userId": 2,
+      "completed": true,
+      "createdAt": 1612909611772,
+      "updatedAt": 1612917427137,
+      "userId": "2",
       "id": 4
     },
     {
-      "title": "tarefa do João",
-      "userId": 3,
-      "id": 5
-    },
-    {
-      "title": "teste2",
-      "userId": 2,
-      "id": 6
-    },
-    {
-      "title": "teste3",
-      "userId": 2,
-      "id": 7
+      "title": "nova tarefa editada 3",
+      "completed": false,
+      "createdAt": 1612913664875,
+      "updatedAt": 1612917428807,
+      "id": 5,
+      "userId": "2"
     }
   ],
   "users": [
