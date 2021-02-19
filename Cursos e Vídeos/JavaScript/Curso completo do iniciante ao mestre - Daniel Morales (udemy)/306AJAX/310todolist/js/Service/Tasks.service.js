@@ -1,4 +1,4 @@
-import { createXMLHttpRequest } from './../createXMLHttpRequest.js';
+import { createFetch } from './../createFetch.js';
 import { Task } from './../Model/Task.model.js';
 import { urlUsers, urlTasks } from './../config.js';
 
@@ -8,19 +8,10 @@ export default class TasksService {
   }
 
   add(task, cb, error, userId) {
-    const fn = (_task) => {
-      const { title, completed, createdAt, updatedAt } = _task;
-
-      this.getTasks(userId, cb);
-    };
-
-    createXMLHttpRequest(
-      'POST',
-      `${urlUsers}/${userId}/tasks`,
-      fn,
-      error,
-      JSON.stringify(task)
-    );
+    createFetch('POST', `${urlUsers}/${userId}/tasks`, JSON.stringify(task))
+      .then(() => this.getTasks(userId))
+      .then(() => cb())
+      .catch((err) => error(err));
   }
 
   getTasks(userId, success, error) {
@@ -31,30 +22,34 @@ export default class TasksService {
       });
 
       if (typeof success === 'function') success(this.tasks);
+      return this.tasks;
     };
-    createXMLHttpRequest('GET', `${urlUsers}/${userId}/tasks`, fn, error);
+    return createFetch('GET', `${urlUsers}/${userId}/tasks`)
+      .then((response) => {
+        return fn(response);
+      })
+      .catch((erro) => {
+        if (typeof error === 'function') {
+          return error(erro.message);
+        }
+        throw Error(erro.message);
+      });
   }
 
   remove(id, cb, error, userId) {
-    const fn = () => {
-      this.getTasks(userId, cb);
-    };
-    createXMLHttpRequest('DELETE', `${urlTasks}/${id}`, fn, error);
+    createFetch('DELETE', `${urlTasks}/${id}`)
+      .then(() => this.getTasks(userId))
+      .then(() => cb())
+      .catch((err) => error(err.message));
   }
 
   update(task, cb, error, userId) {
     task.updatedAt = Date.now();
-    const fn = () => {
-      this.getTasks(userId, cb);
-    };
 
-    createXMLHttpRequest(
-      'PATCH',
-      `${urlTasks}/${task.id}`,
-      fn,
-      error,
-      JSON.stringify(task)
-    );
+    createFetch('PATCH', `${urlTasks}/${task.id}`, JSON.stringify(task))
+      .then(() => this.getTasks(userId))
+      .then(() => cb())
+      .catch((err) => error(err.message));
   }
 
   getById(id) {

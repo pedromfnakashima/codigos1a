@@ -2,34 +2,18 @@
   "tasks": [
     {
       "title": "segunda tarefa editada",
-      "completed": true,
+      "completed": false,
       "createdAt": "",
-      "updatedAt": 1612917430094,
+      "updatedAt": 1613777484992,
       "userId": 2,
       "id": 2
     },
     {
-      "title": "terceira tarefa",
-      "completed": true,
-      "createdAt": 1612909611772,
-      "updatedAt": 1612917427137,
-      "userId": "2",
-      "id": 4
-    },
-    {
       "title": "nova tarefa editada 3",
-      "completed": false,
+      "completed": true,
       "createdAt": 1612913664875,
-      "updatedAt": 1612917428807,
+      "updatedAt": 1613777450746,
       "id": 5,
-      "userId": "2"
-    },
-    {
-      "title": "sdfsdf",
-      "completed": false,
-      "createdAt": 1612919515374,
-      "updatedAt": null,
-      "id": 6,
       "userId": "2"
     }
   ],
