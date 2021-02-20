@@ -72,3 +72,56 @@ function clickedUl(e) {
 }
 
 ul.addEventListener('click', clickedUl);
+
+// Códigos de exemplo  - aula 342
+
+/* 
+console.log('Exemplo do finally e Tratamento do erro. Arquivo: todolist.js');
+ */
+
+/* 
+fetch('http://localhost:3000/users/')
+  .then((resposta) => resposta.json())
+  .then((resposta) => console.log('resposta :>> ', resposta))
+  .catch((err) => console.log('err :>> ', err))
+  .finally(() => console.log('finally'));
+*/
+
+// Códigos de exemplo  - aula 343 (parte 1)
+
+/* 
+(async function () {
+  let users = [];
+
+  try {
+    await fetch('http://localhost:3000/users/')
+      .then((resposta) => resposta.json())
+      .then((_users) => {
+        console.log('_users :>> ', _users);
+        users = _users;
+      });
+  } catch (e) {
+    console.log('e :>> ', e);
+  }
+  console.log('users :>> ', users);
+})();
+ */
+
+// Códigos de exemplo  - aula 343 (parte 2 - erro na url)
+/* 
+(async function () {
+  let users = [];
+
+  try {
+    await fetch('http://localhost:3002/users/')
+      .then((resposta) => resposta.json())
+      .then((_users) => {
+        console.log('_users :>> ', _users);
+        users = _users;
+      });
+  } catch (e) {
+    console.log('e.message :>> ', e.message);
+  }
+  console.log('users :>> ', users);
+})();
+ */
