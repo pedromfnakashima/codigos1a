@@ -1,0 +1,1 @@
+let aluno: {nome: string, aprovado: boolean, idade: number}
