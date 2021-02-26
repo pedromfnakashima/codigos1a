@@ -1,0 +1,91 @@
+/* ex1 */
+/* 
+span:first-child {
+  color: red;
+}
+
+span:last-child {
+  color: red;
+} */
+
+/* ex2 */
+
+/* span:last-of-type {
+  color: red;
+} */
+
+/* ex3 */
+
+/* span:nth-child(3) {
+  color: red;
+} */
+
+/* ex3 */
+
+/* span:nth-child(even) {
+  color: red;
+} */
+
+/* ex4 */
+/* 
+span:nth-child(odd) {
+  color: red;
+} */
+
+/* ex5
+abaixo, mesmo que even
+*/
+
+/* span:nth-child(2n) {
+  color: red;
+} */
+
+/* ex6
+abaixo, cada elemento par, mas pulando o primeiro elemento
+*/
+
+/* span:nth-child(2n + 1) {
+  color: red;
+} */
+
+/* ex7
+*/
+
+/* span:nth-child(2n + 3) {
+  color: red;
+} */
+
+/* ex8
+*/
+
+/* span:nth-last-child(2) {
+  color: red;
+} */
+
+/* ex9
+*/
+
+/* span:nth-last-child(2n + 1) {
+  color: red;
+} */
+
+/* ex10
+*/
+/* 
+span:nth-of-type(2) {
+  color: red;
+} */
+
+/* ex11
+*/
+
+/* span:nth-of-type(2n + 1) {
+  color: red;
+} */
+
+/* ex11
+*/
+
+span:nth-last-of-type(2) {
+  color: red;
+}

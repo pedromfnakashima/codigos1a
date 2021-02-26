@@ -1,0 +1,82 @@
+/* ex1 */
+
+/* h2 {
+  color: green;
+}
+
+h2 {
+  color: blue;
+} */
+
+/* ex2 */
+
+/* .header {
+  color: green;
+}
+
+h2 {
+  color: blue;
+} */
+
+/* ex3 */
+
+/* #heading-id {
+  color: red;
+}
+
+.header {
+  color: green;
+}
+
+h2 {
+  color: blue;
+} */
+
+/* ex4
+CÁLCULO DE PRIORIDADE:
+- coluna 0 => coluna 1 => coluna 2 => coluna 3
+!important, id, class, html_tag
+*/
+
+/* 0, 1, 0, 0 */
+/* #heading-id {
+  color: red;
+} */
+
+/* 0, 0, 1, 0 */
+/* .header {
+  color: green;
+} */
+
+/* 0, 0, 0, 1 */
+/* h2 {
+  color: blue;
+} */
+
+/* ex5
+CÁLCULO DE PRIORIDADE:
+- coluna 0 => coluna 1 => coluna 2 => coluna 3
+!important, id, class, html_tag
+*/
+
+/* 0, 1, 2, 2 */
+/* h2.header.green div#id {
+  color: green;
+} */
+
+/* 0, 0, 0, 1 */
+/* .header {
+  color: blue;
+} */
+
+/* ex 6 */
+
+/* 0, 0, 1, 2 */
+h2.header span {
+  color: red;
+}
+
+/* 0, 1, 0, 1 */
+#heading-id span {
+  color: green;
+}

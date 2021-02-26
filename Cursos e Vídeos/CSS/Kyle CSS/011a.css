@@ -1,0 +1,21 @@
+/* ex1 */
+
+.submit:hover {
+  background-color: red;
+}
+
+.submit:focus {
+  background-color: blue;
+}
+
+.name:hover {
+  background-color: green;
+}
+
+.email:disabled {
+  background-color: purple;
+}
+
+.name:required {
+  background-color: blue;
+}

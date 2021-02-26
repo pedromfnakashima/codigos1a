@@ -1,0 +1,15 @@
+/* Algumas propriedades herdam, outras não. */
+div {
+  color: blue;
+  border: 1px solid black;
+}
+
+p {
+  /*
+   color: inherit (padrão)
+   color: initial - não herda, cor inicial do documento
+   
+   */
+  color: initial;
+  border: inherit;
+}

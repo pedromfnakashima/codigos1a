@@ -1,0 +1,12 @@
+div {
+  background-color: red;
+}
+
+p {
+  /* background-color: rgb(100, 255, 100); */
+  /* background-color: rgba(100, 255, 100, 0.5); */
+  /* background-color: transparent; */
+  /* background-color: white; */
+
+  background-color: hsl(100, 100%, 70%, 0.5);
+}
