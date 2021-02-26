@@ -1,18 +1,16 @@
 {
-  "name": "intro",
+  "name": "classes",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "ts-node-dev --respawn ./src/interface.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "typescript": "^4.1.5"
-  },
-  "dependencies": {
-    "ts-node": "^9.1.1"
+    "ts-node-dev": "^1.1.1",
+    "typescript": "^4.1.3"
   }
 }
