@@ -1,0 +1,22 @@
+* {
+  box-sizing: border-box;
+}
+
+.div-1 {
+  background-color: hsl(300, 80%, 50%);
+  width: 100px;
+  height: 100px;
+  /* padding: 10px 5px 20px 15px; */
+  padding: 10px 30px;
+  margin: 30px;
+  border: 20px solid black;
+  border-width: 10px 5px 2px 6px;
+  /* box-sizing: border-box; */
+}
+
+.div-2 {
+  background-color: hsl(200, 80%, 50%);
+  width: 100px;
+  height: 100px;
+  margin: 30px;
+}

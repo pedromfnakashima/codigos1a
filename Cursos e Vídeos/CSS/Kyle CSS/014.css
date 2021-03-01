@@ -1,0 +1,9 @@
+* {
+  box-sizing: border-box;
+}
+
+.btn {
+  background-color: hsl(0, 0%, 90%);
+  border: 1px solid #b3b3b3;
+  outline: none;
+}

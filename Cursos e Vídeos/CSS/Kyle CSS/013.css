@@ -1,0 +1,29 @@
+.parent {
+  width: 200px;
+  border: 1px solid black;
+  font-size: 30px;
+}
+
+.item {
+  background-color: red;
+  /* height: 20px; */
+  margin: 5px 0;
+}
+
+.item-percent {
+  width: 50%;
+}
+
+.item-view-width {
+  width: 50vw;
+  height: 25vh;
+}
+
+.rem {
+  font-size: 2rem;
+}
+
+.em {
+  /* font-size: 2em; */
+  padding: 0.25em;
+}
