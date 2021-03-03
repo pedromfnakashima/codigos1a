@@ -1,0 +1,35 @@
+body {
+  height: 200vh;
+}
+
+.parent {
+  padding: 0.25rem;
+  background-color: lightskyblue;
+  position: relative;
+  z-index: 10;
+}
+
+.parent2 {
+  margin-top: 10px;
+  z-index: 2;
+  top: -30px;
+}
+
+.child1 {
+  position: sticky;
+  z-index: -1;
+  top: 10px;
+  padding: 0.25rem;
+  background-color: lightcoral;
+}
+
+.child2 {
+  padding: 0.25rem;
+  background-color: lightgreen;
+}
+
+.child3 {
+  padding: 0.25rem;
+  background-color: peru;
+  z-index: 1;
+}

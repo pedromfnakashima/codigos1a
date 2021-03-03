@@ -1,0 +1,24 @@
+.item {
+  border: 1px solid #333;
+  background-color: #777;
+  color: yellow;
+}
+
+.container {
+  display: grid;
+  grid-auto-flow: row;
+  grid-template-columns: repeat(3, 100px);
+  grid-template-rows: minmax(50px, auto) 100px;
+  gap: 15px;
+}
+
+.item1 {
+  grid-column: span 2;
+}
+
+.item2 {
+  grid-column: span 2;
+}
+
+.item6 {
+}
