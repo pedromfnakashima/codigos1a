@@ -1,0 +1,27 @@
+.item {
+  border: 1px solid #333;
+  background-color: #777;
+  width: 75px;
+  color: yellow;
+  margin: 10px;
+}
+
+.container {
+  display: flex;
+  background-color: #DDD;
+  border: 1px solid black;
+}
+
+.item1 {
+  min-height: 50px;
+}
+
+.item2 {
+  min-height: 100px;
+
+}
+
+.item3 {
+  min-height: 150px;
+
+}

@@ -1,0 +1,13 @@
+.div1 {
+  background-color: red;
+}
+.div2 {
+  background-color: cyan;
+}
+.span1 {
+  background-color: peru;
+}
+.span2 {
+  background-color: green;
+  display: none;
+}
