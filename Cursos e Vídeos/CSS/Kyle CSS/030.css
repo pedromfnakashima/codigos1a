@@ -1,0 +1,16 @@
+.parent {
+  /* column-width: 200px; */
+  column-rule: 1px solid black;
+  /* column-gap: 40px; */
+  column-gap: 1em; /* padrão: 1em */
+  column-count: 3;
+  /* Column-fill. Padrão: balance */
+  height: 100vh;
+  /* column-fill: auto; */
+
+}
+
+h2 {
+  column-span: all;
+  column-span: none; /* padrão */
+}

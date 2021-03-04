@@ -1,0 +1,14 @@
+.parent {
+  height: 100px;
+  width: 100px;
+  border: 1px solid red;
+  /* Overflow. Padrão: visible
+  Outros
+  hidden
+  scroll
+  */
+  /* overflow: scroll; */
+  /* overflow-y: scroll; */
+  overflow: auto;
+  /* overflow-x: hidden; */
+}
