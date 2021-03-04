@@ -1,0 +1,89 @@
+/* div span {
+  background-color: red;
+} */
+
+/* div > span {
+  background-color: red;
+}
+
+span {
+  background-color: green;
+} */
+
+/* ex2a */
+
+/* h2 ~ p {
+  background-color: red;
+} */
+
+/* ex2b
+Sibling selector pode selecionar apenas elementos que venham DEPOIS da referência (div).
+*/
+
+/* div ~ p {
+  background-color: red;
+} */
+
+/* ex2c
+Apenas o sibling p que vem imediatamente depois da referência (div).
+*/
+
+/* div + p {
+  background-color: red;
+} */
+
+/* ex3a */
+
+/* p:not(.red) {
+  background-color: blue;
+} */
+
+/* ex3b */
+
+/* p:not(.red):not(.green) {
+  background-color: blue;
+} */
+
+/* ex3c1 */
+/* input:not(:checked) {
+  margin: 10px;
+} */
+
+/* ex3c2 */
+/* input[type='text'] {
+  background-color: red;
+}
+
+input:not(:checked) {
+  margin: 10px;
+} */
+
+/* ex3c3 */
+/* input[type] {
+  margin: 50px;
+} */
+
+/* ex3c4 */
+/* input[data-margin] {
+  margin: 50px;
+} */
+
+/* ex3c5 */
+/* input[data-margin='abcde'] {
+  margin: 50px;
+} */
+
+/* ex3c6 */
+/* input[data-margin*='cd'] {
+  margin: 50px;
+} */
+
+/* ex3c7 */
+/* input[data-margin^='a'] {
+  margin: 50px;
+} */
+
+/* ex3c8 */
+input[data-margin$='e'] {
+  margin: 50px;
+}

@@ -1,0 +1,56 @@
+.box {
+  width: 50px;
+  height: 50px;
+  background-color: red;
+}
+
+/* ex1a */
+/* p::first-letter {
+  font-size: 200%;
+} */
+
+/* ex1b */
+/* p::first-line {
+  background-color: green;
+} */
+
+/* ex2a */
+/* .box::before {
+  display: block;
+  content: 'Hi';
+  width: 25px;
+  height: 25px;
+  background-color: green;
+}
+.box::after {
+  content: 'Bye';
+} */
+
+/* pseudo element só mostra se ele tem content */
+
+/* ex2b */
+/* .box::before {
+  display: block;
+  width: 25px;
+  height: 25px;
+  background-color: green;
+}
+.box::after {
+  content: 'Bye';
+} */
+
+/* ex2c */
+.box::before {
+  content: '';
+  display: block;
+  width: 25px;
+  height: 25px;
+  background-color: green;
+}
+.box::after {
+  content: attr(data-text);
+  display: block;
+  width: 25px;
+  height: 25px;
+  background-color: cyan;
+}
