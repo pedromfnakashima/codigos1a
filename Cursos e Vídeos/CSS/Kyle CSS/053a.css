@@ -1,0 +1,61 @@
+.div {
+  background-color: red;
+  height: 100px;
+  width: 100px;
+  color: white;
+ 
+  /* do código anterior */
+  animation-name: custom;
+  animation-delay: .5s;
+  animation-direction: alternate;
+  animation-iteration-count: infinite;
+  animation-duration: 1s;
+  animation-timing-function: linear;
+
+  /* 1a1 */
+  /* transform: scale(.5); */
+
+  /* 1a2 */
+  /* transform: scale(1, 1.25); */
+
+  /* 1a3 */
+  /* transform: scaleX(1) scaleY(1.25); */
+
+  /* 2a1 */
+  /* transform: rotate(45deg); */
+  
+  /* 2a2 */
+  /* transform: rotate(.75turn); */
+  
+  /* 2a3 */
+  /* transform: rotate(.65rad); */
+  
+  /* 3a1 */
+  /* transform: translate(100px); */
+  
+  /* 3a2 */
+  /* transform: translate(100px, 50px); */
+  
+  /* 3a3 */
+  /* transform: translateX(100px) translateY(50px); */
+  
+  /* 3b1 - % = percentual do tamanho do objeto */
+  /* transform: translate(100%); */
+  
+  /* 3b1 - % = percentual do tamanho do objeto */
+  transform: translate(-50%);
+  
+}
+
+.div:hover {
+  animation-play-state: paused;
+}
+
+
+/* 1a */
+@keyframes custom {
+
+
+
+}
+

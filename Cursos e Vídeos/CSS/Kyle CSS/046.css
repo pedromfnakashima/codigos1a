@@ -1,0 +1,68 @@
+div {
+  font-weight: bold;
+  font-size: 400%;
+  color: green;
+}
+
+/* ex1a */
+/* @media print {
+  div {
+    color: blue
+  }
+} */
+
+/* ex1b */
+/* @media screen {
+  div {
+    color: blue
+  }
+} */
+
+/* ex1c */
+/* @media all {
+  div {
+    color: blue
+  }
+} */
+
+/* ex2a */
+/* @media all and (max-width: 800px) {
+  div {
+    color: blue
+  }
+} */
+
+/* ex2b1 */
+/* @media (max-width: 800px) {
+  div {
+    color: blue
+  }
+} */
+
+/* ex2b2 */
+/* @media (min-width: 800px) {
+  div {
+    color: blue
+  }
+} */
+
+/* ex2b3 */
+/* @media (min-width: 800px) and (max-width: 1000px) {
+  div {
+    color: blue
+  }
+} */
+
+/* ex2c1 */
+/* @media (orientation: landscape) {
+  div {
+    color: blue
+  }
+} */
+
+/* ex2c2 */
+@media (min-width: 800px), (orientation: landscape) {
+  div {
+    color: blue
+  }
+}

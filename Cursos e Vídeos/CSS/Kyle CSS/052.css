@@ -1,0 +1,86 @@
+div {
+  background-color: red;
+  height: 100px;
+  width: 100px;
+  color: white;
+  /* transition: all 1s ease; */
+  /* 1b */
+  /* animation: color-change 1s linear .5s forwards alternate infinite; */
+
+  /* 1c - com mudança de tamanho*/
+  /* animation: color-change 1s linear .5s forwards alternate infinite, size-change 1s linear .5s forwards alternate infinite; */
+  
+  /* 1d - componente por componente, separados */
+  /* animation-name: color-change, size-change;
+  animation-delay: .5s;
+  animation-direction: alternate;
+  animation-iteration-count: infinite;
+  animation-duration: 1s;
+  animation-timing-function: linear; */
+  
+  /* 2a */
+  animation-name: custom;
+  animation-delay: .5s;
+  animation-direction: alternate;
+  animation-iteration-count: infinite;
+  animation-duration: 1s;
+  animation-timing-function: linear;
+  
+}
+
+div:hover {
+  /* 1a */
+  /* animation: color-change 1s linear .5s forwards alternate infinite; */
+  animation-play-state: paused;
+}
+
+/* 1d */
+
+/* @keyframes color-change {
+
+  100% {
+    background-color: green;
+    color: black;
+  }
+
+}
+
+@keyframes size-change {
+
+  to {
+    width: 200px;
+    height: 200px;
+  }
+
+} */
+
+/* 2a */
+@keyframes custom {
+
+  from {
+    font-size: 1rem;
+    color: white;
+  }
+  
+  25% {
+    color: red;
+    font-size: 3rem;
+  }
+
+  25% {
+    color: green;
+    font-size: 2.5rem;
+  }
+  
+  75% {
+    color: green;
+    font-size: 2.5rem;
+  }
+  
+  to {
+    color: green;
+    font-size: 1rem;
+  }
+
+}
+

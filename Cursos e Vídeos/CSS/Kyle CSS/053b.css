@@ -1,0 +1,41 @@
+.div {
+  --scale: 1.5;
+  background-color: red;
+  height: 100px;
+  width: 100px;
+  color: white;
+ 
+  /* do código anterior */
+  animation-name: custom;
+  animation-delay: .5s;
+  animation-direction: alternate;
+  animation-iteration-count: infinite;
+  animation-duration: 1s;
+  animation-timing-function: linear;
+
+  /* .. */
+  transform: scale(var(--scale))
+  
+}
+
+.div:hover {
+  animation-play-state: paused;
+}
+
+
+/* 1a */
+@keyframes custom {
+
+  from {
+    /* transform: translateX(0) */
+    /* transform: translateX(0) scale(1.5) */
+    transform: translateX(0) scale(var(--scale));
+  }
+  
+  to {
+    /* transform: translateX(100%); */
+    transform: translateX(100%) scale(var(--scale));
+  }
+
+}
+

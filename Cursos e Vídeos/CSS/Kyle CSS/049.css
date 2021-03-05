@@ -1,0 +1,54 @@
+div {
+  background-color: red;
+  height: 100px;
+  width: 100px;
+  color: white;
+  /* 1a */
+  /* transition: 1s; */
+
+  /* 1b */
+  /* transition-duration: 1s; */
+
+  /* 2a - apenas elementos específicos
+  opções: all (padrão), color (fonte)
+  */
+  /* transition: all 1s; */
+  /* Forma
+  opções: linear (padrão), ease-in, ease-out, ease-in-out, cubic-bezier()
+  */
+  /* transition: all 1s linear; */
+
+  /* 2b
+  delay
+  */
+  /* transition: all 1s linear .5s; */
+
+  /* 3a
+  Individualmente
+  */
+  /* transition-delay: .5s;
+  transition-timing-function: linear;
+  transition-duration: 1s;
+  transition-property: all; */
+
+  /* 4a
+  timings diferentes p/ diferentes propriedades
+  */
+
+  /* transition: color 1s, background-color 2s; */
+  /* transition: color 1s, background-color 1s; */
+
+  /* 4b
+  timings iguais p/ diferentes propriedades
+  */
+
+  /* transition: color 1s, background-color 2s; */
+  transition-property: color, background-color;
+  transition-duration: 1s;
+
+}
+
+div:hover {
+  background-color: green;
+  color: black;
+}
