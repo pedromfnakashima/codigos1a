@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../bootstrap.min.css">
+  <title>Document</title>
+  <style type="text/css">
+    .exemplo-cor {
+      background: #f9f9f9;
+      border: solid 1px #ddd;
+      margin-top: 10px;
+      margin-bottom: 10px;
+
+    }
+
+    .dark {
+      background: #000;
+      color: white;
+    }
+  </style>
+</head>
+
+<body>
+
+  <section>
+    <div style="border: solid 1px;" class="container">
+      <div class="row">
+        <div class="col exemplo-cor">Coluna 1</div>
+        <div class="col exemplo-cor">Coluna 2</div>
+        <div class="col exemplo-cor">Coluna 3</div>
+        <!-- <div class="col exemplo-cor">Coluna 4</div>
+        <div class="col exemplo-cor">Coluna 5</div>
+        <div class="col exemplo-cor">Coluna 6</div>
+        <div class="col exemplo-cor">Coluna 7</div>
+        <div class="col exemplo-cor">Coluna 8</div>
+        <div class="col exemplo-cor">Coluna 9</div>
+        <div class="col exemplo-cor">Coluna 10</div>
+        <div class="col exemplo-cor">Coluna 11</div>
+        <div class="col exemplo-cor">Coluna 12</div>
+      </div> -->
+        <div class="row">
+          <div class="col-3 exemplo-cor">Coluna 1</div>
+          <div class="col-6 exemplo-cor">Coluna 2</div>
+          <div class="col-3 exemplo-cor">Coluna 3</div>
+        </div>
+        <div class="row">
+          <div class="col-sm-4 exemplo-cor">Coluna 1</div>
+          <div class="col-sm-4 exemplo-cor">Coluna 2</div>
+          <div class="col-sm-4 exemplo-cor">Coluna 3</div>
+        </div>
+        <div class="row">
+          <div class="col-12 col-sm-4 exemplo-cor">Coluna 1</div>
+          <div class="col-6 col-sm-4 exemplo-cor">Coluna 2</div>
+          <div class="col-6 col-sm-4 exemplo-cor">Coluna 3</div>
+        </div>
+        <div class="row">
+          <div class="col-12 col-sm-4 col-md-3 exemplo-cor">Coluna 1</div>
+          <div class="col-6 col-sm-4 col-md-6 exemplo-cor">Coluna 2</div>
+          <div class="col-6 col-sm-4 col-md-3 exemplo-cor">Coluna 3</div>
+        </div>
+        <div class="row">
+          <div class="col-12 col-sm-4 col-md-3 col-lg-2 exemplo-cor">Coluna 1</div>
+          <div class="col-6 col-sm-4 col-md-6 col-lg-3 exemplo-cor">Coluna 2</div>
+          <div class="col-6 col-sm-4 col-md-3 col-lg-7 exemplo-cor">Coluna 3</div>
+        </div>
+        <div class="row align-items-end" style="min-height: 200px; border:solid black">
+          <div class="col-4 exemplo-cor">Alinhamento <br /> vertical</div>
+          <div class="col-4 exemplo-cor">Alinhamento vertical</div>
+          <div class="col-4 exemplo-cor">Alinhamento vertical</div>
+        </div>
+
+        <div class="row" style="min-height: 200px; border:solid red">
+          <div class="col-4 exemplo-cor align-self-center">Alinhamento <br /> vertical</div>
+          <div class="col-4 exemplo-cora align-self-start">Alinhamento vertical</div>
+          <div class="col-4 exemplo-cor align-self-end">Alinhamento vertical</div>
+        </div>
+
+        <!-- <div class="row justify-content-start" style="min-height: 250px; border:solid blue"> -->
+        <!-- <div class="row justify-content-end" style="min-height: 250px; border:solid blue"> -->
+        <!-- <div class="row justify-content-center" style="min-height: 250px; border:solid blue"> -->
+        <!-- <div class="row justify-content-around" style="min-height: 250px; border:solid blue"> -->
+        <!-- <div class="row justify-content-between" style="min-height: 250px; border:solid blue"> -->
+        <div class="row justify-content-evenly" style="min-height: 200px; border:solid blue">
+          <div class="col-2 exemplo-cor">Alinhamento Horizontal</div>
+          <div class="col-2 exemplo-cor">Alinhamento Horizontal</div>
+          <div class="col-2 exemplo-cor">Alinhamento Horizontal</div>
+          <div class="col-2 exemplo-cor">Alinhamento Horizontal</div>
+        </div>
+
+        <div class="row" style="min-height: 200px; border:solid green">
+          <div class="col-2 exemplo-cor offset-4">Offset</div>
+          <div class="col-2 exemplo-cor">Offset</div>
+          <div class="col-2 exemplo-cor">Offset</div>
+        </div>
+
+        <div class="row" style="min-height: 200px; border:solid yellow">
+          <!-- <div class="col-2 exemplo-cor offset-lg-4 dark">Offset</div> -->
+          <!-- <div class="col-2 exemplo-cor offset-lg-4 offset-sm-1 dark">Offset</div> -->
+          <!-- <div class="col-2 exemplo-cor offset-lg-4 offset-sm-1 offset-3 dark">Offset</div> -->
+          <div class="col-2 exemplo-cor offset-lg-4 offset-sm-0 offset-3">Offset</div>
+          <div class="col-2 exemplo-cor">Offset</div>
+          <div class="col-2 exemplo-cor">Offset</div>
+        </div>
+
+        <div class="row" style="min-height: 200px; border:solid orange">
+          <div class="col-2 exemplo-cor dark">1</div>
+          <div class="col-2 exemplo-cor order-3 dark">2</div>
+          <div class="col-2 exemplo-cor dark">3</div>
+        </div>
+
+        <div class="row" style="min-height: 200px; border:solid purple">
+          <div class="col-2 exemplo-cor order-sm-3 order-5 dark">1</div>
+          <div class="col-2 exemplo-cor order-sm-2 order-3 dark">2</div>
+          <div class="col-2 exemplo-cor order-sm-5 dark">3</div>
+        </div>
+
+        <div class="row" style="min-height: 200px; border:solid cyan">
+          <div class="col-6 col-sm-3 order-sm-1 exemplo-cor dark">1</div>
+          <div class="col-12 col-sm-6 order-sm-2 order-3 exemplo-cor dark">2</div>
+          <div class="col-6 col-sm-3 order-sm-3 order-2 exemplo-cor dark">3</div>
+        </div>
+
+        <div class="row" style="min-height: 200px; border:solid brown">
+          <div class="col-6 col-sm-3 order-sm-1 exemplo-cor dark">1</div>
+          <div class="col-12 col-sm-6 order-sm-first order-3 exemplo-cor dark">2</div>
+          <div class="col-6 col-sm-3 order-sm-last order-2 exemplo-cor dark">3</div>
+        </div>
+
+
+      </div>
+  </section>
+
+  <script src="../bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
