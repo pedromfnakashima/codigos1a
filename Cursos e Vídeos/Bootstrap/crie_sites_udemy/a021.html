@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../bootstrap.min.css">
+  <title>Document</title>
+
+</head>
+
+<body>
+
+  <section>
+
+    <div class="container">
+
+      <div class="row justify-content-center mt-3">
+        <div class="col-6">
+          <form name="fomulario-teste" method="POST">
+
+            <div class="row mt-3">
+              <label class="form-label col-4">Nome:</label>
+              <div class="col-8">
+                <input class="form-control" type="text" name="nome">
+              </div>
+            </div>
+
+            <div class="row mt-3">
+              <label class="form-label col-4">E-mail:</label>
+              <div class="col-8">
+                <input class="form-control" type="text" name="email">
+              </div>
+            </div>
+
+            <div class="row mt-3">
+              <label class="form-label col-4">Envie seu arquivo:</label>
+              <div class="col-8">
+                <input class="form-control" type="file" name="file">
+              </div>
+            </div>
+
+            <div class="row mt-3">
+              <label class="form-label col-4">Selecione a cor:</label>
+              <div class="col-8">
+                <input class="form-control form-control-color" type="color" name="cor">
+              </div>
+            </div>
+
+            <div class="row mt-3">
+              <label class="form-label col-4">Encontre seu curso:</label>
+              <div class="col-8">
+                <input list="listaCursos" class="form-control" name="cursos" placeholder="Escreva o nome do curso">
+                <datalist id="listaCursos">
+                  <option value="HTML 5"></option>
+                  <option value="CSS 3"></option>
+                  <option value="JS"></option>
+                  <option value="Python"></option>
+                </datalist>
+              </div>
+            </div>
+
+          </form>
+        </div>
+      </div>
+
+
+
+    </div>
+
+  </section>
+
+  <script src="../bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

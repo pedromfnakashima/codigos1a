@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../bootstrap.min.css">
+  <title>Document</title>
+
+</head>
+
+<body>
+
+  <section>
+
+    <div class="container">
+
+      <div class="row justify-content-center mt-3">
+        <div class="col-6">
+
+          <form class="needs-validation" name="fomulario-teste" method="POST">
+
+            <div class="row mt-3">
+              <label class="form-label col-12">Nome de usuário:</label>
+              <div class="input-group">
+                <span class="input-group-text">@</span>
+                <input required class="form-control" type="text" name="usuario">
+              </div>
+            </div>
+
+            <div class="row mt-3">
+              <label class="form-label col-12">Link personalizado:</label>
+              <div class="input-group">
+                <span class="input-group-text">http://exemplo.com/usuario/</span>
+                <input class="form-control" type="text" name="link">
+              </div>
+            </div>
+
+            <div class="row mt-3">
+              <label class="form-label col-12">Preço do produto:</label>
+              <div class="input-group">
+                <span class="input-group-text">R$</span>
+                <input class="form-control" type="text" name="precoProduto">
+              </div>
+            </div>
+
+            <div class="row mt-3">
+              <label class="form-label col-4">Nome:</label>
+              <div class="col-8">
+                <input required class="form-control" type="text" name="nome">
+              </div>
+            </div>
+
+            <div class="row mt-3">
+              <label class="form-label col-4">E-mail:</label>
+              <div class="col-8">
+                <input required class="form-control" type="text" name="email">
+              </div>
+            </div>
+
+            <div class="row mt-3">
+              <label class="form-label col-4">Envie seu arquivo:</label>
+              <div class="col-8">
+                <input class="form-control" type="file" name="file">
+              </div>
+            </div>
+
+            <div class="row mt-3">
+              <label class="form-label col-4">Selecione a cor:</label>
+              <div class="col-8">
+                <input class="form-control form-control-color" type="color" name="cor">
+              </div>
+            </div>
+
+            <div class="row mt-3">
+              <label class="form-label col-4">Encontre seu curso:</label>
+              <div class="col-8">
+                <input list="listaCursos" class="form-control" name="cursos" placeholder="Escreva o nome do curso">
+                <datalist id="listaCursos">
+                  <option value="HTML 5"></option>
+                  <option value="CSS 3"></option>
+                  <option value="JS"></option>
+                  <option value="Python"></option>
+                </datalist>
+              </div>
+            </div>
+
+            <div class="row mt-3">
+              <label class="form-label col-4">Selecione o curso:</label>
+              <div class="col-8">
+                <select required class="form-select form-select-sm" multiple>
+                  <option value="">-- Selecione --</option>
+                  <option value="html">HTML 5</option>
+                  <option value="css">CSS 3</option>
+                  <option value="js">JS</option>
+                  <option value="python">Python</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="row mt-3">
+              <label class="form-label col-4">Central de notificações:</label>
+              <div class="col-8">
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="checkbox" name="promo" id="idCheckPromo">
+                  <label class="form-check-label" for="idCheckPromo">Promoções</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="checkbox" name="info" id="idCheckInfo" checked>
+                  <label class="form-check-label" for="idCheckInfo">Informações úteis</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="row mt-3">
+              <label class="form-label col-4">Gênero:</label>
+              <div class="col-8">
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="genero" id="idHomem">
+                  <label class="form-check-label" for="idHomem">Masculino</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <!-- <input class="form-check-input" type="radio" name="genero" id="idMulher" checked> -->
+                  <input class="form-check-input" type="radio" name="genero" id="idMulher" required>
+                  <label class="form-check-label" for="idMulher">Feminino</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="row mt-3">
+              <label class="form-label col-4">Gostaria de receber nossas promoções:</label>
+              <div class="col-8">
+                <div class="form-check form-switch">
+                  <input class="form-check-input" type="checkbox" name="promo" id="idNews">
+                  <label class="form-check-label" for="idNews">Receber promoções e novidades.</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="row mt-3">
+              <label class="form-label col-12">Faixa de preços:</label>
+              <div class="col-12">
+                <input class="form-range" step="0.5" min="1" max="10" type="range" name="precos">
+              </div>
+            </div>
+
+
+            <button type="submit" class="btn btn-primary">Enviar</button>
+
+
+          </form>
+        </div>
+      </div>
+
+
+
+    </div>
+
+  </section>
+
+  <script src="../bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
