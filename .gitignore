@@ -1,6 +1,8 @@
 # Pasta
 Design
 
+composer.lock
+
 .db
 .vscode
 .idea
@@ -9,8 +11,21 @@ Design
 *.xml
 
 # Dependency directories
+/node_modules/
+/vendor/
+/logs/
+/reports/
+play.js
 node_modules/
-jspm_packages/
+.vscode
+.vscode/
+.netlify/
+.netlify
+.DS_Store
+.DS_Store?
+
+
+/jspm_packages/
 
 # testing
 /coverage
