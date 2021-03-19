@@ -4,7 +4,7 @@ Design
 composer.lock
 
 .db
-.vscode
+
 .idea
 
 *.png
@@ -17,8 +17,7 @@ composer.lock
 /reports/
 play.js
 node_modules/
-.vscode
-.vscode/
+
 .netlify/
 .netlify
 .DS_Store
